@@ -20,7 +20,7 @@ class Events
     {
         /** @var ManifestController $controller */
         $controller = $event->sender;
-        $controller->manifest['gcm_sender_id'] = (string) 103953800507;
+        $controller->manifest['gcm_sender_id'] = (string)103953800507;
     }
 
     public static function onServiceWorkerControllerInit($event)
@@ -56,7 +56,8 @@ class Events
 JS;
     }
 
-    public static function onLayoutaddonInit($event) {
+    public static function onLayoutaddonInit($event)
+    {
 
         $view = Yii::$app->view;
 
@@ -64,7 +65,7 @@ JS;
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
 
-        $script <<<JS
+        $script = <<<JS
             // Initialize the Firebase app by passing in the messagingSenderId
             var config = {
               messagingSenderId: "744948498049"
