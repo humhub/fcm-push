@@ -12,6 +12,7 @@ namespace humhub\modules\fcmPush;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
+use yii\helpers\Url;
 
 class Events
 {
@@ -64,6 +65,8 @@ JS;
         $view->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
+
+        $tokenUpdateUrl = Url::to(['/fcm-push/token/update']);
 
         $script = <<<JS
             // Initialize the Firebase app by passing in the messagingSenderId
@@ -135,6 +138,12 @@ JS;
               if (!isTokenSentToServer()) {
                 console.log('Sending token to server...');
                 // TODO(developer): Send the current token to your server.
+                $.ajax({
+                  method: "POST",
+                  url: "{$tokenUpdateUrl}",
+                  data: { token: currentToken }
+                })
+                
                 setTokenSentToServer(true);
               } else {
                 console.log('Token already sent to server so won\'t send it again ' +
