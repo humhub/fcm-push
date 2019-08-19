@@ -23,9 +23,9 @@ class TokenController extends Controller
     {
         $this->forcePostRequest();
 
-        $token = Yii::$app->request->post('token');
+        $token = (string) Yii::$app->request->post('token');
 
-        $fcmUser = FcmUser::findOne(['token' => (string) $token]);
+        $fcmUser = FcmUser::findOne(['token' => $token]);
         if ($fcmUser !== null && $fcmUser->user_id !== Yii::$app->user->id) {
             $fcmUser->delete();
             $fcmUser = null;
@@ -34,9 +34,9 @@ class TokenController extends Controller
         if ($fcmUser === null) {
             $fcmUser = new FcmUser();
             $fcmUser->user_id = Yii::$app->user->id;
+            $fcmUser->token = $token;
         }
 
-        $fcmUser->token = $token;
 
         return $this->asJson(['success' => ($fcmUser->save())]);
     }

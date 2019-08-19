@@ -14,7 +14,7 @@ class m190819_210853_initial extends Migration
     {
         $this->createTable('fcmpush_user', [
             'id' => $this->primaryKey(),
-            'token' => $this->string(255),
+            'token' => $this->string(100),
             'user_id' => $this->integer()->notNull(),
             'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression('NOW()')),
             'updated_at' => $this->dateTime()
