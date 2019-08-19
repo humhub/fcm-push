@@ -1,0 +1,15 @@
+{
+    "id": "fcm-push",
+    "name": "FireBase Messaging - Push Provider",
+    "description": "Mobile push notification integration.",
+    "keywords": [
+        "push",
+        "notifications",
+        "firebase"
+    ],
+    "humhub": {
+        "minVersion": "1.4"
+    },
+    "version": "1.0",
+    "screenshots": []
+}
