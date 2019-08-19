@@ -60,10 +60,11 @@ JS;
 
         $view = Yii::$app->view;
 
+        $view->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
 
-        $view->registerJs(<<<JS
+        $script <<<JS
             // Initialize the Firebase app by passing in the messagingSenderId
             var config = {
               messagingSenderId: "744948498049"
@@ -147,7 +148,9 @@ JS;
             function setTokenSentToServer(sent) {
               window.localStorage.setItem('sentToServer', sent ? 1 : 0);
             }
-JS);
+JS;
+
+        $view->registerJs($script);
 
     }
 
