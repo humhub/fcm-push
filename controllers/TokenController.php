@@ -19,9 +19,11 @@ class TokenController extends Controller
         ];
     }
 
-    public function actionUpdate($token)
+    public function actionUpdate()
     {
         $this->forcePostRequest();
+
+        $token = Yii::$app->request->post('token');
 
         $fcmUser = FcmUser::findOne(['token' => (string) $token]);
         if ($fcmUser !== null && $fcmUser->user_id !== Yii::$app->user->id) {

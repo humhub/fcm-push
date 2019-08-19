@@ -137,7 +137,6 @@ JS;
             function sendTokenToServer(currentToken) {
               if (!isTokenSentToServer()) {
                 console.log('Sending token to server...');
-                // TODO(developer): Send the current token to your server.
                 $.ajax({
                   method: "POST",
                   url: "{$tokenUpdateUrl}",
