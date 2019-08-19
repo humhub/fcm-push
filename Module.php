@@ -12,7 +12,6 @@ class Module extends \humhub\components\Module
      */
     public $resourcesPath = 'resources';
 
-
     public function getConfigUrl()
     {
         return Url::to(['/mobile/settings']);
