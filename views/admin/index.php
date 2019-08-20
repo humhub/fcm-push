@@ -12,6 +12,7 @@ use yii\helpers\Html;
 
         <?= $form->field($model, 'senderId'); ?>
         <?= $form->field($model, 'serverKey'); ?>
+        <?= $form->field($model, 'projectId'); ?>
 
         <br/>
 

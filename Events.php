@@ -33,6 +33,9 @@ class Events
         /** @var ServiceWorkerController $controller */
         $controller = $event->sender;
 
+        $configureForm = ConfigureForm::getInstance();
+        $senderId = $configureForm->senderId;
+        
         $controller->additionalJs .= <<<JS
 
 
@@ -42,7 +45,7 @@ class Events
             
             // Initialize the Firebase app in the service worker by passing in the messagingSenderId.
             var config = {
-                messagingSenderId: "744948498049"
+                messagingSenderId: "{$senderId}"
             };
             firebase.initializeApp(config);
             
@@ -72,10 +75,13 @@ JS;
 
         $tokenUpdateUrl = Url::to(['/fcm-push/token/update']);
 
+        $configureForm = ConfigureForm::getInstance();
+        $senderId = $configureForm->senderId;
+
         $script = <<<JS
             // Initialize the Firebase app by passing in the messagingSenderId
             var config = {
-              messagingSenderId: "744948498049"
+              messagingSenderId: "{$senderId}"
             };
             firebase.initializeApp(config);
             

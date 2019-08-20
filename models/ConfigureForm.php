@@ -65,7 +65,11 @@ class ConfigureForm extends Model
 
     public function isActive()
     {
-        return (!empty($this->senderId) && (!empty($this->serverKey)) && (!empty($this->projectId)));
+        if (empty($this->senderId) || empty($this->serverKey) || empty($this->projectId)) {
+            return false;
+        }
+        
+        return true;
     }
 
 
