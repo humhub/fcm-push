@@ -126,9 +126,11 @@ JS;
                     $.ajax({
                       method: "POST",
                       url: "{$tokenUpdateUrl}",
-                      data: { token: currentToken }
+                      data: { token: currentToken },
+                      success: function(data) {
+                        setTokenSentToServer(currentToken);
+                      }           
                     });
-                    setTokenSentToServer(currentToken);
                   } else {
                     console.log('Token already sent to server so won\'t send it again unless it changes');
                   }
