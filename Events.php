@@ -88,36 +88,35 @@ JS;
                     console.log('Unable to retrieve refreshed token ', err);
                   });
                 });
-            }
                 
-                
-            function afterServiceWorkerRegistration(registration) {
-                messaging.useServiceWorker(registration);
+                function afterServiceWorkerRegistration(registration) {
+                    messaging.useServiceWorker(registration);
+                        
+                    // Request for permission
+                    messaging.requestPermission().then(function() {
+                      console.log('Notification permission granted.');
                     
-                // Request for permission
-                messaging.requestPermission().then(function() {
-                  console.log('Notification permission granted.');
-                
-                  messaging.getToken().then(function(currentToken) {
-                    if (currentToken) {
-                      console.log('Token: ' + currentToken);
-                      sendTokenToServer(currentToken);
-                    } else {
-                      console.log('No Instance ID token available. Request permission to generate one.');
-                      setTokenSentToServer('');
-                    }
-                  })
-                  .catch(function(err) {
-                    console.log('An error occurred while retrieving token. ', err);
-                    setTokenSentToServer('');
-                  });
-                })
-                .catch(function(err) {
-                  // e.g. Igonito Mode  
-                  //console.log('Unable to get permission to notify.', err);
-                });
+                      messaging.getToken().then(function(currentToken) {
+                        if (currentToken) {
+                          console.log('Token: ' + currentToken);
+                          sendTokenToServer(currentToken);
+                        } else {
+                          console.log('No Instance ID token available. Request permission to generate one.');
+                          setTokenSentToServer('');
+                        }
+                      })
+                      .catch(function(err) {
+                        console.log('An error occurred while retrieving token. ', err);
+                        setTokenSentToServer('');
+                      });
+                    })
+                    .catch(function(err) {
+                      // e.g. Igonito Mode  
+                      //console.log('Unable to get permission to notify.', err);
+                    });
+                }                
             }
-        
+                
             // Send the Instance ID token your application server, so that it can:
             // - send messages back to this app
             // - subscribe/unsubscribe the token from topics
