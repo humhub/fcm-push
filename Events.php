@@ -1,14 +1,11 @@
 <?php
-/**
- * @link https://www.humhub.org/
- * @copyright Copyright (c) 2017 HumHub GmbH & Co. KG
- * @license https://www.humhub.com/licences
- *
- */
 
 namespace humhub\modules\fcmPush;
 
 
+use humhub\modules\fcmPush\components\NotificationTargetProvider;
+use humhub\modules\fcmPush\models\ConfigureForm;
+use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
@@ -16,6 +13,13 @@ use yii\helpers\Url;
 
 class Events
 {
+
+    public static function onBeforeRequest($event)
+    {
+        if (ConfigureForm::getInstance()->isActive()) {
+            Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
+        }
+    }
 
     public static function onManifestControllerInit($event)
     {
@@ -158,7 +162,6 @@ JS;
               window.localStorage.setItem('sentToServer', sent ? 1 : 0);
             }
 JS;
-
         $view->registerJs($script);
 
     }
