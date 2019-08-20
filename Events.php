@@ -60,6 +60,10 @@ JS;
 
     public static function onLayoutaddonInit($event)
     {
+        if (Yii::$app->user->isGuest) {
+            return;
+        }
+
         $view = Yii::$app->view;
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');

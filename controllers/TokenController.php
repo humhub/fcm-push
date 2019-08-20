@@ -9,21 +9,17 @@ use Yii;
 
 class TokenController extends Controller
 {
-    /**
-     * @inheritdoc
-     */
-    public function getAccessRules()
-    {
-        return [
-            ['login']
-        ];
-    }
 
     public function actionUpdate()
     {
         $this->forcePostRequest();
 
-        $token = (string) Yii::$app->request->post('token');
+        if (Yii::$app->user->isGuest) {
+            Yii::$app->response->statusCode = 401;
+            return $this->asJson(['success' => false]);
+        }
+
+        $token = (string)Yii::$app->request->post('token');
 
         $fcmUser = FcmUser::findOne(['token' => $token]);
         if ($fcmUser !== null && $fcmUser->user_id !== Yii::$app->user->id) {
