@@ -66,7 +66,7 @@ class FcmApi extends Client
         ];
 
         $response = $this->post('send', $data)->send();
-        if (!$response->isOk) {
+        if (!$response->isOk || empty($response->data['success'])) {
             throw new \yii\base\Exception("Response is not ok!" . print_r($response->data, 1));
         }
 
