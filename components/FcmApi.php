@@ -8,6 +8,8 @@ use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\models\FcmUser;
 use humhub\modules\notification\components\BaseNotification;
 use humhub\modules\user\models\User;
+use humhub\modules\web\pwa\widgets\SiteIcon;
+use Yii;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\httpclient\Client;
@@ -49,8 +51,14 @@ class FcmApi extends Client
             "notification" => [
                 "title" => Html::encode(Yii::$app->name),
                 "body" => $baseNotification->text(),
-                "icon" => "alarm.png",
+                "icon" => SiteIcon::getUrl(180),
                 "click_action" => Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true)
+            ],
+            "data" => [
+                "title" => Html::encode(Yii::$app->name),
+                "body" => $baseNotification->text(),
+                "icon" => SiteIcon::getUrl(180),
+                "url" => Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true)
             ],
             "to" => $tokens[0]
         ];

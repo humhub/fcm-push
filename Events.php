@@ -52,10 +52,13 @@ class Events
             // Retrieve an instance of Firebase Data Messaging so that it can handle background messages.
             const messaging = firebase.messaging()
             messaging.setBackgroundMessageHandler(function(payload) {
-              const notificationTitle = 'Data Message Title';
+                  
+            console.log('Handling background message ', payload);
+
+              const notificationTitle = payload.data.title;
               const notificationOptions = {
-                body: 'Data Message body',
-                icon: 'alarm.png'
+                body: payload.data.body,
+                icon: payload.data.icon
               };
               
               return self.registration.showNotification(notificationTitle,
