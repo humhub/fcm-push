@@ -164,6 +164,7 @@ JS;
             }
             
             function isTokenSentToServer() {
+              return false;
               return window.localStorage.getItem('sentToServer') == 1;
             }
             
