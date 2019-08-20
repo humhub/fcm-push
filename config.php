@@ -7,7 +7,7 @@ use humhub\modules\fcmPush\Events;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use humhub\widgets\LayoutAddons;
-use yii\web\Application;
+use yii\base\Application;
 
 return [
     'id' => 'fcm-push',

@@ -8,6 +8,8 @@ use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\models\FcmUser;
 use humhub\modules\notification\components\BaseNotification;
 use humhub\modules\user\models\User;
+use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\httpclient\Client;
 
 
@@ -32,7 +34,7 @@ class FcmApi extends Client
     }
 
 
-    public function send(BaseNotification $notfication, User $user)
+    public function sendNotification(BaseNotification $baseNotification, User $user)
     {
         $tokens = [];
         foreach (FcmUser::findAll(['user_id' => $user->id]) as $fcmUser) {
@@ -45,10 +47,10 @@ class FcmApi extends Client
 
         $data = [
             "notification" => [
-                "title" => "New Article",
-                "body" => "Firebase Cloud Messaging for Web using JavaScript",
+                "title" => Html::encode(Yii::$app->name),
+                "body" => $baseNotification->text(),
                 "icon" => "alarm.png",
-                "click_action" => "http://abc.net/fcm-web-js"
+                "click_action" => Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true)
             ],
             "to" => $tokens[0]
         ];

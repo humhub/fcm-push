@@ -29,7 +29,7 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
     public function handle(BaseNotification $notification, User $user)
     {
         $api = new FcmApi();
-        return $api->send($notification, $user);
+        return $api->sendNotification($notification, $user);
     }
 
 
