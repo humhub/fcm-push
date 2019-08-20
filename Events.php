@@ -70,77 +70,81 @@ JS;
         $senderId = $configureForm->senderId;
 
         $script = <<<JS
-            firebase.initializeApp({messagingSenderId: "{$senderId}"});
-            
-            const messaging = firebase.messaging();
-            
-            function afterServiceWorkerRegistration(registration) {
-                messaging.useServiceWorker(registration);
-                    
-                // Request for permission
-                messaging.requestPermission().then(function() {
-                  console.log('Notification permission granted.');
 
-                  messaging.getToken().then(function(currentToken) {
-                    if (currentToken) {
-                      console.log('Token: ' + currentToken);
-                      sendTokenToServer(currentToken);
-                    } else {
-                      console.log('No Instance ID token available. Request permission to generate one.');
-                      setTokenSentToServer(false);
-                    }
-                  })
-                  .catch(function(err) {
-                    console.log('An error occurred while retrieving token. ', err);
+          if (!firebase.apps.length) {     
+                  
+                firebase.initializeApp({messagingSenderId: "{$senderId}"});
+                
+                const messaging = firebase.messaging();
+                
+                function afterServiceWorkerRegistration(registration) {
+                    messaging.useServiceWorker(registration);
+                        
+                    // Request for permission
+                    messaging.requestPermission().then(function() {
+                      console.log('Notification permission granted.');
+    
+                      messaging.getToken().then(function(currentToken) {
+                        if (currentToken) {
+                          console.log('Token: ' + currentToken);
+                          sendTokenToServer(currentToken);
+                        } else {
+                          console.log('No Instance ID token available. Request permission to generate one.');
+                          setTokenSentToServer(false);
+                        }
+                      })
+                      .catch(function(err) {
+                        console.log('An error occurred while retrieving token. ', err);
+                        setTokenSentToServer(false);
+                      });
+                    })
+                    .catch(function(err) {
+                      // e.g. Igonito Mode  
+                      //console.log('Unable to get permission to notify.', err);
+                    });
+                }
+                
+                // Handle incoming messages
+                messaging.onMessage(function(payload) {
+                  console.log("FCM Notification received: ", payload);
+                });
+                
+                // Callback fired if Instance ID token is updated.
+                messaging.onTokenRefresh(function() {
+                  messaging.getToken().then(function(refreshedToken) {
+                    console.log('Token refreshed.');
                     setTokenSentToServer(false);
+                    sendTokenToServer(refreshedToken);
+                  }).catch(function(err) {
+                    console.log('Unable to retrieve refreshed token ', err);
                   });
-                })
-                .catch(function(err) {
-                  // e.g. Igonito Mode  
-                  //console.log('Unable to get permission to notify.', err);
                 });
-            }
-            
-            // Handle incoming messages
-            messaging.onMessage(function(payload) {
-              console.log("FCM Notification received: ", payload);
-            });
-            
-            // Callback fired if Instance ID token is updated.
-            messaging.onTokenRefresh(function() {
-              messaging.getToken().then(function(refreshedToken) {
-                console.log('Token refreshed.');
-                setTokenSentToServer(false);
-                sendTokenToServer(refreshedToken);
-              }).catch(function(err) {
-                console.log('Unable to retrieve refreshed token ', err);
-              });
-            });
-            
-            // Send the Instance ID token your application server, so that it can:
-            // - send messages back to this app
-            // - subscribe/unsubscribe the token from topics
-            function sendTokenToServer(currentToken) {
-              if (!isTokenSentToServer()) {
-                console.log('Sending token to server...');
-                $.ajax({
-                  method: "POST",
-                  url: "{$tokenUpdateUrl}",
-                  data: { token: currentToken }
-                });
-                setTokenSentToServer(true);
-              } else {
-                console.log('Token already sent to server so won\'t send it again unless it changes');
-              }
-            }
-            
-            function isTokenSentToServer() {
-              return window.localStorage.getItem('FcmTokenSentToServer') == 1;
-            }
-            
-            function setTokenSentToServer(sent) {
-              window.localStorage.setItem('FcmTokenSentToServer', sent ? 1 : 0);
-            }
+                
+                // Send the Instance ID token your application server, so that it can:
+                // - send messages back to this app
+                // - subscribe/unsubscribe the token from topics
+                function sendTokenToServer(currentToken) {
+                  if (!isTokenSentToServer()) {
+                    console.log('Sending token to server...');
+                    $.ajax({
+                      method: "POST",
+                      url: "{$tokenUpdateUrl}",
+                      data: { token: currentToken }
+                    });
+                    setTokenSentToServer(true);
+                  } else {
+                    console.log('Token already sent to server so won\'t send it again unless it changes');
+                  }
+                }
+                
+                function isTokenSentToServer() {
+                  return window.localStorage.getItem('FcmTokenSentToServer') == 1;
+                }
+                
+                function setTokenSentToServer(sent) {
+                  window.localStorage.setItem('FcmTokenSentToServer', sent ? 1 : 0);
+                }
+        }
 JS;
         $view->registerJs($script);
 
