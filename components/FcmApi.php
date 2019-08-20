@@ -32,6 +32,8 @@ class FcmApi extends Client
     {
         $request = parent::createRequest();
         $request->addHeaders(['Authorization' => 'key=' . ConfigureForm::getInstance()->serverKey]);
+        $request->setFormat(Client::FORMAT_JSON);
+
         return $request;
     }
 
@@ -60,7 +62,7 @@ class FcmApi extends Client
                 "icon" => SiteIcon::getUrl(180),
                 "url" => Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true)
             ],
-            "to" => $tokens[0]
+            "registration_ids" => $tokens
         ];
 
         $response = $this->post('send', $data)->send();

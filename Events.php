@@ -124,8 +124,8 @@ JS;
             
             // Handle incoming messages
             messaging.onMessage(function(payload) {
-              console.log("Notification received: ", payload);
-              toastr["info"](payload.notification.body, payload.notification.title);
+              console.log("FCM Notification received: ", payload);
+              //toastr["info"](payload.data.body, payload.data.title);
             });
             
             // Callback fired if Instance ID token is updated.
