@@ -36,43 +36,31 @@ class Events
         $configureForm = ConfigureForm::getInstance();
         $senderId = $configureForm->senderId;
         
+        // Service Worker Addons
         $controller->additionalJs .= <<<JS
 
-
             // Give the service worker access to Firebase Messaging.
-            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js')
-            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js')
+            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
+            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
             
-            // Initialize the Firebase app in the service worker by passing in the messagingSenderId.
-            var config = {
-                messagingSenderId: "{$senderId}"
-            };
-            firebase.initializeApp(config);
+            firebase.initializeApp({messagingSenderId: "{$senderId}"});
             
-            // Retrieve an instance of Firebase Data Messaging so that it can handle background messages.
-            const messaging = firebase.messaging()
+            const messaging = firebase.messaging();
             messaging.setBackgroundMessageHandler(function(payload) {
-                  
-            console.log('Handling background message ', payload);
-
               const notificationTitle = payload.data.title;
               const notificationOptions = {
                 body: payload.data.body,
                 icon: payload.data.icon
               };
-              
-              return self.registration.showNotification(notificationTitle,
-                  notificationOptions);
+              return self.registration.showNotification(notificationTitle, notificationOptions);
             });
+
 JS;
     }
 
     public static function onLayoutaddonInit($event)
     {
-
         $view = Yii::$app->view;
-
-        $view->registerJsFile('https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
         $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
 
@@ -82,30 +70,20 @@ JS;
         $senderId = $configureForm->senderId;
 
         $script = <<<JS
-            // Initialize the Firebase app by passing in the messagingSenderId
-            var config = {
-              messagingSenderId: "{$senderId}"
-            };
-            firebase.initializeApp(config);
+            firebase.initializeApp({messagingSenderId: "{$senderId}"});
             
             const messaging = firebase.messaging();
-            
-            navigator.serviceWorker.addEventListener('install', event => {
-                console.log('skip waiting GOT EVEnt!!!!!!!!');
-            });
             
             function afterServiceWorkerRegistration(registration) {
                 messaging.useServiceWorker(registration);
                     
                 // Request for permission
-                messaging.requestPermission()
-                .then(function() {
+                messaging.requestPermission().then(function() {
                   console.log('Notification permission granted.');
-                  // TODO(developer): Retrieve an Instance ID token for use with FCM.
-                  messaging.getToken()
-                  .then(function(currentToken) {
+
+                  messaging.getToken().then(function(currentToken) {
                     if (currentToken) {
-                      console.log('Token: ' + currentToken)
+                      console.log('Token: ' + currentToken);
                       sendTokenToServer(currentToken);
                     } else {
                       console.log('No Instance ID token available. Request permission to generate one.');
@@ -118,28 +96,23 @@ JS;
                   });
                 })
                 .catch(function(err) {
-                  console.log('Unable to get permission to notify.', err);
+                  // e.g. Igonito Mode  
+                  //console.log('Unable to get permission to notify.', err);
                 });
             }
             
             // Handle incoming messages
             messaging.onMessage(function(payload) {
               console.log("FCM Notification received: ", payload);
-              //toastr["info"](payload.data.body, payload.data.title);
             });
             
             // Callback fired if Instance ID token is updated.
             messaging.onTokenRefresh(function() {
-              messaging.getToken()
-              .then(function(refreshedToken) {
+              messaging.getToken().then(function(refreshedToken) {
                 console.log('Token refreshed.');
-                // Indicate that the new Instance ID token has not yet been sent 
-                // to the app server.
                 setTokenSentToServer(false);
-                // Send Instance ID token to app server.
                 sendTokenToServer(refreshedToken);
-              })
-              .catch(function(err) {
+              }).catch(function(err) {
                 console.log('Unable to retrieve refreshed token ', err);
               });
             });
@@ -154,22 +127,19 @@ JS;
                   method: "POST",
                   url: "{$tokenUpdateUrl}",
                   data: { token: currentToken }
-                })
-                
+                });
                 setTokenSentToServer(true);
               } else {
-                console.log('Token already sent to server so won\'t send it again ' +
-                    'unless it changes');
+                console.log('Token already sent to server so won\'t send it again unless it changes');
               }
             }
             
             function isTokenSentToServer() {
-              return false;
-              return window.localStorage.getItem('sentToServer') == 1;
+              return window.localStorage.getItem('FcmTokenSentToServer') == 1;
             }
             
             function setTokenSentToServer(sent) {
-              window.localStorage.setItem('sentToServer', sent ? 1 : 0);
+              window.localStorage.setItem('FcmTokenSentToServer', sent ? 1 : 0);
             }
 JS;
         $view->registerJs($script);
