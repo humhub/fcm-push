@@ -1,7 +1,7 @@
 {
     "id": "fcm-push",
-    "name": "FireBase Messaging - Push Provider",
-    "description": "Mobile push notification integration.",
+    "name": "FireBase - Push Notifications",
+    "description": "Mobile push notifications using Google FireBase.",
     "keywords": [
         "push",
         "notifications",

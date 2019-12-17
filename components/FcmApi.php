@@ -18,7 +18,6 @@ use yii\httpclient\Client;
 /**
  * Class FcmApi
  *
- *
  * @see https://firebase.google.com/docs/reference/fcm/rest/v1/projects.messages
  * @package humhub\modules\fcmPush\components
  */
