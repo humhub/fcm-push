@@ -4,7 +4,6 @@ namespace humhub\modules\fcmPush\models;
 
 use humhub\modules\user\models\User;
 use yii\db\ActiveRecord;
-use yii\db\Expression;
 
 /**
  * Class FcmUser
@@ -45,9 +44,9 @@ class FcmUser extends ActiveRecord
     public function beforeSave($insert)
     {
         if ($insert) {
-            $this->created_at = new Expression('NOW()');
+            $this->created_at = date('Y-m-d G:i:s');
         } else {
-            $this->updated_at = new Expression('NOW()');
+            $this->updated_at = date('Y-m-d G:i:s');
         }
 
         return parent::beforeSave($insert);

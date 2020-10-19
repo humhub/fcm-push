@@ -16,7 +16,7 @@ class m190819_210853_initial extends Migration
             'id' => $this->primaryKey(),
             'token' => $this->string(255),
             'user_id' => $this->integer()->notNull(),
-            'created_at' => $this->dateTime()->defaultValue(new \yii\db\Expression('NOW()')),
+            'created_at' => $this->dateTime()->defaultValue(date('Y-m-d G:i:s')),
             'updated_at' => $this->dateTime()
         ]);
 
