@@ -7,6 +7,7 @@
         "notifications",
         "firebase"
     ],
+    "homepage": "https://github.com/humhub-contrib/fcm-push",
     "humhub": {
         "minVersion": "1.5"
     },
