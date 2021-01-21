@@ -34,8 +34,12 @@ class Events
         $controller = $event->sender;
 
         $configureForm = ConfigureForm::getInstance();
+        if (!$configureForm->validate()) {
+            return;
+        }
+
         $senderId = $configureForm->senderId;
-        
+
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
 
@@ -71,6 +75,10 @@ JS;
         $tokenUpdateUrl = Url::to(['/fcm-push/token/update']);
 
         $configureForm = ConfigureForm::getInstance();
+
+        if(!$configureForm->validate()) {
+            return;
+        }
         $senderId = $configureForm->senderId;
 
         $script = <<<JS
