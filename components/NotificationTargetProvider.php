@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\components;
 
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\models\FcmUser;
+use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\FireBaseMessagingService;
 use Yii;
 use yii\base\Component;
@@ -29,7 +30,10 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
      */
     public function handle(BaseNotification $notification, User $user)
     {
-        return (new FireBaseMessagingService())->processNotification($notification, $user);
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        return (new FireBaseMessagingService($module->getConfigureForm()))->processNotification($notification, $user);
     }
 
 
