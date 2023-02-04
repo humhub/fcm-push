@@ -13,8 +13,8 @@ humhub.module('firebase', function (module, require, $) {
             // Callback fired if Instance ID token is updated.
             this.messaging.onTokenRefresh(function () {
                 this.messaging.getToken().then(function (refreshedToken) {
-                    setTokenSentToServer('');
-                    sendTokenToServer(refreshedToken);
+                    this.setTokenSentToServer('');
+                    this.sendTokenToServer(refreshedToken);
                 }).catch(function (err) {
                     console.log('Unable to retrieve refreshed token ', err);
                 });
@@ -24,28 +24,31 @@ humhub.module('firebase', function (module, require, $) {
 
     var afterServiceWorkerRegistration = function (registration) {
         //console.log("After Service Worker Registration");
+        //console.log(registration);
+
+        var that = this;
 
         this.messaging.useServiceWorker(registration);
 
         // Request for permission
         this.messaging.requestPermission().then(function () {
-            console.log('Notification permission granted.');
+            //console.log('Notification permission granted.');
 
-            this.messaging.getToken().then(function (currentToken) {
+            that.messaging.getToken().then(function (currentToken) {
                 if (currentToken) {
-                    console.log('Token: ' + currentToken);
-                    sendTokenToServer(currentToken);
+                    //console.log('Token: ' + currentToken);
+                    that.sendTokenToServer(currentToken);
                 } else {
                     console.log('No Instance ID token available. Request permission to generate one.');
-                    setTokenSentToServer('');
+                    that.setTokenSentToServer('');
                 }
             }).catch(function (err) {
                 console.log('An error occurred while retrieving token. ', err);
-                setTokenSentToServer('');
+                that.setTokenSentToServer('');
             });
         }).catch(function (err) {
             // e.g. Igonito Mode
-            //console.log('Unable to get permission to notify.', err);
+            console.log('Unable to get permission to notify.', err);
         });
     };
 
@@ -53,14 +56,15 @@ humhub.module('firebase', function (module, require, $) {
     // - send messages back to this app
     // - subscribe/unsubscribe the token from topics
     var sendTokenToServer = function (token) {
-        if (!isTokenSentToServer(token)) {
+        var that = this;
+        if (!this.isTokenSentToServer(token)) {
             console.log('Sending token to server...');
             $.ajax({
                 method: "POST",
                 url: module.config.tokenUpdateUrl,
                 data: {token: token},
                 success: function (data) {
-                    setTokenSentToServer(token);
+                    that.setTokenSentToServer(token);
                 }
             });
         } else {
@@ -78,6 +82,9 @@ humhub.module('firebase', function (module, require, $) {
 
     module.export({
         init: init,
+        isTokenSentToServer: isTokenSentToServer,
+        setTokenSentToServer: setTokenSentToServer,
+        sendTokenToServer: sendTokenToServer,
         afterServiceWorkerRegistration: afterServiceWorkerRegistration,
 
     });
