@@ -6,7 +6,6 @@ namespace humhub\modules\fcmPush;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
-use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -20,7 +19,7 @@ class Events
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (!$module->getConfigureForm()->isActive()) {
+        if ($module->getConfigureForm()->isActive()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
         }
     }
