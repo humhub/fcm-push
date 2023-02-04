@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush;
 
 
+use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\targets\MobileTargetProvider;
@@ -40,14 +41,18 @@ class Events
 
         $senderId = $configureForm->senderId;
 
+        $bundle = FirebaseAsset::register(Yii::$app->view);
+
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
-
             // Give the service worker access to Firebase Messaging.
-            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
-            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
-            
-            firebase.initializeApp({messagingSenderId: "{$senderId}"});
+            importScripts('{$bundle->baseUrl}/firebase-app.js');
+            importScripts('{$bundle->baseUrl}/firebase-messaging.js');
+
+//            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
+//            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
+        
+        //    firebase.initializeApp({messagingSenderId: "{$senderId}"});
             
             const messaging = firebase.messaging();
             messaging.setBackgroundMessageHandler(function(payload) {
@@ -58,7 +63,6 @@ class Events
               };
               return self.registration.showNotification(notificationTitle, notificationOptions);
             });
-
 JS;
     }
 
@@ -68,21 +72,18 @@ JS;
             return;
         }
 
-        $view = Yii::$app->view;
-        $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
-        $view->registerJsFile('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
+        FirebaseAsset::register(Yii::$app->view);
 
         $tokenUpdateUrl = Url::to(['/fcm-push/token/update']);
 
         $configureForm = ConfigureForm::getInstance();
 
-        if(!$configureForm->validate()) {
+        if (!$configureForm->validate()) {
             return;
         }
         $senderId = $configureForm->senderId;
 
         $script = <<<JS
-            
             if (!firebase.apps.length) {     
                 firebase.initializeApp({messagingSenderId: "{$senderId}"});
                 const messaging = firebase.messaging();
@@ -156,7 +157,7 @@ JS;
                 window.localStorage.setItem('sentFcmToken', token);
             }
 JS;
-        $view->registerJs($script);
+        Yii::$app->view->registerJs($script);
 
     }
 

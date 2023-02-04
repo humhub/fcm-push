@@ -20,5 +20,8 @@ return [
         [LayoutAddons::class, LayoutAddons::EVENT_INIT, [Events::class, 'onLayoutaddonInit']],
         [Application::class, Application::EVENT_BEFORE_REQUEST, [Events::class, 'onBeforeRequest']],
     ],
+    'consoleControllerMap' => [
+        'firebase' => 'humhub\modules\fcmPush\commands\SendController'
+    ],
 ];
 ?>

@@ -1,5 +1,6 @@
 <?php
 /* @var $this \humhub\modules\ui\view\components\View */
+/* @var $model \humhub\modules\fcmPush\models\ConfigureForm */
 
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
@@ -11,8 +12,7 @@ use yii\helpers\Html;
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
 
         <?= $form->field($model, 'senderId'); ?>
-        <?= $form->field($model, 'serverKey'); ?>
-        <?= $form->field($model, 'projectId'); ?>
+        <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
 
         <br/>
 

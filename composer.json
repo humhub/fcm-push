@@ -1,0 +1,39 @@
+{
+  "name": "humhub/fcm-push",
+  "description": "HumHub Firebase Module",
+  "type": "library",
+  "require": {
+    "kreait/firebase-php": "^6.0",
+    "npm-asset/firebase": "6.3.3"
+  },
+  "replace": {
+    "npm-asset/firebase--app": "*",
+    "npm-asset/firebase--app-types": "*",
+    "npm-asset/firebase--auth": "*",
+    "npm-asset/firebase--database": "*",
+    "npm-asset/firebase--firestore": "*",
+    "npm-asset/firebase--functions": "*",
+    "npm-asset/firebase--installations": "*",
+    "npm-asset/firebase--messaging": "*",
+    "npm-asset/firebase--polyfill": "*",
+    "npm-asset/firebase--storage": "*",
+    "npm-asset/firebase--performance": "*",
+    "npm-asset/firebase--util": "*"
+  },
+
+
+
+  "config": {
+    "process-timeout": 1800,
+    "platform": {
+      "php": "7.4"
+    }
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "minimum-stability": "dev"
+}

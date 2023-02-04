@@ -5,15 +5,14 @@ namespace humhub\modules\fcmPush\models;
 use humhub\modules\fcmPush\Module;
 use Yii;
 use yii\base\Model;
+use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
 
     public $senderId;
 
-    public $serverKey;
-
-    public $projectId;
+    public $json;
 
     /**
      * @inheritdoc
@@ -21,7 +20,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['senderId', 'serverKey', 'projectId'], 'required'],
+            [['senderId', 'json'], 'required'],
         ];
     }
 
@@ -32,8 +31,7 @@ class ConfigureForm extends Model
     {
         return [
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
-            'serverKey' => Yii::t('FcmPushModule.base', 'Server Key'),
-            'projectId' => Yii::t('FcmPushModule.base', 'Project ID'),
+            'json' => Yii::t('FcmPushModule.base', 'JSON'),
         ];
     }
 
@@ -45,8 +43,7 @@ class ConfigureForm extends Model
         $settings = $module->settings;
 
         $this->senderId = $settings->get('senderId');
-        $this->serverKey = $settings->get('serverKey');
-        $this->projectId = $settings->get('projectId');
+        $this->json = $settings->get('json');
 
         return true;
     }
@@ -57,18 +54,22 @@ class ConfigureForm extends Model
         $module = Yii::$app->getModule('fcm-push');
 
         $module->settings->set('senderId', $this->senderId);
-        $module->settings->set('serverKey', $this->serverKey);
-        $module->settings->set('projectId', $this->projectId);
+        $module->settings->set('json', $this->json);
 
         return true;
     }
 
+    public function getJsonAsArray()
+    {
+        return Json::decode($this->json);
+    }
+
     public function isActive()
     {
-        if (empty($this->senderId) || empty($this->serverKey) || empty($this->projectId)) {
+        if (empty($this->senderId) || empty($this->json)) {
             return false;
         }
-        
+
         return true;
     }
 
