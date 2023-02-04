@@ -57,7 +57,7 @@ class FireBaseMessagingService
 
         $tokens = (new TokenService())->getTokensForUser($user);
         try {
-            $sendReport = $this->messaging->sendMulticast($message, $tokens);
+            $report = $this->messaging->sendMulticast($message, $tokens);
         } catch (MessagingException $e) {
             Yii::warning("Messaging Exception: " . print_r($e, 1), 'fcm-push');
             return false;
@@ -65,6 +65,29 @@ class FireBaseMessagingService
             Yii::warning("Firebase Exception: " . print_r($e, 1), 'fcm-push');
             return false;
         }
+
+        Yii::warning('Send: ' . $report->successes()->count(), 'fcm-push');
+
+        if ($report->hasFailures()) {
+            foreach ($report->failures()->getItems() as $failure) {
+                Yii::warning('Error Send: ' . $failure->error()->getMessage(), 'fcm-push');
+            }
+        }
+
+        /*
+        // The following methods return arrays with registration token strings
+        $successfulTargets = $report->validTokens(); // string[]
+
+        // Unknown tokens are tokens that are valid but not know to the currently
+        // used Firebase project. This can, for example, happen when you are
+        // sending from a project on a staging environment to tokens in a
+        // production environment
+        $unknownTargets = $report->unknownTokens(); // string[]
+
+        // Invalid (=malformed) tokens
+        $invalidTargets = $report->invalidTokens(); // string[]
+
         Yii::warning('Success: SendReport: ' . print_r($sendReport, 1), 'fcm-push');
+        */
     }
 }
