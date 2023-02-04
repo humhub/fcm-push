@@ -52,7 +52,7 @@ class FireBaseMessagingService
         }
 
         $message = CloudMessage::new()
-            ->withNotification(Notification::create('Title', 'Body'))
+            ->withNotification(Notification::create($title, $body))
             ->withWebPushConfig(['fcm_options' => ['link' => $url]]);
 
         $tokens = (new TokenService())->getTokensForUser($user);
@@ -66,11 +66,12 @@ class FireBaseMessagingService
             return false;
         }
 
-        Yii::warning('Send: ' . $report->successes()->count(), 'fcm-push');
+        //Yii::warning('Send: ' . $report->successes()->count(), 'fcm-push');
 
         if ($report->hasFailures()) {
             foreach ($report->failures()->getItems() as $failure) {
-                Yii::warning('Error Send: ' . $failure->error()->getMessage(), 'fcm-push');
+                // TODO: Delete Token?
+                //Yii::warning('Error Send: ' . $failure->error()->getMessage(), 'fcm-push');
             }
         }
 
