@@ -6,6 +6,7 @@
 - Enh: Switched to new Google Firebase API
 - Enh: Added CLI Test Command
 - Enh: Bundle JS File instead of use Google CDN
+- Enh: Migrated Javascript code into HumHub module logic
 
 
 1.0.1  (January 21, 2021)

@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush;
 
 
+use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\models\ConfigureForm;
@@ -10,14 +11,16 @@ use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
-use yii\helpers\Url;
 
 class Events
 {
 
     public static function onBeforeRequest($event)
     {
-        if (ConfigureForm::getInstance()->isActive()) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        if (!$module->getConfigureForm()->isActive()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
         }
     }
@@ -34,12 +37,12 @@ class Events
         /** @var ServiceWorkerController $controller */
         $controller = $event->sender;
 
-        $configureForm = ConfigureForm::getInstance();
-        if (!$configureForm->validate()) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        if (!$module->getConfigureForm()->isActive()) {
             return;
         }
-
-        $senderId = $configureForm->senderId;
 
         $bundle = FirebaseAsset::register(Yii::$app->view);
 
@@ -48,11 +51,10 @@ class Events
             // Give the service worker access to Firebase Messaging.
             importScripts('{$bundle->baseUrl}/firebase-app.js');
             importScripts('{$bundle->baseUrl}/firebase-messaging.js');
-
-//            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
-//            importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
+            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
+            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
         
-        //    firebase.initializeApp({messagingSenderId: "{$senderId}"});
+           firebase.initializeApp({messagingSenderId: "{$module->getConfigureForm()->senderId}"});
             
             const messaging = firebase.messaging();
             messaging.setBackgroundMessageHandler(function(payload) {
@@ -72,93 +74,15 @@ JS;
             return;
         }
 
-        FirebaseAsset::register(Yii::$app->view);
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
 
-        $tokenUpdateUrl = Url::to(['/fcm-push/token/update']);
-
-        $configureForm = ConfigureForm::getInstance();
-
-        if (!$configureForm->validate()) {
+        if (!$module->getConfigureForm()->isActive()) {
             return;
         }
-        $senderId = $configureForm->senderId;
 
-        $script = <<<JS
-            if (!firebase.apps.length) {     
-                firebase.initializeApp({messagingSenderId: "{$senderId}"});
-                const messaging = firebase.messaging();
-                
-                messaging.onMessage(function(payload) {
-                  console.log("FCM Notification received: ", payload);
-                });
-                
-                // Callback fired if Instance ID token is updated.
-                messaging.onTokenRefresh(function() {
-                  messaging.getToken().then(function(refreshedToken) {
-                    setTokenSentToServer('');
-                    sendTokenToServer(refreshedToken);
-                  }).catch(function(err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                  });
-                });
-                
-                function afterServiceWorkerRegistration(registration) {
-                    messaging.useServiceWorker(registration);
-                        
-                    // Request for permission
-                    messaging.requestPermission().then(function() {
-                      console.log('Notification permission granted.');
-                    
-                      messaging.getToken().then(function(currentToken) {
-                        if (currentToken) {
-                          console.log('Token: ' + currentToken);
-                          sendTokenToServer(currentToken);
-                        } else {
-                          console.log('No Instance ID token available. Request permission to generate one.');
-                          setTokenSentToServer('');
-                        }
-                      })
-                      .catch(function(err) {
-                        console.log('An error occurred while retrieving token. ', err);
-                        setTokenSentToServer('');
-                      });
-                    })
-                    .catch(function(err) {
-                      // e.g. Igonito Mode  
-                      //console.log('Unable to get permission to notify.', err);
-                    });
-                }                
-            }
-                
-            // Send the Instance ID token your application server, so that it can:
-            // - send messages back to this app
-            // - subscribe/unsubscribe the token from topics
-            function sendTokenToServer(currentToken) {
-                  if (!isTokenSentToServer(currentToken)) {
-                    console.log('Sending token to server...');
-                    $.ajax({
-                      method: "POST",
-                      url: "{$tokenUpdateUrl}",
-                      data: { token: currentToken },
-                      success: function(data) {
-                        setTokenSentToServer(currentToken);
-                      }           
-                    });
-                  } else {
-                    console.log('Token already sent to server so won\'t send it again unless it changes');
-                  }
-            }
-        
-            function isTokenSentToServer(token) {
-                return (window.localStorage.getItem('sentFcmToken') == token);
-            }
-        
-            function setTokenSentToServer(token) {
-                window.localStorage.setItem('sentFcmToken', token);
-            }
-JS;
-        Yii::$app->view->registerJs($script);
-
+        FcmPushAsset::register(Yii::$app->view);
+        FirebaseAsset::register(Yii::$app->view);
     }
 
 }
