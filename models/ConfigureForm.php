@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\models;
 
 use humhub\modules\fcmPush\Module;
 use Yii;
+use yii\base\InvalidArgumentException;
 use yii\base\Model;
 use yii\helpers\Json;
 
@@ -21,6 +22,23 @@ class ConfigureForm extends Model
     {
         return [
             [['senderId', 'json'], 'required'],
+            ['json', function ($attribute, $params, $validator) {
+                try {
+                    $data = Json::decode($this->$attribute);
+                } catch (InvalidArgumentException $ex) {
+                    $this->addError($attribute, 'Invalid JSON input.');
+                    return;
+                }
+                if (empty($data)) {
+                    $this->addError($attribute, 'Empty JSON input.');
+                    return;
+                }
+                if (!isset($data['project_id'])) {
+                    $this->addError($attribute, 'JSON contain no project id.');
+                    return;
+                }
+            }],
+
         ];
     }
 
