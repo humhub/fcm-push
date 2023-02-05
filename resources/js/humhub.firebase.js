@@ -39,16 +39,15 @@ humhub.module('firebase', function (module, require, $) {
                     //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);
                 } else {
-                    console.log('No Instance ID token available. Request permission to generate one.');
+                    module.log.info('No Instance ID token available. Request permission to generate one.');
                     that.deleteTokenLocalStore();
                 }
             }).catch(function (err) {
-                console.log('An error occurred while retrieving token. ', err);
+                module.log.error('An error occurred while retrieving token. ', err);
                 that.deleteTokenLocalStore();
             });
         }).catch(function (err) {
-            // e.g. Igonito Mode
-            console.log('Unable to get permission to notify.', err);
+            module.log.info('Could not get Push Notification permission!', err);
         });
     };
 
