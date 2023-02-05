@@ -3,17 +3,17 @@ humhub.module('firebase', function (module, require, $) {
 
     var init = function () {
         if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: module.config.senderId});
+            firebase.initializeApp({messagingSenderId: this.senderId()});
             this.messaging = firebase.messaging();
 
             this.messaging.onMessage(function (payload) {
-                console.log("FCM Notification received: ", payload);
+                module.log.info("Received FCM Push Notification", payload);
             });
 
             // Callback fired if Instance ID token is updated.
             this.messaging.onTokenRefresh(function () {
                 this.messaging.getToken().then(function (refreshedToken) {
-                    this.setTokenSentToServer('');
+                    this.deleteTokenLocalStore();
                     this.sendTokenToServer(refreshedToken);
                 }).catch(function (err) {
                     console.log('Unable to retrieve refreshed token ', err);
@@ -40,11 +40,11 @@ humhub.module('firebase', function (module, require, $) {
                     that.sendTokenToServer(currentToken);
                 } else {
                     console.log('No Instance ID token available. Request permission to generate one.');
-                    that.setTokenSentToServer('');
+                    that.deleteTokenLocalStore();
                 }
             }).catch(function (err) {
                 console.log('An error occurred while retrieving token. ', err);
-                that.setTokenSentToServer('');
+                that.deleteTokenLocalStore();
             });
         }).catch(function (err) {
             // e.g. Igonito Mode
@@ -56,37 +56,77 @@ humhub.module('firebase', function (module, require, $) {
     // - send messages back to this app
     // - subscribe/unsubscribe the token from topics
     var sendTokenToServer = function (token) {
-        var that = this;
-        if (!this.isTokenSentToServer(token)) {
-            console.log('Sending token to server...');
+        const that = this;
+        if (!that.isTokenSentToServer(token)) {
+            module.log.info("Send FCM Push Token to Server");
             $.ajax({
                 method: "POST",
-                url: module.config.tokenUpdateUrl,
+                url: that.tokenUpdateUrl(),
                 data: {token: token},
                 success: function (data) {
-                    that.setTokenSentToServer(token);
+                    that.setTokenLocalStore(token);
                 }
             });
         } else {
-            console.log('Token already sent to server so won\'t send it again unless it changes');
+            //console.log('Token already sent to server so won\'t send it again unless it changes');
         }
     };
 
-    var setTokenSentToServer = function (token) {
-        window.localStorage.setItem('sentFcmToken', token);
+    var isTokenSentToServer = function (token) {
+        return (this.getTokenLocalStore() === token);
     };
 
-    var isTokenSentToServer = function (token) {
-        return (window.localStorage.getItem('sentFcmToken') === token);
+    var deleteTokenLocalStore = function () {
+        window.localStorage.removeItem('fcmPushToken_' + this.senderId())
+    };
+
+    var setTokenLocalStore = function (token) {
+        const item = {
+            value: token,
+            expiry: (Date.now() / 1000) + (24 * 60 * 60),
+        };
+        window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item))
+    };
+
+    var getTokenLocalStore = function () {
+        const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
+
+        // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null
+        }
+        const item = JSON.parse(itemStr)
+        const now = (Date.now() / 1000)
+        if (now > item.expiry) {
+            this.deleteTokenLocalStore();
+            return null;
+        }
+        return item.value;
+    };
+
+    var tokenUpdateUrl = function () {
+        return module.config.tokenUpdateUrl;
+    };
+
+    var senderId = function () {
+        return module.config.senderId;
     };
 
     module.export({
         init: init,
+
         isTokenSentToServer: isTokenSentToServer,
-        setTokenSentToServer: setTokenSentToServer,
         sendTokenToServer: sendTokenToServer,
         afterServiceWorkerRegistration: afterServiceWorkerRegistration,
 
+        // Config Vars
+        senderId: senderId,
+        tokenUpdateUrl: tokenUpdateUrl,
+
+        // LocalStore Helper
+        setTokenLocalStore: setTokenLocalStore,
+        getTokenLocalStore: getTokenLocalStore,
+        deleteTokenLocalStore: deleteTokenLocalStore,
     });
 });
 

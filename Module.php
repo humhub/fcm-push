@@ -14,6 +14,7 @@ class Module extends \humhub\components\Module
      * @inheritdoc
      */
     public $resourcesPath = 'resources';
+    public string $humhubProxySenderId = '21392898126';
 
     private ?ConfigureForm $configForm = null;
 
@@ -36,12 +37,7 @@ class Module extends \humhub\components\Module
 
     public static function registerAutoloader()
     {
-#        if (class_exists('\Sabre\VObject\Component\VCalendar')) {
-#            return;
-#        }
-
         require Yii::getAlias('@fcm-push/vendor/autoload.php');
-
     }
 
 }

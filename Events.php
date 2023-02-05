@@ -6,6 +6,7 @@ namespace humhub\modules\fcmPush;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
+use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -45,6 +46,8 @@ class Events
 
         $bundle = FirebaseAsset::register(Yii::$app->view);
 
+        $pushDriver = (new DriverService($module->getConfigureForm()))->getWebDriver();
+
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
             // Give the service worker access to Firebase Messaging.
@@ -53,7 +56,7 @@ class Events
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
         
-           firebase.initializeApp({messagingSenderId: "{$module->getConfigureForm()->senderId}"});
+           firebase.initializeApp({messagingSenderId: "{$pushDriver->getSenderId()}"});
             
             const messaging = firebase.messaging();
             messaging.setBackgroundMessageHandler(function(payload) {

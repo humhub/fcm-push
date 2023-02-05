@@ -1,7 +1,7 @@
 {
     "id": "fcm-push",
-    "name": "FireBase - Push Notifications",
-    "description": "Mobile push notifications using Google FireBase.",
+    "name": "Push Notifications (Firebase)",
+    "description": "Push notifications (Web & Mobile) using Google Firebase.",
     "keywords": [
         "push",
         "notifications",
