@@ -19,7 +19,7 @@ class MessagingService
 
     public function __construct(ConfigureForm $config)
     {
-        $this->drivers = (new DriverService($config))->getDrivers();
+        $this->drivers = (new DriverService($config))->getConfiguredDrivers();
     }
 
     public function processNotification(BaseNotification $baseNotification, User $user): void

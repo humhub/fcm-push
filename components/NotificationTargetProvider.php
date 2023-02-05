@@ -33,7 +33,10 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        return (new MessagingService($module->getConfigureForm()))->processNotification($notification, $user);
+        (new MessagingService($module->getConfigureForm()))
+            ->processNotification($notification, $user);
+
+        return true;
     }
 
 
@@ -42,7 +45,10 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
      */
     public function isActive(User $user = null)
     {
-        if (!ConfigureForm::getInstance()->isActive()) {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        if (!$module->getDriverService()->hasConfiguredDriver()) {
             return false;
         }
 

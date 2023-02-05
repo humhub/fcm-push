@@ -14,13 +14,12 @@ use Yii;
 
 class Events
 {
-
     public static function onBeforeRequest($event)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if ($module->getConfigureForm()->isActive()) {
+        if ($module->getDriverService()->hasConfiguredDriver()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
         }
     }

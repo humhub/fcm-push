@@ -12,9 +12,32 @@ class DriverService
 {
     private ConfigureForm $config;
 
+    private array $configuredDrivers;
+
     public function __construct(ConfigureForm $config)
     {
         $this->config = $config;
+        $this->initDrivers();
+    }
+
+    private function initDrivers()
+    {
+        $this->configuredDrivers = [];
+
+        $proxy = new Proxy($this->config);
+        if ($proxy->isConfigured()) {
+            $this->configuredDrivers[] = $proxy;
+        }
+
+        $fcm = new Fcm($this->config);
+        if ($fcm->isConfigured()) {
+            $this->configuredDrivers[] = $fcm;
+        } else {
+            $fcmLegacy = new FcmLegacy($this->config);
+            if ($fcmLegacy->isConfigured()) {
+                $this->configuredDrivers[] = $fcmLegacy;
+            }
+        }
     }
 
 
@@ -26,47 +49,33 @@ class DriverService
      *
      * @return DriverInterface[]
      */
-    public function getDrivers(): array
+    public function getConfiguredDrivers(): array
     {
-        $drivers = [];
-
-        $proxy = new Proxy($this->config);
-        if ($proxy->isConfigured()) {
-            $drivers[] = $proxy;
-        }
-
-        $fcm = new Fcm($this->config);
-        if ($fcm->isConfigured()) {
-            $drivers[] = $fcm;
-        } else {
-            $fcmLegacy = new FcmLegacy($this->config);
-            if ($fcmLegacy->isConfigured()) {
-                $drivers[] = $fcmLegacy;
-            }
-        }
-
-        return $drivers;
+        return $this->configuredDrivers;
     }
 
     public function getWebDriver(): ?DriverInterface
     {
-        $drivers = $this->getDrivers();
-
         // If Fcm driver is available use it
-        foreach ($drivers as $driver) {
+        foreach ($this->configuredDrivers as $driver) {
             if ($driver instanceof Fcm || $driver instanceof FcmLegacy) {
                 return $driver;
             }
         }
 
         // Fallback to Proxy driver
-        foreach ($drivers as $driver) {
+        foreach ($this->configuredDrivers as $driver) {
             if ($driver instanceof Proxy) {
                 return $driver;
             }
         }
 
         return null;
+    }
+
+    public function hasConfiguredDriver(): bool
+    {
+        return (!empty($this->configuredDrivers));
     }
 
 }
