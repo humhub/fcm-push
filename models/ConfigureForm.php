@@ -10,6 +10,7 @@ use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
+    public $humhubInstallId;
 
     public $senderId;
 
@@ -56,6 +57,7 @@ class ConfigureForm extends Model
     public function attributeLabels()
     {
         return [
+            'humhubInstallId' => Yii::t('FcmPushModule.base', 'Install ID'),
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
@@ -66,6 +68,7 @@ class ConfigureForm extends Model
     public function attributeHints()
     {
         return [
+            'humhubInstallId' => 'Use this ID to register your API Key.',
             'serverKey' => 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained. ',
             'json' => 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'
         ];
@@ -78,6 +81,10 @@ class ConfigureForm extends Model
 
         $settings = $module->settings;
 
+        /** @var \humhub\modules\admin\Module $adminModule */
+        $adminModule = Yii::$app->getModule('admin');
+
+        $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
         $this->json = $settings->get('json');
         $this->serverKey = $settings->get('serverKey');
@@ -103,16 +110,6 @@ class ConfigureForm extends Model
     {
         return Json::decode($this->json);
     }
-
-    public function isActive()
-    {
-        if (empty($this->senderId) || empty($this->json)) {
-            return false;
-        }
-
-        return true;
-    }
-
 
     public static function getInstance()
     {

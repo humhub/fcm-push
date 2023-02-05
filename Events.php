@@ -39,7 +39,7 @@ class Events
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (!$module->getConfigureForm()->isActive()) {
+        if (!$module->getDriverService()->hasConfiguredDriver()) {
             return;
         }
 
@@ -78,7 +78,7 @@ JS;
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (!$module->getConfigureForm()->isActive()) {
+        if (!$module->getDriverService()->hasConfiguredDriver()) {
             return;
         }
 
