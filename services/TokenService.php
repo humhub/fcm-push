@@ -36,6 +36,7 @@ class TokenService
             $fcmUser = new FcmUser();
             $fcmUser->user_id = $user->id;
             $fcmUser->token = $token;
+            $fcmUser->sender_id = $driver->getSenderId();
         }
 
         return $fcmUser->save();

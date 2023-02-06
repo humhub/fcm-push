@@ -8,4 +8,4 @@
 - DocPage for Create own Firebase
 - Check translations (Config Page)
 - Add Check for enabled URL Rewriting
-- 
+- Validate HumHub Api Key

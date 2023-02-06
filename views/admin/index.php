@@ -12,7 +12,7 @@ use yii\helpers\Html;
     <div class="panel-body">
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
 
-        <h3>Push Service</h3>
+        <h3>Push Service (Beta)</h3>
         <p>
             For HumHub mobile app users or (for Web/PWA users) when no own Firebase account is provided,
             push notifications can be sent via the HumHub push service via Firebase. If you want to use this service,
