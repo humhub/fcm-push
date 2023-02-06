@@ -37,6 +37,9 @@ class MessagingService
     {
         foreach ($this->drivers as $driver) {
             $tokens = (new TokenService())->getTokensForUser($user, $driver);
+            if (empty($tokens)) {
+                continue;
+            }
             $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl);
         }
 
