@@ -53,9 +53,9 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
         }
 
         // Check if user has at least one token
-        if ($user !== null && FcmUser::find()->where(['user_id' => $user->id])->count() === 0) {
-            return false;
-        }
+        #if ($user !== null && FcmUser::find()->where(['user_id' => $user->id])->count() === 0) {
+        #    return false;
+        #}
 
         return true;
     }

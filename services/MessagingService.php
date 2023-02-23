@@ -42,7 +42,6 @@ class MessagingService
             }
             $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl);
         }
-
     }
 
 }
