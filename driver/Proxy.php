@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\driver;
 
 use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\Module;
+use humhub\modules\notification\models\Notification;
 use Yii;
 use yii\httpclient\Client;
 use humhub\modules\fcmPush\models\ConfigureForm;
@@ -34,7 +35,8 @@ class Proxy extends Client implements DriverInterface
             'title' => $title,
             'body' => $body,
             'iconUrl' => $imageUrl,
-            'url' => $url
+            'url' => $url,
+            'notificationCount' => Notification::findUnseen()->count()
         ];
 
         $response = $this->post('/push', $data)->send();
