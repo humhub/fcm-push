@@ -28,7 +28,7 @@ class Proxy extends Client implements DriverInterface
         return $request;
     }
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl): SendReport
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
         $data = [
             'tokens' => $tokens,
@@ -36,7 +36,7 @@ class Proxy extends Client implements DriverInterface
             'body' => $body,
             'iconUrl' => $imageUrl,
             'url' => $url,
-            'notificationCount' => Notification::findUnseen()->count()
+            'notificationCount' => $notificationCount
         ];
 
         $response = $this->post('/push', $data)->send();

@@ -24,7 +24,7 @@ class Fcm implements DriverInterface
         $this->config = $config;
     }
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl): SendReport
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
         if ($this->messaging === null) {
             Module::registerAutoloader();
@@ -36,7 +36,7 @@ class Fcm implements DriverInterface
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body))
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
-            ->withData(['url' => $url, 'notificationCount' => NotificationHumHub::findUnseen()->count()]);
+            ->withData(['url' => $url, 'notificationCount' => $notificationCount]);
 
         try {
             $report = $this->messaging->sendMulticast($message, $tokens);

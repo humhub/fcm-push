@@ -10,7 +10,7 @@ interface DriverInterface
 {
     public function __construct(ConfigureForm $config);
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl): SendReport;
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport;
 
     public function getSenderId(): string;
 

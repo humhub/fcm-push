@@ -27,7 +27,7 @@ class FcmLegacy extends Client implements DriverInterface
         return $request;
     }
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl): SendReport
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
         $data = [
             "notification" => [
