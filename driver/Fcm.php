@@ -36,7 +36,7 @@ class Fcm implements DriverInterface
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body))
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
-            ->withData(['url' => $url, 'notificationCount' => $notificationCount]);
+            ->withData(['url' => $url, 'notification_count' => $notificationCount]);
 
         try {
             $report = $this->messaging->sendMulticast($message, $tokens);
