@@ -1,5 +1,5 @@
-2.0.0  (TBD)
--------------------------
+2.0.0-beta.1 (March 28, 2023)
+-----------------------------
 
 :warning: This major release an updated module configuration! 
 
