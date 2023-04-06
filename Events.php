@@ -100,6 +100,16 @@ JS;
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
+
+        if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
+            MobileAppHelper::registerLogoutScript();
+            Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
+        }
+
+        if (Yii::$app->session->has(self::SESSION_VAR_LOGIN)) {
+            MobileAppHelper::registerLoginScript();
+            Yii::$app->session->remove(self::SESSION_VAR_LOGIN);
+        }
     }
 
     public static function onAfterLogout()
@@ -110,19 +120,6 @@ JS;
     public static function onAfterLogin()
     {
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
-    }
-
-    public static function onLayoutAddonsRun()
-    {
-        if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
-            MobileAppHelper::registerLogoutScript();
-            Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
-        }
-
-        if (Yii::$app->session->has(self::SESSION_VAR_LOGIN)) {
-            MobileAppHelper::registerLoginScript();
-            Yii::$app->session->remove(self::SESSION_VAR_LOGIN);
-        }
     }
 
 }
