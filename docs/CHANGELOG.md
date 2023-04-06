@@ -1,3 +1,8 @@
+2.0.0-beta.2 (Unreleased)
+-------------------------
+ 
+- Enh: Show/Hide Mobile App Opener Dialog after Login/Logout
+
 2.0.0-beta.1 (March 28, 2023)
 -----------------------------
 

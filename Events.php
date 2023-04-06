@@ -6,14 +6,21 @@ namespace humhub\modules\fcmPush;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
+use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
+use humhub\widgets\BaseStack;
 use Yii;
 
 class Events
 {
+
+    private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
+    private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
+
     public static function onBeforeRequest($event)
     {
         /** @var Module $module */
@@ -69,7 +76,16 @@ class Events
 JS;
     }
 
-    public static function onLayoutaddonInit($event)
+    public static function onNotificationInfoWidget($event)
+    {
+        /** @var BaseStack $baseStack */
+        $baseStack = $event->sender;
+
+        $baseStack->addWidget(PushNotificationInfoWidget::class);
+
+    }
+
+    public static function onLayoutAddonInit($event)
     {
         if (Yii::$app->user->isGuest) {
             return;
@@ -84,6 +100,29 @@ JS;
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
+    }
+
+    public static function onAfterLogout()
+    {
+        Yii::$app->session->set(self::SESSION_VAR_LOGOUT, 1);
+    }
+
+    public static function onAfterLogin()
+    {
+        Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
+    }
+
+    public static function onLayoutAddonsRun()
+    {
+        if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
+            MobileAppHelper::registerLogoutScript();
+            Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
+        }
+
+        if (Yii::$app->session->has(self::SESSION_VAR_LOGIN)) {
+            MobileAppHelper::registerLoginScript();
+            Yii::$app->session->remove(self::SESSION_VAR_LOGIN);
+        }
     }
 
 }
