@@ -11,6 +11,7 @@ class MobileAppHelper
 
     public static function registerLoginScript()
     {
+
         if (!static::isAppRequest()) {
             return;
         }
@@ -46,7 +47,7 @@ class MobileAppHelper
 
     private static function isAppRequest()
     {
-        return (Yii::$app->request->headers->get('HTTP_X_HUMHUB_APP', null, true));
+        return (Yii::$app->request->headers->get('x-requested-with', null, true) === 'com.humhub.app');
     }
 
     private static function sendFlutterMessage($msg)
