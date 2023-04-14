@@ -21,6 +21,58 @@ class ConfigureForm extends Model
     public $humhubApiKey;
 
     /**
+     * Validate JSON field params
+     *
+     * @param $arrayPattern
+     * @param $arrayCheck
+     * @return string[]
+     */
+    private function validateJsonParams($arrayPattern, $arrayCheck)
+    {
+        $errors = ["contains_no" => "", "empty" => "", "invalid" => ""];
+
+        foreach ($arrayPattern as $key => $value) {
+            if (isset($arrayCheck[$key])) {
+                if (empty($arrayCheck[$key])) {
+                    $errors["empty"] .= $errors["empty"] == "" ? "\"$key\"" : ", \"$key\"";
+                }
+                else {
+                    $condition = false;
+                    switch ($value['type']) {
+                        case "string":
+                            if (isset($value['value'])) {
+                                $condition = $value['value'] !== $arrayCheck[$key];
+                            } elseif (isset($value['pattern'])) {
+                                if ($value['pattern'] == "alfa-numeric" || $value['pattern'] == "numeric") {
+                                    $condition = $value['pattern'] == "numeric"
+                                        ? !preg_match("/^\\d+$/", $arrayCheck[$key])
+                                        : !ctype_alnum($arrayCheck[$key]);
+                                }
+                            }
+                            break;
+                        case "email":
+                            $condition = !filter_var($arrayCheck[$key], FILTER_VALIDATE_EMAIL);
+                            break;
+                        case "url":
+                            $url_validation_regex = "/^https?:\\/\\/(?:www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b(?:[-a-zA-Z0-9()@:%_\\+.~#?&\\/=]*)$/";
+                            $condition = !preg_match($url_validation_regex, $arrayCheck[$key]);
+                            break;
+                        default:
+                    }
+
+                    if ($condition) {
+                        $errors["invalid"] .= $errors["invalid"] == "" ? "\"$key\"" : ", \"$key\"";
+                    }
+                }
+            } else {
+                $errors["contains_no"] .= $errors["contains_no"] == "" ? "\"$key\"" : ", \"$key\"";
+            }
+        }
+
+        return $errors;
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()
@@ -42,12 +94,33 @@ class ConfigureForm extends Model
                     $this->addError($attribute, 'Empty JSON input.');
                     return;
                 }
-                if (!isset($data['project_id'])) {
-                    $this->addError($attribute, 'JSON contain no project id.');
+
+                $googleServiceParamsPattern = [
+                    "type" => ["type" => "string", "value" => "service_account"],
+                    "project_id" => ["type" => "string"],
+                    "private_key_id" => ["type" => "string", "pattern" => "alfa-numeric"],
+                    "private_key" => ["type" => "string"],
+                    "client_email" => ["type" => "email"],
+                    "client_id" => ["type" => "string", "pattern" => "numeric"],
+                    "auth_uri" => ["type" => "url"],
+                    "token_uri" => ["type" => "url"],
+                    "auth_provider_x509_cert_url" => ["type" => "url"],
+                    "client_x509_cert_url" => ["type" => "url"],
+                ];
+                $result = $this->validateJsonParams($googleServiceParamsPattern, $data);
+
+                if ($result["contains_no"] !== "") {
+                    $this->addError($attribute, "JSON contains no {$result['contains_no']}.");
                     return;
                 }
+                if ($result["empty"] !== "") {
+                    $this->addError($attribute, "JSON has empty {$result['empty']}.");
+                    return;
+                }
+                if ($result["invalid"] !== "") {
+                    $this->addError($attribute, "JSON has invalid value in {$result['invalid']}.");
+                }
             }],
-
         ];
     }
 
@@ -118,5 +191,4 @@ class ConfigureForm extends Model
 
         return $config;
     }
-
 }

@@ -1,7 +1,7 @@
 humhub.module('firebase', function (module, require, $) {
-    var messaging;
+    let messaging;
 
-    var init = function () {
+    const init = function () {
         if (!firebase.apps.length) {
             firebase.initializeApp({messagingSenderId: this.senderId()});
             this.messaging = firebase.messaging();
@@ -22,11 +22,11 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
-    var afterServiceWorkerRegistration = function (registration) {
+    const afterServiceWorkerRegistration = function (registration) {
         //console.log("After Service Worker Registration");
         //console.log(registration);
 
-        var that = this;
+        const that = this;
 
         this.messaging.useServiceWorker(registration);
 
@@ -54,7 +54,7 @@ humhub.module('firebase', function (module, require, $) {
     // Send the Instance ID token your application server, so that it can:
     // - send messages back to this app
     // - subscribe/unsubscribe the token from topics
-    var sendTokenToServer = function (token) {
+    const sendTokenToServer = function (token) {
         const that = this;
         if (!that.isTokenSentToServer(token)) {
             module.log.info("Send FCM Push Token to Server");
@@ -71,15 +71,15 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
-    var isTokenSentToServer = function (token) {
+    const isTokenSentToServer = function (token) {
         return (this.getTokenLocalStore() === token);
     };
 
-    var deleteTokenLocalStore = function () {
+    const deleteTokenLocalStore = function () {
         window.localStorage.removeItem('fcmPushToken_' + this.senderId())
     };
 
-    var setTokenLocalStore = function (token) {
+    const setTokenLocalStore = function (token) {
         const item = {
             value: token,
             expiry: (Date.now() / 1000) + (24 * 60 * 60),
@@ -87,7 +87,7 @@ humhub.module('firebase', function (module, require, $) {
         window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item))
     };
 
-    var getTokenLocalStore = function () {
+    const getTokenLocalStore = function () {
         const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
 
         // if the item doesn't exist, return null
@@ -103,11 +103,11 @@ humhub.module('firebase', function (module, require, $) {
         return item.value;
     };
 
-    var tokenUpdateUrl = function () {
+    const tokenUpdateUrl = function () {
         return module.config.tokenUpdateUrl;
     };
 
-    var senderId = function () {
+    const senderId = function () {
         return module.config.senderId;
     };
 
