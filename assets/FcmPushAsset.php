@@ -14,7 +14,6 @@ class FcmPushAsset extends AssetBundle
 
     public $publishOptions = [
         'forceCopy' => true,
-
     ];
 
     public $sourcePath = '@fcm-push/resources/js';
@@ -22,7 +21,6 @@ class FcmPushAsset extends AssetBundle
     public $js = [
         'humhub.firebase.js',
     ];
-
 
     public static function register($view)
     {
@@ -39,6 +37,4 @@ class FcmPushAsset extends AssetBundle
 
         return parent::register($view);
     }
-
-
 }
