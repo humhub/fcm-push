@@ -1,10 +1,9 @@
 <?php
-
-return [
-    '<strong>FireBase Messaging</strong> Configuration' => '',
-    'API Key' => '',
-    'Cloud Messaging API (Legacy)' => '',
-    'Install ID' => '',
-    'Sender ID' => '',
-    'Service Account (JSON file)' => '',
-];
+return array (
+  '<strong>FireBase Messaging</strong> Configuration' => '<strong>FireBase Messaging</strong>-configuratie',
+  'API Key' => 'API sleutel',
+  'Cloud Messaging API (Legacy)' => 'Cloud Messaging-API (verouderd)',
+  'Install ID' => 'Installatie ID',
+  'Sender ID' => 'Zender ID',
+  'Service Account (JSON file)' => 'Serviceaccount (JSON-bestand)',
+);
