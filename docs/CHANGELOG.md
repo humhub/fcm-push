@@ -3,6 +3,7 @@
 
 - Enh: Validator for GoogleService Account JSON 
 - Enh: Show/Hide Mobile App Opener Dialog after Login/Logout
+- Fix #18: Do not pass `SiteIcon` as notification image
 
 2.0.0-beta.1 (March 28, 2023)
 -----------------------------

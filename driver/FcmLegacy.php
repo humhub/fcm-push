@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush\driver;
 
 use humhub\modules\fcmPush\components\SendReport;
+use humhub\modules\web\pwa\widgets\SiteIcon;
 use Yii;
 use yii\httpclient\Client;
 use humhub\modules\fcmPush\models\ConfigureForm;
@@ -33,13 +34,13 @@ class FcmLegacy extends Client implements DriverInterface
             "notification" => [
                 "title" => $title,
                 "body" => $body,
-                "icon" => $imageUrl,
+                "icon" => SiteIcon::getUrl(180),
                 "click_action" => $url
             ],
             "data" => [
                 "title" => $title,
                 "body" => $body,
-                "icon" => $imageUrl,
+                "icon" => SiteIcon::getUrl(180),
                 "url" => $url
             ],
             "registration_ids" => $tokens
