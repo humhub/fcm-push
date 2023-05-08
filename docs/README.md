@@ -3,7 +3,7 @@ FireBase - Push Notifications
 
 "Push Notifications" is a module that enables instant notifications for users regarding activities within your HumHub installation. This feature enables users to stay updated with important events and updates, thereby enhancing response time, collaboration, and efficiency within your organization.
 
-Overview of functions and features:
+## Overview of functions and features:
 
 - Allows your network to send push notifications
 - Gives you and your users the ability to define when notifications are triggered
