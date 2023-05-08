@@ -1,6 +1,13 @@
 FireBase - Push Notifications
 =============================
 
-** Note this module in beta stage yet **
+"Push Notifications" is a module that enables instant notifications for users regarding activities within your HumHub installation. This feature enables users to stay updated with important events and updates, thereby enhancing response time, collaboration, and efficiency within your organization.
 
-This modules enables Push notifications using the [Google Firebase Messaging](https://firebase.google.com/) service.
+Overview of functions and features:
+
+- Allows your network to send push notifications
+- Gives you and your users the ability to define when notifications are triggered
+- Notifications are sent via Google Firebase
+- Supports desktop and mobile notifications
+
+The module is recommended as matching extension to our Progressive Web App. Push notifications can be configured in the admin menu under "Settings", "Notifications" in the "Push" column.
