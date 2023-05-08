@@ -1,7 +1,7 @@
 {
     "id": "fcm-push",
     "name": "Push Notifications (Firebase)",
-    "description": "Push notifications (Web & Mobile) using Google Firebase.",
+    "description": "Enables your users to receive push notifications from your network.",
     "keywords": [
         "push",
         "notifications",
