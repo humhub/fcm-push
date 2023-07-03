@@ -30,10 +30,8 @@ use yii\helpers\Url;
                     </p>
                 <?php endif; ?>
 
-                <ul>
-                    <li><a id="hideOpenerLink" href="#">Trigger: humhub.mobile.hideOpener</a></li>
-                    <li><a id="showOpenerLink" href="#">Trigger: humhub.mobile.showOpener</a></li>
-                </ul>
+                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
+                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
 
             </div>
         </div>
@@ -149,15 +147,6 @@ use yii\helpers\Url;
 
 
 <script <?= Html::nonce() ?>>
-
-    $('#hideOpenerLink').on('click', function () {
-        window.flutterChannel.postMessage('humhub.mobile.hideOpener');
-    });
-
-    $('#showOpenerLink').on('click', function () {
-        window.flutterChannel.postMessage('humhub.mobile.showOpener');
-    });
-
     $('.postFlutterMsgLink').on('click', function (evt) {
         var message = $(evt.target).data('message');
         if (window.flutterChannel) {
