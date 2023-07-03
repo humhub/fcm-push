@@ -150,7 +150,11 @@ use yii\helpers\Url;
     $('.postFlutterMsgLink').on('click', function (evt) {
         var message = $(evt.target).data('message');
         if (window.flutterChannel) {
-            window.flutterChannel.postMessage(message)
+            try {
+                window.flutterChannel.postMessage(JSON.stringify(message))
+            } catch (err) {
+                alert("Flutter Channel Error: " + err)
+            }
             alert("Message sent! Message: " + JSON.stringify(message));
         } else {
             alert("Could not send message! Message: " + JSON.stringify(message));

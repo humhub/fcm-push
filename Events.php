@@ -94,6 +94,7 @@ JS;
 
         if (Yii::$app->session->has(self::SESSION_VAR_LOGIN)) {
             MobileAppHelper::registerLoginScript();
+            MobileAppHelper::registerNotificationScript();
             Yii::$app->session->remove(self::SESSION_VAR_LOGIN);
         }
 
