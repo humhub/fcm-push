@@ -8,6 +8,7 @@ use humhub\modules\fcmPush\models\FcmUser;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
+
 ?>
 
 
@@ -28,6 +29,11 @@ use yii\helpers\Url;
                         <strong>App Detection</strong> - Current Request: NO App Request Detected
                     </p>
                 <?php endif; ?>
+
+                <ul>
+                    <li><a id="hideOpenerLink" href="#">Trigger: humhub.mobile.hideOpener</a></li>
+                    <li><a id="showOpenerLink" href="#">Trigger: humhub.mobile.showOpener</a></li>
+                </ul>
 
             </div>
         </div>
@@ -54,14 +60,14 @@ use yii\helpers\Url;
 
                 <?php
                 $message = Json::encode(['type' => 'updateNotificationCount', 'count' => rand(100, 200)]);
-                $this->registerJsVar('registerMsg2', $message);
                 ?>
 
                 <p><code><?= $message; ?></code></p>
 
                 <?= Html::a(
                     'Execute via JS Channel',
-                    'javascript:alert("Send: "+ registerMsg2);window.flutterChannel.postMessage(registerMsg2);', ['class' => 'btn btn-primary pull-right']
+                    '#',
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
                 ) ?>
             </div>
         </div>
@@ -130,16 +136,36 @@ use yii\helpers\Url;
                     <li>400 - No `token` in payload</li>
                 </ul>
 
-                <?php
-                $this->registerJsVar('registerMsg', $message);
-                ?>
-
                 <?= Html::a(
                     'Execute via JS Channel',
-                    'javascript:alert("Send: "+ registerMsg);window.flutterChannel.postMessage(registerMsg);', ['class' => 'btn btn-primary pull-right']
+                    '#',
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
                 ) ?>
             </div>
         </div>
 
     </div>
 </div>
+
+
+<script <?= Html::nonce() ?>>
+
+    $('#hideOpenerLink').on('click', function () {
+        window.flutterChannel.postMessage('humhub.mobile.hideOpener');
+    });
+
+    $('#showOpenerLink').on('click', function () {
+        window.flutterChannel.postMessage('humhub.mobile.showOpener');
+    });
+
+    $('.postFlutterMsgLink').on('click', function (evt) {
+        var message = $(evt.target).data('message');
+        if (window.flutterChannel) {
+            window.flutterChannel.postMessage(message)
+            alert("Message sent! Message: " + JSON.stringify(message));
+        } else {
+            alert("Could not send message! Message: " + JSON.stringify(message));
+        }
+    });
+
+</script>
