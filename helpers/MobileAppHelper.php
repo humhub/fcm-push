@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\helpers;
 
 use Yii;
 use yii\helpers\Json;
+use yii\helpers\Url;
 
 class MobileAppHelper
 {
@@ -40,14 +41,17 @@ class MobileAppHelper
             return;
         }
 
-        $json = ['type' => 'registerFcmDevice', 'url' => \yii\helpers\Url::to(['/mobile-app/register'], true)];
+        $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update'], true)];
         $message = Json::encode($json);
         self::sendFlutterMessage($message);
     }
 
-    private static function isAppRequest()
+    public static function isAppRequest()
     {
-        return (Yii::$app->request->headers->get('x-requested-with', null, true) === 'com.humhub.app');
+        return (
+            (Yii::$app->request->headers->get('x-requested-with', null, true) === 'com.humhub.app') ||
+            (Yii::$app->request->headers->has('x-humhub-app'))
+        );
     }
 
     private static function sendFlutterMessage($msg)
