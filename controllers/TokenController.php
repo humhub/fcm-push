@@ -14,6 +14,8 @@ use Yii;
  */
 class TokenController extends Controller
 {
+    public $enableCsrfValidation = false;
+
     public function actionUpdate()
     {
         $this->forcePostRequest();
