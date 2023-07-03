@@ -49,7 +49,6 @@ class MobileAppHelper
     public static function isAppRequest()
     {
         return (
-            (Yii::$app->request->headers->get('x-requested-with', null, true) === 'com.humhub.app') ||
             (Yii::$app->request->headers->has('x-humhub-app'))
         );
     }
