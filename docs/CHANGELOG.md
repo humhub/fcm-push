@@ -1,5 +1,5 @@
-2.0.0-beta.2 (Unreleased)
--------------------------
+2.0.0-beta.3 (July 4, 2023)
+---------------------------
 
 - Enh: Validator for GoogleService Account JSON 
 - Enh: Show/Hide Mobile App Opener Dialog after Login/Logout
