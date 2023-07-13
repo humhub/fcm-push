@@ -14,10 +14,9 @@ use yii\helpers\Html;
 
         <h3>Push Service (Beta)</h3>
         <p>
-            For HumHub mobile app users or (for Web/PWA users) when no own Firebase account is provided,
-            push notifications can be sent via the HumHub push service via Firebase. If you want to use this service,
-            please enter your access key below.
-
+            For HumHub mobile app users, push notifications can be sent via the HumHub push service.
+            If you want to use this service, please enter your access key below.<br />
+            Please note, this push gateway is only available for the users of the official HumHub mobile app.
         <ul>
             <li><a href="https://push.humhub.com">Push Service Registration</a></li>
         </ul>

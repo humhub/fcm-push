@@ -3,12 +3,13 @@ Installation
 
 1. Create an Google Firebase Account [Google Firebase Messaging](https://firebase.google.com/)
 2. Add a new project in the Firebase Console
-3. Enable ***Cloud Messaging API (Legacy)***
-4. Install and enable this module
-5. Copy ***Project ID**, **Cloud messaging Sender ID** & **Server key*** from Google Firebase Console into the module configuration.
-6. Enable "Mobile" column in the Notification settings
+3. Go to: `Project Overview` -> `Project settings` -> `Cloud Messaging`
+4. Copy the `Sender Id` number and paste it into the `Sender ID` field in the HumHub module configuration
+4. Click on `Manage Service Accounts`  and select the `firebase` Service Account or create a new one
+5. In the Service Acccount, click on the `Keys` tab, Click `Add Key` -> `Create New Key` -> `Key type: JSON`
+6. Download the created JSON key file, open it, copy it and paste the file content into the `Service Account (JSON file)` file in the HumHub module configuration
 
-## CSP
+## Custom CSP Configuration 
 
 In case you have customized your [csp header](https://docs.humhub.org/docs/admin/security#web-security-configuration).
 Make sure to allow the following urls:
