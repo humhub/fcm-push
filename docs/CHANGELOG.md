@@ -2,7 +2,7 @@
 ---------------------------
 
 - Fix #22: `send-to-user` CLI command fails because mismatched arguments 
-
+- 
 
 2.0.0-beta.3 (July 4, 2023)
 ---------------------------

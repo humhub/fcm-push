@@ -87,7 +87,16 @@ use yii\helpers\Url;
                 <ul>
                     <?php foreach ($tokens as $fcm): ?>
                         <li>
-                            <?= $fcm->token ?> <?= Html::a('Delete', ['index', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
+                            <?= substr($fcm->token, 0, 7) ?>
+                            ...
+                            <?= substr($fcm->token, -7) ?>
+
+                            &middot;
+                            <?= $fcm->sender_id ?>
+
+                            &middot;
+
+                            <?= Html::a('Delete', ['index', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -113,7 +122,7 @@ use yii\helpers\Url;
                 <p>This is usally </p>
 
                 <?php
-                $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update'], true)];
+                $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)];
                 $message = Json::encode($json);
                 ?>
 

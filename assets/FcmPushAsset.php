@@ -28,13 +28,15 @@ class FcmPushAsset extends AssetBundle
         $module = Yii::$app->getModule('fcm-push');
 
         $pushDriver = (new DriverService($module->getConfigureForm()))->getWebDriver();
+        if ($pushDriver !== null) {
+            Yii::$app->view->registerJsConfig('firebase', [
+                'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
+                'senderId' => $pushDriver->getSenderId(),
+            ]);
+
+            return parent::register($view);
+        }
 
 
-        Yii::$app->view->registerJsConfig('firebase', [
-            'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
-            'senderId' => $pushDriver->getSenderId(),
-        ]);
-
-        return parent::register($view);
     }
 }

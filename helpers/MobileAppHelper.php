@@ -41,7 +41,7 @@ class MobileAppHelper
             return;
         }
 
-        $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update'], true)];
+        $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)];
         $message = Json::encode($json);
         self::sendFlutterMessage($message);
     }

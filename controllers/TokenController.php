@@ -16,27 +16,48 @@ class TokenController extends Controller
 {
     public $enableCsrfValidation = false;
 
-    public function actionUpdate()
+
+    public function beforeAction($action)
     {
         $this->forcePostRequest();
 
         if (Yii::$app->user->isGuest) {
             Yii::$app->response->statusCode = 401;
-            return $this->asJson(['success' => false]);
+            return false;
         }
 
+        return parent::beforeAction($action);
+    }
+
+    public function actionUpdate()
+    {
         $driver = (new DriverService($this->module->getConfigureForm()))->getWebDriver();
         if (!$driver) {
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
         }
 
-        $token = (string)Yii::$app->request->post('token');
-
-        $tokenService = new TokenService();
         return $this->asJson([
-            'success' => ($tokenService->storeTokenForUser(Yii::$app->user->getIdentity(), $driver, $token)),
+            'success' => ((new TokenService())->storeTokenForUser(
+                Yii::$app->user->getIdentity(), $driver, Yii::$app->request->post('token'))
+            ),
         ]);
     }
+
+    public function actionUpdateMobileApp()
+    {
+        $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
+        if (!$driver) {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
+        }
+
+        return $this->asJson([
+            'success' => ((new TokenService())->storeTokenForUser(
+                Yii::$app->user->getIdentity(), $driver, Yii::$app->request->post('token'))
+            ),
+        ]);
+    }
+
 
 }

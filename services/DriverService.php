@@ -54,6 +54,7 @@ class DriverService
         return $this->configuredDrivers;
     }
 
+
     public function getWebDriver(): ?DriverInterface
     {
         // If Fcm driver is available use it
@@ -63,19 +64,32 @@ class DriverService
             }
         }
 
-        // Fallback to Proxy driver
-        foreach ($this->configuredDrivers as $driver) {
-            if ($driver instanceof Proxy) {
-                return $driver;
-            }
-        }
+        // Do not allow Proxy for non App usage
+        // return $this->getConfiguredDriverByType(Proxy::class);
 
         return null;
     }
+
+    public function getMobileAppDriver(): ?DriverInterface
+    {
+        return $this->getConfiguredDriverByType(Proxy::class);
+    }
+
 
     public function hasConfiguredDriver(): bool
     {
         return (!empty($this->configuredDrivers));
     }
+
+
+    private function getConfiguredDriverByType(string $class): ?DriverInterface
+    {
+        foreach ($this->configuredDrivers as $driver) {
+            if ($driver instanceof $class) {
+                return $driver;
+            }
+        }
+    }
+
 
 }
