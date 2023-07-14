@@ -38,7 +38,7 @@ class Events
         $controller->manifest['gcm_sender_id'] = (string)103953800507;
     }
 
-    public static function onServiceWorkerControllerInit($event)
+    public static function onServiceWorkerControllerInit($event): void
     {
         /** @var ServiceWorkerController $controller */
         $controller = $event->sender;
@@ -46,7 +46,7 @@ class Events
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (!$module->getDriverService()->hasConfiguredDriver()) {
+        if (!$module->getDriverService()->hasConfiguredWebDriver()) {
             return;
         }
 
@@ -105,7 +105,7 @@ JS;
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (!$module->getDriverService()->hasConfiguredDriver()) {
+        if (!$module->getDriverService()->hasConfiguredWebDriver()) {
             return;
         }
 

@@ -1,3 +1,10 @@
+2.0.0-beta.5 (July 14, 2023)
+----------------------------
+
+- Fix: Error when no Web Driver is configured.
+
+
+
 2.0.0-beta.4 (July 13, 2023)
 ----------------------------
 

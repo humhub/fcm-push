@@ -75,6 +75,10 @@ class DriverService
         return $this->getConfiguredDriverByType(Proxy::class);
     }
 
+    public function hasConfiguredWebDriver(): bool
+    {
+        return ($this->getWebDriver() !== null);
+    }
 
     public function hasConfiguredDriver(): bool
     {
