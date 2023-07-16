@@ -3,6 +3,7 @@
 
 /* @var $model \humhub\modules\fcmPush\models\ConfigureForm */
 
+use humhub\widgets\Button;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\Html;
 
@@ -15,12 +16,10 @@ use yii\helpers\Html;
         <h3>Push Service (required for the mobile app) (Beta)</h3>
         <p>
             For HumHub mobile app users, push notifications can be sent via the HumHub push service.
-            If you want to use this service, please enter your access key below.<br />
+            If you want to use this service, please enter your access key below.<br/>
             Please note, this push gateway is only available for the users of the official HumHub mobile app.
-        <ul>
-            <li><a href="https://push.humhub.com">Push Service Registration</a></li>
-        </ul>
         </p>
+        <?= Button::info('Push Service Registration')->link('https://push.humhub.com')->options(['target' => '_blank'])->loader(false) ?>
         <?= $form->field($model, 'humhubInstallId')->textInput(['disabled' => 'disabled']); ?>
 
         <?= $form->field($model, 'humhubApiKey')->textarea(['rows' => 2]); ?>
@@ -28,14 +27,11 @@ use yii\helpers\Html;
 
         <hr>
 
-        <h3> Firebase Cloud Messaging (required for browser & PWA notifications)</h3>
+        <h3>Firebase Cloud Messaging (required for browser & PWA notifications)</h3>
         <p>
             To send Firebase push notifications with your own Firebase project, enter your access details here.
-
-        <ul>
-            <li><a href="https://marketplace.humhub.com/module/fcm-push/installation">Installation </a></li>
-        </ul>
         </p>
+        <?= Button::info('Installation documentation')->link('https://marketplace.humhub.com/module/fcm-push/installation')->options(['target' => '_blank'])->loader(false) ?>
         <?= $form->field($model, 'senderId'); ?>
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
         <?php if (!empty($model->serverKey)): ?>
