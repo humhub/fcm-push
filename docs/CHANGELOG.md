@@ -1,6 +1,6 @@
-Unreleased
-----------------------------
-
+2.0.0-beta.6 (August 1, 2023)
+-----------------------------
+- Fix #25: Notification is not sent in user's language setting
 - Chg #26: Module configuration titles rewording and changing links to buttons
 
 2.0.0-beta.5 (July 14, 2023)

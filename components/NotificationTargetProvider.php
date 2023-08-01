@@ -2,8 +2,6 @@
 
 namespace humhub\modules\fcmPush\components;
 
-use humhub\modules\fcmPush\models\ConfigureForm;
-use humhub\modules\fcmPush\models\FcmUser;
 use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\MessagingService;
 use Yii;
@@ -30,11 +28,15 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
      */
     public function handle(BaseNotification $notification, User $user)
     {
+        Yii::$app->i18n->setUserLocale($user);
+
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
         (new MessagingService($module->getConfigureForm()))
             ->processNotification($notification, $user);
+
+        Yii::$app->i18n->autosetLocale();
 
         return true;
     }
