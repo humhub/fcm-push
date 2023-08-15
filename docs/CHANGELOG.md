@@ -1,3 +1,7 @@
+Unreleased
+-----------------------------
+- Enh #24: Notification Grant Status
+
 2.0.0-beta.6 (August 1, 2023)
 -----------------------------
 - Fix #25: Notification is not sent in user's language setting

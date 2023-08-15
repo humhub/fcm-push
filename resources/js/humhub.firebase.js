@@ -22,6 +22,47 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
+    const getNotificationPermissionContent = function () {
+        if (!("Notification" in window)) {
+            return 'This browser does not support notifications.';
+        }
+        console.log('Notification.permission:', Notification.permission);
+        return Notification.permission === "granted"
+            ? 'Push Notifications are active on this browser.<br>You can disable it in browser settings for this site.'
+            : 'You have blocked Push Notifications.<br>' +
+            (Notification.permission === 'denied'
+                ? 'You can enable it in browser settings for this site.'
+                : '<a href="#" id="enablePushBtn"><i class="fa fa-unlock"></i> Click here to enable</a>'); // 'default'
+    }
+
+    const showNotificationPermissionWindow = function () {
+        function handlePermission(permission) {
+            // set the button to shown or hidden, depending on what the user answers
+            addPushNotificationPermissionsInfo(permission, true);
+        }
+
+        // Let's check if the browser supports notifications
+        if (!("Notification" in window)) {
+            console.log("This browser does not support notifications.");
+        } else {
+            Notification.requestPermission().then((permission) => {
+                handlePermission(permission);
+            });
+        }
+    }
+
+    const addPushNotificationPermissionsInfo = function (permission, rewrite = false) {
+        if (rewrite) {
+            const contentContainer = document.getElementById('notificationPermissions');
+            contentContainer.innerHTML = getNotificationPermissionContent()
+        } else {
+            const content = '<div class="panel panel-default panel-pn-permissions"><div class="panel-body" id="notificationPermissions">' + getNotificationPermissionContent() + '</div></div>';
+            $('.layout-sidebar-container').prepend($(content));
+        }
+
+        $('#enablePushBtn').on('click', showNotificationPermissionWindow);
+    }
+
     const afterServiceWorkerRegistration = function (registration) {
         //console.log("After Service Worker Registration");
         //console.log(registration);
@@ -33,6 +74,7 @@ humhub.module('firebase', function (module, require, $) {
         // Request for permission
         this.messaging.requestPermission().then(function () {
             //console.log('Notification permission granted.');
+            addPushNotificationPermissionsInfo('granted');
 
             that.messaging.getToken().then(function (currentToken) {
                 if (currentToken) {
@@ -48,6 +90,7 @@ humhub.module('firebase', function (module, require, $) {
             });
         }).catch(function (err) {
             module.log.info('Could not get Push Notification permission!', err);
+            addPushNotificationPermissionsInfo('denied');
         });
     };
 

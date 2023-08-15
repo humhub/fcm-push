@@ -36,7 +36,5 @@ class FcmPushAsset extends AssetBundle
 
             return parent::register($view);
         }
-
-
     }
 }
