@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
@@ -17,7 +16,6 @@ use Yii;
 
 class Events
 {
-
     private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
     private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
 
@@ -82,7 +80,6 @@ JS;
         $baseStack = $event->sender;
 
         $baseStack->addWidget(PushNotificationInfoWidget::class);
-
     }
 
     public static function onLayoutAddonInit($event)
@@ -111,7 +108,6 @@ JS;
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
-
     }
 
     public static function onAfterLogout()
@@ -123,5 +119,4 @@ JS;
     {
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
     }
-
 }
