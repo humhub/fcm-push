@@ -60,4 +60,18 @@ class TokenController extends Controller
     }
 
 
+    public function actionDeleteMobileApp()
+    {
+        $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
+        if (!$driver) {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
+        }
+
+        return $this->asJson([
+            'success' => ((new TokenService())->deleteTokenForUser(
+                Yii::$app->user->getIdentity(), Yii::$app->request->post('token'))
+            ),
+        ]);
+    }
 }

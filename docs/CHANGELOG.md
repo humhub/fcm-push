@@ -1,3 +1,7 @@
+2.0.0-beta.7 (Unreleased)
+-------------------------
+- Enh: Added Token Unregister on App Logout 
+
 2.0.0-beta.6 (August 1, 2023)
 -----------------------------
 - Fix #25: Notification is not sent in user's language setting

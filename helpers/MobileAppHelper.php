@@ -46,6 +46,17 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
+    public static function unregisterNotificationScript()
+    {
+        if (!static::isAppRequest()) {
+            return;
+        }
+
+        $json = ['type' => 'unregisterFcmDevice', 'url' => Url::to(['/fcm-push/token/delete-mobile-app'], true)];
+        $message = Json::encode($json);
+        self::sendFlutterMessage($message);
+    }
+
     public static function isAppRequest()
     {
         return (
