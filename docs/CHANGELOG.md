@@ -1,5 +1,5 @@
-2.0.0-beta.7 (Unreleased)
--------------------------
+2.0.0-beta.7 (August 21, 2023)
+------------------------------
 - Enh: Added Token Unregister on App Logout 
 
 2.0.0-beta.6 (August 1, 2023)
