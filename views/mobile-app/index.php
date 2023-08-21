@@ -119,14 +119,48 @@ use yii\helpers\Url;
 
                 <h4>Send `registerFcmDevice` message </h4>
 
-                <p>This is usally </p>
-
                 <?php
                 $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)];
                 $message = Json::encode($json);
                 ?>
 
                 <p><code><?= $message; ?></code></p>
+
+
+                <p>
+                    The POST to given URL request must contain a `token` field in the payload.
+                </p>
+                <hr>
+
+                <p>HTTP Return Codes for given URL:</p>
+
+                <ul>
+                    <li>201 - Token saved</li>
+                    <li>200 - Token already saved</li>
+
+                    <li>404 - No valid Method POST Request</li>
+                    <li>400 - No `token` in payload</li>
+                </ul>
+
+                <?= Html::a(
+                    'Execute via JS Channel',
+                    '#',
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
+                ) ?>
+            </div>
+        </div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+
+                <h4>Send `unregisterFcmDevice` message </h4>
+
+                <?php
+                $json = ['type' => 'unregisterFcmDevice', 'url' => Url::to(['/fcm-push/token/delete-mobile-app'], true)];
+                $message = Json::encode($json);
+                ?>
+
+                <p><code><?= $message; ?></code></p>
+
 
                 <p>
                     The POST to given URL request must contain a `token` field in the payload.

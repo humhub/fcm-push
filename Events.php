@@ -88,7 +88,7 @@ JS;
     public static function onLayoutAddonInit($event)
     {
         if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
-            MobileAppHelper::unregisterNotificationScript();
+            MobileAppHelper::unregisterNotificationScript(); // Before Logout
             MobileAppHelper::registerLogoutScript();
             Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
         }
