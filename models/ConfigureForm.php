@@ -10,6 +10,8 @@ use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
+    public $enableEmailGoService;
+
     public $humhubInstallId;
 
     public $senderId;
@@ -78,6 +80,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
+            [['enableEmailGoService'], 'boolean'],
             [['senderId'], 'number'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
             ['json', function ($attribute, $params, $validator) {
@@ -130,6 +133,7 @@ class ConfigureForm extends Model
     public function attributeLabels()
     {
         return [
+            'enableEmailGoService' => Yii::t('FcmPushModule.base', 'Enable Link Redirection Service for Links in outgoing E-Mails'),
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Install ID'),
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
@@ -157,6 +161,7 @@ class ConfigureForm extends Model
         /** @var \humhub\modules\admin\Module $adminModule */
         $adminModule = Yii::$app->getModule('admin');
 
+        $this->enableEmailGoService = $settings->get('enableEmailGoService', false);
         $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
         $this->json = $settings->get('json');
@@ -171,6 +176,7 @@ class ConfigureForm extends Model
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
+        $module->settings->set('enableEmailGoService', $this->enableEmailGoService);
         $module->settings->set('senderId', $this->senderId);
         $module->settings->set('json', $this->json);
         $module->settings->set('serverKey', $this->serverKey);

@@ -1,3 +1,7 @@
+2.0.0-beta.8 (Unreleased)
+-------------------------
+- Enh #29: Wrap URLs in email messages to "go" app
+
 2.0.0-beta.7 (August 21, 2023)
 ------------------------------
 - Enh: Added Token Unregister on App Logout 
