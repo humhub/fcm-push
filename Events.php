@@ -3,8 +3,10 @@
 namespace humhub\modules\fcmPush;
 
 
+use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
+use humhub\modules\fcmPush\components\MailerMessage;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
@@ -21,13 +23,17 @@ class Events
     private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
     private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
 
-    public static function onBeforeRequest($event)
+    public static function onBeforeRequest()
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
         if ($module->getDriverService()->hasConfiguredDriver()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
+        }
+
+        if ($module->getGoService()->isConfigured()) {
+            Yii::$container->set(Message::class, MailerMessage::class);
         }
     }
 
