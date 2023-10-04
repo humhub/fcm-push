@@ -13,8 +13,11 @@ use yii\helpers\Html;
     <div class="panel-body">
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
 
-        <h3><?= Yii::t('FcmPushModule.base', 'Mobile App Links') ?></h3>
-        <?= $form->field($model, 'enableEmailGoService')->checkbox() ?>
+        <h3><?= Yii::t('FcmPushModule.base', 'Link Redirection Service') ?></h3>
+        <?= $form->field($model, 'enableEmailGoService')->checkbox()
+            ->label(Yii::t('FcmPushModule.base', 'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)', [
+                'url' => 'https://www.humhub.com/en/privacy/'
+            ])) ?>
 
         <hr>
 

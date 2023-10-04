@@ -133,7 +133,6 @@ class ConfigureForm extends Model
     public function attributeLabels()
     {
         return [
-            'enableEmailGoService' => Yii::t('FcmPushModule.base', 'Enable Link Redirection Service for Links in outgoing E-Mails'),
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Install ID'),
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
