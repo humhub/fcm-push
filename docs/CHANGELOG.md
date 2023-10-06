@@ -1,9 +1,13 @@
 Changelog
 =========
 
-2.0.0-beta.8 (Unreleased)
+2.0.0-beta.9 (Unreleased)
 ------------------------------
 - Enh: Do not require valid session for unregister FCM tokens
+
+2.0.0-beta.8 (October 4, 2023)
+-------------------------------
+- Enh #29: Wrap URLs in email messages to "go" app
  
 2.0.0-beta.7 (August 21, 2023)
 ------------------------------
