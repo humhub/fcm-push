@@ -93,6 +93,8 @@ class DriverService
                 return $driver;
             }
         }
+
+        return null;
     }
 
 

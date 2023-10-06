@@ -1,3 +1,10 @@
+Changelog
+=========
+
+2.0.0-beta.8 (Unreleased)
+------------------------------
+- Enh: Do not require valid session for unregister FCM tokens
+ 
 2.0.0-beta.7 (August 21, 2023)
 ------------------------------
 - Enh: Added Token Unregister on App Logout 
