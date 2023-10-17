@@ -1,9 +1,9 @@
 Changelog
 =========
 
-2.0.0 (October 6, 2023)
+2.0.0 (October 17, 2023)
 ------------------------------
-- Enh: Do not require valid session for unregister FCM tokens
+- Enh: Translations & Stable Release
 
 2.0.0-beta.9 (October 6, 2023)
 ------------------------------
