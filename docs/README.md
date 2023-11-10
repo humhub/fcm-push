@@ -10,6 +10,6 @@ Push Notifications (Firebase)
 - Notifications are sent via Google Firebase
 - Supports desktop and mobile notifications
 
-The module is recommended as matching extension to our Progressive Web App. Push notifications can be configured in the admin menu under "Settings", "Notifications" in the "Mobile" column.
+The module is recommended as matching extension to our Progressive Web App (PWA) and Mobile Apps. Push notifications can be configured in the admin menu under "Settings", "Notifications" in the "Mobile" column.
 
 Brave browser: by default, Firebase is disabled. "Google Services for push messaging" must be enabled in the browser settings.
