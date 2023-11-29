@@ -4,7 +4,7 @@
 /* @var $model \humhub\modules\fcmPush\models\ConfigureForm */
 
 use humhub\widgets\Button;
-use yii\bootstrap\ActiveForm;
+use humhub\modules\ui\form\widgets\ActiveForm;
 use yii\helpers\Html;
 
 ?>
@@ -43,14 +43,24 @@ use yii\helpers\Html;
         <?php if (!empty($model->serverKey)): ?>
             <?= $form->field($model, 'serverKey')->textInput(); ?>
         <?php endif; ?>
+        <br/>
 
+
+        <?= $form->beginCollapsibleFields('Advanced Settings'); ?>
+        <?= $form->field($model, 'disableAuthChoicesIos')->checkbox()
+            ->label(Yii::t('FcmPushModule.base', 'Hide third-party login options for app users with iOS.')) ?>
+        <?= $form->endCollapsibleFields(); ?>
         <br/>
 
         <div class="form-group">
             <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
         </div>
 
+
         <?php ActiveForm::end(); ?>
+
+
+
 
         <?= Html::a('Mobile App Debug', ['/fcm-push/mobile-app'], ['class' => 'pull-right']); ?>
     </div>

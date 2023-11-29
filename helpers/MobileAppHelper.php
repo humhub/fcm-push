@@ -70,4 +70,16 @@ class MobileAppHelper
         Yii::$app->view->registerJs('if (window.flutterChannel) { window.flutterChannel.postMessage(\'' . $msg . '\'); }');
     }
 
+    public static function isIosApp()
+    {
+        $headers = Yii::$app->request->headers;
+
+        if (static::isAppRequest() &&
+            $headers->has('user-agent') &&
+            str_contains($headers->get('user-agent', '', true), 'iPhone')) {
+
+            return true;
+        }
+    }
+
 }

@@ -22,6 +22,8 @@ class ConfigureForm extends Model
 
     public $humhubApiKey;
 
+    public $disableAuthChoicesIos;
+
     /**
      * Validate JSON field params
      *
@@ -80,7 +82,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['enableEmailGoService'], 'boolean'],
+            [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
             ['json', function ($attribute, $params, $validator) {
@@ -138,6 +140,7 @@ class ConfigureForm extends Model
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
+            'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
         ];
     }
 
@@ -166,6 +169,8 @@ class ConfigureForm extends Model
         $this->json = $settings->get('json');
         $this->serverKey = $settings->get('serverKey');
         $this->humhubApiKey = $settings->get('humhubApiKey');
+        $this->disableAuthChoicesIos = $settings->get('disableAuthChoicesIos');
+
 
         return true;
     }
@@ -180,6 +185,7 @@ class ConfigureForm extends Model
         $module->settings->set('json', $this->json);
         $module->settings->set('serverKey', $this->serverKey);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
+        $module->settings->set('disableAuthChoicesIos', $this->disableAuthChoicesIos);
 
         return true;
     }

@@ -12,10 +12,12 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
+use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use humhub\widgets\BaseStack;
 use Yii;
+use yii\base\Event;
 
 class Events
 {
@@ -129,6 +131,20 @@ JS;
     public static function onAfterLogin()
     {
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
+    }
+
+    public static function onAuthChoiceBeforeRun(Event $event) {
+        /** @var AuthChoice $sender */
+        $sender = $event->sender;
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
+            $sender->setClients([]);
+        }
+
+
     }
 
 }
