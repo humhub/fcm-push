@@ -20,6 +20,10 @@ use yii\helpers\Url;
             </div>
             <div class="panel-body">
 
+
+
+
+
                 <?php if (MobileAppHelper::isAppRequest()): ?>
                     <p class="alert alert-success">
                         <strong>App Detection</strong> - Current Request: Is App Request
@@ -32,6 +36,7 @@ use yii\helpers\Url;
 
                 <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
                 <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
+                <?= Html::a('Open this page as POST Request', ['index'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>
 
             </div>
         </div>
@@ -93,7 +98,6 @@ use yii\helpers\Url;
 
                             &middot;
                             <?= $fcm->sender_id ?>
-
                             &middot;
 
                             <?= Html::a('Delete', ['index', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>

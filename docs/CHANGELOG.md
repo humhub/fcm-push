@@ -1,6 +1,11 @@
 Changelog
 =========
 
+
+2.0.1 (January 8, 2024)
+-----------------------
+- Enh: Improve Mobile Page Debug Page with POST Debug
+
 2.0.0 (October 17, 2023)
 ------------------------------
 - Enh: Translations & Stable Release
