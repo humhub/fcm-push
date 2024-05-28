@@ -20,20 +20,27 @@ use yii\helpers\Url;
             </div>
             <div class="panel-body">
 
-
-
-
-
                 <?php if (MobileAppHelper::isAppRequest()): ?>
                     <p class="alert alert-success">
                         <strong>App Detection</strong> - Current Request: Is App Request
                     </p>
+
+                    <?php if (MobileAppHelper::isAppWithCustomFcm()): ?>
+                        <p class="alert alert-success">
+                            <strong>FCM Detection</strong> - App is using custom Firebase
+                        </p>
+                    <?php else: ?>
+                        <p class="alert alert-warning">
+                            <strong>FCM Detection</strong> - App is using Proxy Firebase Service
+                        </p>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <p class="alert alert-warning">
                         <strong>App Detection</strong> - Current Request: NO App Request Detected
                     </p>
                 <?php endif; ?>
-
+                
                 <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
                 <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
                 <?= Html::a('Open this page as POST Request', ['index'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>

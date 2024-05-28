@@ -1,6 +1,5 @@
 <?php
 
-
 namespace humhub\modules\fcmPush\controllers;
 
 use humhub\components\access\ControllerAccess;
@@ -40,8 +39,12 @@ class TokenController extends Controller
         }
 
         return $this->asJson([
-            'success' => ((new TokenService())->storeTokenForUser(
-                Yii::$app->user->getIdentity(), $driver, Yii::$app->request->post('token'))
+            'success' => (
+            (new TokenService())->storeTokenForUser(
+                Yii::$app->user->getIdentity(),
+                $driver,
+                Yii::$app->request->post('token')
+            )
             ),
         ]);
     }
@@ -52,13 +55,19 @@ class TokenController extends Controller
 
         $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
         if (!$driver) {
+            Yii::error('Could not update token for mobile app. No driver available.', 'fcm-push');
+
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
         }
 
         return $this->asJson([
-            'success' => ((new TokenService())->storeTokenForUser(
-                Yii::$app->user->getIdentity(), $driver, Yii::$app->request->post('token'))
+            'success' => (
+            (new TokenService())->storeTokenForUser(
+                Yii::$app->user->getIdentity(),
+                $driver,
+                Yii::$app->request->post('token')
+            )
             ),
         ]);
     }
@@ -68,6 +77,8 @@ class TokenController extends Controller
     {
         $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
         if (!$driver) {
+            Yii::error('Could not delete token for mobile app. No driver available.', 'fcm-push');
+
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
         }
@@ -77,8 +88,10 @@ class TokenController extends Controller
         }
 
         return $this->asJson([
-            'success' => ((new TokenService())->deleteToken(
-                Yii::$app->request->post('token'))
+            'success' => (
+            (new TokenService())->deleteToken(
+                Yii::$app->request->post('token')
+            )
             ),
         ]);
     }

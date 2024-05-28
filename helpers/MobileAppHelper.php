@@ -8,8 +8,6 @@ use yii\helpers\Url;
 
 class MobileAppHelper
 {
-
-
     public static function registerLoginScript()
     {
 
@@ -63,6 +61,22 @@ class MobileAppHelper
             (Yii::$app->request->headers->get('x-requested-with', null, true) === 'com.humhub.app') ||
             (Yii::$app->request->headers->has('x-humhub-app'))
         );
+    }
+
+    /**
+     * Determines whether the app is a branded app with custom firebase configuration.
+     * @return bool
+     */
+    public static function isAppWithCustomFcm(): bool
+    {
+        return (
+            Yii::$app->request->headers->has('x-humhub-app-bundle-id') &&
+            !str_contains(
+                Yii::$app->request->headers->get('x-humhub-app-bundle-id', '', true),
+                'com.humhub.app'
+            )
+        );
+
     }
 
     private static function sendFlutterMessage($msg)
