@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2.1.0 (Unreleased)
+-----------------------
+- Fix: Update module resources path
 
 2.0.1 (January 8, 2024)
 -----------------------
