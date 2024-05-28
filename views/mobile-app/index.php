@@ -40,7 +40,7 @@ use yii\helpers\Url;
                         <strong>App Detection</strong> - Current Request: NO App Request Detected
                     </p>
                 <?php endif; ?>
-                
+
                 <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
                 <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
                 <?= Html::a('Open this page as POST Request', ['index'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>

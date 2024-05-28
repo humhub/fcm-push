@@ -1,6 +1,9 @@
 Changelog
 =========
 
+2.0.2 (May 28, 2024)
+-----------------------
+- Enh: Branded App Firebase Support
 
 2.0.1 (January 8, 2024)
 -----------------------
