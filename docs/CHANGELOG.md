@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.3 (Unreleased)
+-----------------------
+- Enh: Endpoint to test push status
+
 2.0.2 (May 28, 2024)
 -----------------------
 - Enh: Branded App Firebase Support
