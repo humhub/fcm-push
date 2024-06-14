@@ -2,14 +2,19 @@
 
 namespace humhub\modules\fcmPush\models;
 
+use Exception;
 use humhub\modules\fcmPush\Module;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
+use yii\helpers\FileHelper;
 use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
+    public const FILE_ASSET_LINKS = 'assetlinks.json';
+    public const FILE_APPLE_ASSOCIATION = 'apple-app-site-association';
+
     public $enableEmailGoService;
 
     public $humhubInstallId;
@@ -23,6 +28,10 @@ class ConfigureForm extends Model
     public $humhubApiKey;
 
     public $disableAuthChoicesIos;
+
+    public $fileAssetlinksJson;
+
+    public $fileAppleAppSiteAssociation;
 
     /**
      * Validate JSON field params
@@ -39,8 +48,7 @@ class ConfigureForm extends Model
             if (isset($arrayCheck[$key])) {
                 if (empty($arrayCheck[$key])) {
                     $errors["empty"] .= $errors["empty"] == "" ? "\"$key\"" : ", \"$key\"";
-                }
-                else {
+                } else {
                     $condition = false;
                     switch ($value['type']) {
                         case "string":
@@ -85,6 +93,7 @@ class ConfigureForm extends Model
             [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
+            [['fileAssetlinksJson', 'fileAppleAppSiteAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
                 if (empty($this->$attribute)) {
                     return;
@@ -141,15 +150,17 @@ class ConfigureForm extends Model
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
             'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
+            'fileAssetlinksJson' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', ['fileName' => '"' . self::FILE_ASSET_LINKS . '"']),
+            'fileAppleAppSiteAssociation' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', ['fileName' => '"' . self::FILE_APPLE_ASSOCIATION . '"']),
         ];
     }
 
     public function attributeHints()
     {
         return [
-            'humhubInstallId' => 'Use this ID to register your API Key.',
-            'serverKey' => 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained. ',
-            'json' => 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'
+            'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
+            'serverKey' => Yii::t('FcmPushModule.base', 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.'),
+            'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
         ];
     }
 
@@ -170,7 +181,8 @@ class ConfigureForm extends Model
         $this->serverKey = $settings->get('serverKey');
         $this->humhubApiKey = $settings->get('humhubApiKey');
         $this->disableAuthChoicesIos = $settings->get('disableAuthChoicesIos');
-
+        $this->fileAssetlinksJson = $this->getFileContent(self::FILE_ASSET_LINKS);
+        $this->fileAppleAppSiteAssociation = $this->getFileContent(self::FILE_APPLE_ASSOCIATION);
 
         return true;
     }
@@ -186,6 +198,8 @@ class ConfigureForm extends Model
         $module->settings->set('serverKey', $this->serverKey);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
         $module->settings->set('disableAuthChoicesIos', $this->disableAuthChoicesIos);
+        $this->saveFile(self::FILE_ASSET_LINKS, $this->fileAssetlinksJson);
+        $this->saveFile(self::FILE_APPLE_ASSOCIATION, $this->fileAppleAppSiteAssociation);
 
         return true;
     }
@@ -197,9 +211,46 @@ class ConfigureForm extends Model
 
     public static function getInstance()
     {
-        $config = new static;
+        $config = new static();
         $config->loadSettings();
 
         return $config;
+    }
+
+    protected function getFilePath(string $fileName): string
+    {
+        return Yii::getAlias('@webroot') . DIRECTORY_SEPARATOR . '.well-known' . DIRECTORY_SEPARATOR . $fileName;
+    }
+
+    protected function getFileContent(string $fileName): string
+    {
+        $filePath = $this->getFilePath($fileName);
+        return is_file($filePath) ? file_get_contents($filePath) : '';
+    }
+
+    protected function saveFile(string $fileName, ?string $content): bool
+    {
+        $filePath = $this->getFilePath($fileName);
+        if (!file_exists($filePath)) {
+            if (empty($content) && $content !== '0') {
+                // Don't create a file with empty content
+                return true;
+            }
+
+            $dirPath = dirname($filePath);
+            try {
+                FileHelper::createDirectory($dirPath);
+            } catch (Exception $ex) {
+                Yii::error('Cannot create the dir ' . $dirPath . ' Error: ' . $ex->getMessage(), 'fcm-push');
+            }
+        }
+
+        try {
+            return (bool) file_put_contents($filePath, $content);
+        } catch (Exception $ex) {
+            Yii::error('Cannot update the file ' . $filePath . ' Error: ' . $ex->getMessage(), 'fcm-push');
+        }
+
+        return false;
     }
 }

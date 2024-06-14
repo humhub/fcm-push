@@ -49,6 +49,8 @@ use yii\helpers\Html;
         <?= $form->beginCollapsibleFields('Advanced Settings'); ?>
         <?= $form->field($model, 'disableAuthChoicesIos')->checkbox()
             ->label(Yii::t('FcmPushModule.base', 'Hide third-party login options for app users with iOS.')) ?>
+        <?= $form->field($model, 'fileAssetlinksJson')->textarea(['rows' => 10]) ?>
+        <?= $form->field($model, 'fileAppleAppSiteAssociation')->textarea(['rows' => 10]) ?>
         <?= $form->endCollapsibleFields(); ?>
         <br/>
 
@@ -56,11 +58,7 @@ use yii\helpers\Html;
             <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
         </div>
 
-
         <?php ActiveForm::end(); ?>
-
-
-
 
         <?= Html::a('Mobile App Debug', ['/fcm-push/mobile-app'], ['class' => 'pull-right']); ?>
     </div>
