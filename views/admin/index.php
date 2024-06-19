@@ -1,12 +1,12 @@
 <?php
-/* @var $this \humhub\modules\ui\view\components\View */
 
-/* @var $model \humhub\modules\fcmPush\models\ConfigureForm */
-
+use humhub\modules\fcmPush\models\ConfigureForm;
+use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\Button;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use yii\helpers\Html;
 
+/* @var $model ConfigureForm */
 ?>
 <div class="panel panel-default">
     <div class="panel-heading"><?= Yii::t('FcmPushModule.base', '<strong>FireBase Messaging</strong> Configuration'); ?></div>
@@ -16,7 +16,7 @@ use yii\helpers\Html;
         <h3><?= Yii::t('FcmPushModule.base', 'Link Redirection Service') ?></h3>
         <?= $form->field($model, 'enableEmailGoService')->checkbox()
             ->label(Yii::t('FcmPushModule.base', 'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)', [
-                'url' => 'https://www.humhub.com/en/privacy/'
+                'url' => 'https://www.humhub.com/en/privacy/',
             ])) ?>
 
         <hr>
@@ -49,8 +49,18 @@ use yii\helpers\Html;
         <?= $form->beginCollapsibleFields('Advanced Settings'); ?>
         <?= $form->field($model, 'disableAuthChoicesIos')->checkbox()
             ->label(Yii::t('FcmPushModule.base', 'Hide third-party login options for app users with iOS.')) ?>
-        <?= $form->field($model, 'fileAssetlinksJson')->textarea(['rows' => 10]) ?>
-        <?= $form->field($model, 'fileAppleAppSiteAssociation')->textarea(['rows' => 10]) ?>
+
+        <?php if (!Yii::$app->urlManager->enablePrettyUrl) : ?>
+        <div class="alert alert-warning">
+            <?= Icon::get('warning') ?>
+            <?= Yii::t('FcmPushModule.base', 'Please enable <a {attrs}>Pretty URLs</a> for proper working of the well-known files.', [
+                'attrs' => 'href="https://docs.humhub.org/docs/admin/installation/#pretty-urls" target="_blank"',
+            ]) ?>
+        </div>
+        <?php endif; ?>
+
+        <?= $form->field($model, 'fileAssetLinks')->textarea(['rows' => 10]) ?>
+        <?= $form->field($model, 'fileAppleAssociation')->textarea(['rows' => 10]) ?>
         <?= $form->endCollapsibleFields(); ?>
         <br/>
 
