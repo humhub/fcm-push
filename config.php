@@ -27,7 +27,9 @@ return [
         //[NotificationInfoWidget::class, \humhub\widgets\BaseStack::EVENT_RUN, [Events::class, 'onNotificationInfoWidget']]
     ],
     'consoleControllerMap' => [
-        'firebase' => 'humhub\modules\fcmPush\commands\SendController'
+        'firebase' => 'humhub\modules\fcmPush\commands\SendController',
+    ],
+    'urlManagerRules' => [
+        ['class' => 'humhub\modules\fcmPush\components\UrlRule'],
     ],
 ];
-?>

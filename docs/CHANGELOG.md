@@ -4,6 +4,7 @@ Changelog
 2.0.3 (Unreleased)
 -----------------------
 - Enh: Endpoint to test push status
+- Enh: Add possibility to profile `.well-known` files
 
 2.0.2 (May 28, 2024)
 -----------------------
