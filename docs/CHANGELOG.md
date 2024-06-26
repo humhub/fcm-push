@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.4 (Unreleased)
+---------------------
+- Fix #41: Fix go service for multiline links
+
 2.0.3 (June 24, 2024)
 ---------------------
 - Enh: Endpoint to test push status

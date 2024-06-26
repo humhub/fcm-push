@@ -60,7 +60,7 @@ class GoService
     public function processLinks($text): ?string
     {
         return $this->isConfigured()
-            ? preg_replace_callback('#(<a.+?href=")(' . $this->sitePattern . '.+?)(".*?>)#i', [$this, 'callbackReplaceLink'], $text)
+            ? preg_replace_callback('#(<a.+?href=")(' . $this->sitePattern . '.+?)(".*?>)#is', [$this, 'callbackReplaceLink'], $text)
             : $text;
     }
 
