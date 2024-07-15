@@ -12,7 +12,7 @@ return [
     'Install ID' => '',
     'Link Redirection Service' => '',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => '',
-    'Please enable <a {attrs}>Pretty URLs</a> for proper working of the well-known files.' => '',
+    'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => '',
     'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => '',
     'Push Service (required for the mobile app) (Beta)' => '',
     'Sender ID' => '',

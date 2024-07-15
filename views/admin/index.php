@@ -53,8 +53,8 @@ use yii\helpers\Html;
         <?php if (!Yii::$app->urlManager->enablePrettyUrl) : ?>
         <div class="alert alert-warning">
             <?= Icon::get('warning') ?>
-            <?= Yii::t('FcmPushModule.base', 'Please enable <a {attrs}>Pretty URLs</a> for proper working of the well-known files.', [
-                'attrs' => 'href="https://docs.humhub.org/docs/admin/installation/#pretty-urls" target="_blank"',
+            <?= Yii::t('FcmPushModule.base', 'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.', [
+                'url' => 'https://docs.humhub.org/docs/admin/installation/#pretty-urls',
             ]) ?>
         </div>
         <?php endif; ?>
