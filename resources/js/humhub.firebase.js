@@ -1,6 +1,17 @@
+/**
+ * @fileoverview HumHub Firebase Module
+ * This module handles Firebase Cloud Messaging (FCM) integration for HumHub.
+ * It manages notification permissions, token handling, and message reception.
+ * @module firebase
+ */
+
 humhub.module('firebase', function (module, require, $) {
     let messaging;
 
+    /**
+     * Initializes the Firebase module.
+     * Sets up the Firebase app if not already initialized and configures message handling.
+     */
     const init = function () {
         if (!firebase.apps.length) {
             firebase.initializeApp({messagingSenderId: this.senderId()});
@@ -22,28 +33,37 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
+    /**
+     * Generates the appropriate content for notification permission status.
+     * @returns {string} HTML content describing the current notification permission status.
+     */
     const getNotificationPermissionContent = function () {
         if (!("Notification" in window)) {
-            return 'This browser does not support notifications.';
+            return 'Not Supported: This browser does not support notifications.';
         }
         console.log('Notification.permission:', Notification.permission);
-        return Notification.permission === "granted"
-            ? 'Push Notifications are active on this browser.<br>You can disable it in browser settings for this site.'
-            : 'You have blocked Push Notifications.<br>' +
-            (Notification.permission === 'denied'
-                ? 'You can enable it in browser settings for this site.'
-                : '<a href="#" id="enablePushBtn"><i class="fa fa-unlock"></i> Click here to enable</a>'); // 'default'
+        switch (Notification.permission) {
+            case "granted":
+                return 'Granted: Push Notifications are active on this browser.<br>You can disable it in browser settings for this site.';
+            case "denied":
+                return 'Denied: You have blocked Push Notifications.<br>You can enable it in browser settings for this site.';
+            default:
+                return 'Default: Push Notifications are not yet enabled.<br><a href="#" id="enablePushBtn"><i class="fa fa-unlock"></i> Click here to enable</a>';
+        }
     }
 
+    /**
+     * Displays the notification permission request window.
+     * Handles the permission request process and updates the UI accordingly.
+     */
     const showNotificationPermissionWindow = function () {
         function handlePermission(permission) {
-            // set the button to shown or hidden, depending on what the user answers
             addPushNotificationPermissionsInfo(permission, true);
         }
 
-        // Let's check if the browser supports notifications
         if (!("Notification" in window)) {
             console.log("This browser does not support notifications.");
+            handlePermission("not-supported");
         } else {
             Notification.requestPermission().then((permission) => {
                 handlePermission(permission);
@@ -51,6 +71,11 @@ humhub.module('firebase', function (module, require, $) {
         }
     }
 
+    /**
+     * Adds or updates the push notification permissions information in the UI.
+     * @param {string} permission - The current notification permission status.
+     * @param {boolean} rewrite - Whether to rewrite existing content or add new content.
+     */
     const addPushNotificationPermissionsInfo = function (permission, rewrite = false) {
         if (rewrite) {
             const contentContainer = document.getElementById('notificationPermissions');
@@ -63,22 +88,21 @@ humhub.module('firebase', function (module, require, $) {
         $('#enablePushBtn').on('click', showNotificationPermissionWindow);
     }
 
+    /**
+     * Handles tasks after service worker registration.
+     * Requests notification permission and manages token retrieval and storage.
+     * @param {ServiceWorkerRegistration} registration - The service worker registration object.
+     */
     const afterServiceWorkerRegistration = function (registration) {
-        //console.log("After Service Worker Registration");
-        //console.log(registration);
-
         const that = this;
 
         this.messaging.useServiceWorker(registration);
 
-        // Request for permission
         this.messaging.requestPermission().then(function () {
-            //console.log('Notification permission granted.');
             addPushNotificationPermissionsInfo('granted');
 
             that.messaging.getToken().then(function (currentToken) {
                 if (currentToken) {
-                    //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);
                 } else {
                     module.log.info('No Instance ID token available. Request permission to generate one.');
@@ -90,13 +114,14 @@ humhub.module('firebase', function (module, require, $) {
             });
         }).catch(function (err) {
             module.log.info('Could not get Push Notification permission!', err);
-            addPushNotificationPermissionsInfo('denied');
+            addPushNotificationPermissionsInfo(Notification.permission);
         });
     };
 
-    // Send the Instance ID token your application server, so that it can:
-    // - send messages back to this app
-    // - subscribe/unsubscribe the token from topics
+    /**
+     * Sends the FCM token to the server.
+     * @param {string} token - The FCM token to be sent.
+     */
     const sendTokenToServer = function (token) {
         const that = this;
         if (!that.isTokenSentToServer(token)) {
@@ -114,14 +139,26 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
+    /**
+     * Checks if the token has been sent to the server.
+     * @param {string} token - The token to check.
+     * @returns {boolean} True if the token has been sent to the server, false otherwise.
+     */
     const isTokenSentToServer = function (token) {
         return (this.getTokenLocalStore() === token);
     };
 
+    /**
+     * Deletes the token from local storage.
+     */
     const deleteTokenLocalStore = function () {
         window.localStorage.removeItem('fcmPushToken_' + this.senderId())
     };
 
+    /**
+     * Stores the token in local storage with an expiry time.
+     * @param {string} token - The token to store.
+     */
     const setTokenLocalStore = function (token) {
         const item = {
             value: token,
@@ -130,6 +167,10 @@ humhub.module('firebase', function (module, require, $) {
         window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item))
     };
 
+    /**
+     * Retrieves the token from local storage.
+     * @returns {string|null} The stored token if valid, null otherwise.
+     */
     const getTokenLocalStore = function () {
         const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
 
@@ -146,32 +187,39 @@ humhub.module('firebase', function (module, require, $) {
         return item.value;
     };
 
+    /**
+     * Returns the URL for updating the token on the server.
+     * @returns {string} The token update URL.
+     */
     const tokenUpdateUrl = function () {
         return module.config.tokenUpdateUrl;
     };
 
+    /**
+     * Returns the sender ID for FCM.
+     * @returns {string} The sender ID.
+     */
     const senderId = function () {
         return module.config.senderId;
     };
 
     module.export({
         init: init,
-
         isTokenSentToServer: isTokenSentToServer,
         sendTokenToServer: sendTokenToServer,
         afterServiceWorkerRegistration: afterServiceWorkerRegistration,
-
-        // Config Vars
         senderId: senderId,
         tokenUpdateUrl: tokenUpdateUrl,
-
-        // LocalStore Helper
         setTokenLocalStore: setTokenLocalStore,
         getTokenLocalStore: getTokenLocalStore,
         deleteTokenLocalStore: deleteTokenLocalStore,
     });
 });
 
+/**
+ * Global function to handle service worker registration for the Firebase module.
+ * @param {ServiceWorkerRegistration} registration - The service worker registration object.
+ */
 function afterServiceWorkerRegistration(registration) {
     humhub.modules.firebase.afterServiceWorkerRegistration(registration);
 }
