@@ -1,6 +1,39 @@
-Unreleased
------------------------------
+Changelog
+=========
+
+2.0.4 (Unreleased)
+---------------------
+- Fix #41: Fix go service for multiline links
 - Enh #24: Notification Grant Status
+
+2.0.3 (June 24, 2024)
+---------------------
+- Enh: Endpoint to test push status
+- Enh: Add possibility to profile `.well-known` files
+
+2.0.2 (May 28, 2024)
+-----------------------
+- Enh: Branded App Firebase Support
+
+2.0.1 (January 8, 2024)
+-----------------------
+- Enh: Improve Mobile Page Debug Page with POST Debug
+
+2.0.0 (October 17, 2023)
+------------------------------
+- Enh: Translations & Stable Release
+
+2.0.0-beta.9 (October 6, 2023)
+------------------------------
+- Enh: Do not require valid session for unregister FCM tokens
+
+2.0.0-beta.8 (October 4, 2023)
+-------------------------------
+- Enh #29: Wrap URLs in email messages to "go" app
+ 
+2.0.0-beta.7 (August 21, 2023)
+------------------------------
+- Enh: Added Token Unregister on App Logout 
 
 2.0.0-beta.6 (August 1, 2023)
 -----------------------------
