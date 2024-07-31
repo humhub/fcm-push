@@ -2,6 +2,7 @@
 
 namespace humhub\modules\fcmPush\helpers;
 
+use humhub\modules\ui\helpers\DeviceDetectorHelper;
 use Yii;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -11,7 +12,7 @@ class MobileAppHelper
     public static function registerLoginScript()
     {
 
-        if (!static::isAppRequest()) {
+        if (!DeviceDetectorHelper::isAppRequest()) {
             return;
         }
 
@@ -23,7 +24,7 @@ class MobileAppHelper
 
     public static function registerLogoutScript()
     {
-        if (!static::isAppRequest()) {
+        if (!DeviceDetectorHelper::isAppRequest()) {
             return;
         }
 
@@ -35,7 +36,7 @@ class MobileAppHelper
 
     public static function registerNotificationScript()
     {
-        if (!static::isAppRequest()) {
+        if (!DeviceDetectorHelper::isAppRequest()) {
             return;
         }
 
@@ -46,7 +47,7 @@ class MobileAppHelper
 
     public static function unregisterNotificationScript()
     {
-        if (!static::isAppRequest()) {
+        if (!DeviceDetectorHelper::isAppRequest()) {
             return;
         }
 
@@ -55,6 +56,10 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
+    /**
+     * @deprecated since HumHub version 1.17
+     * Use the new `DeviceDetectorHelper::isAppRequest()` method instead.
+     */
     public static function isAppRequest()
     {
         return (
@@ -64,8 +69,8 @@ class MobileAppHelper
     }
 
     /**
-     * Determines whether the app is a branded app with custom firebase configuration.
-     * @return bool
+     * @deprecated since HumHub version 1.17
+     * Use the new `DeviceDetectorHelper::isAppWithCustomFcm()` method instead.
      */
     public static function isAppWithCustomFcm(): bool
     {
@@ -73,7 +78,7 @@ class MobileAppHelper
             Yii::$app->request->headers->has('x-humhub-app-bundle-id') &&
             !str_contains(
                 Yii::$app->request->headers->get('x-humhub-app-bundle-id', '', true),
-                'com.humhub.app'
+                'com.humhub.app',
             )
         );
 
@@ -84,11 +89,15 @@ class MobileAppHelper
         Yii::$app->view->registerJs('if (window.flutterChannel) { window.flutterChannel.postMessage(\'' . $msg . '\'); }');
     }
 
+    /**
+     * @deprecated since HumHub version 1.17
+     * Use the new `DeviceDetectorHelper::isIosApp()` method instead.
+     */
     public static function isIosApp()
     {
         $headers = Yii::$app->request->headers;
 
-        if (static::isAppRequest() &&
+        if (DeviceDetectorHelper::isAppRequest() &&
             $headers->has('user-agent') &&
             str_contains($headers->get('user-agent', '', true), 'iPhone')) {
 

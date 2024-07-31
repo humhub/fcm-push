@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
@@ -12,6 +11,7 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
+use humhub\modules\ui\helpers\DeviceDetectorHelper;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -21,7 +21,6 @@ use yii\base\Event;
 
 class Events
 {
-
     private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
     private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
 
@@ -69,9 +68,9 @@ class Events
             importScripts('{$bundle->baseUrl}/firebase-messaging.js');
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
-        
+
            firebase.initializeApp({messagingSenderId: "{$pushDriver->getSenderId()}"});
-            
+
             const messaging = firebase.messaging();
             messaging.setBackgroundMessageHandler(function(payload) {
               const notificationTitle = payload.data.title;
@@ -133,18 +132,17 @@ JS;
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
     }
 
-    public static function onAuthChoiceBeforeRun(Event $event) {
+    public static function onAuthChoiceBeforeRun(Event $event)
+    {
         /** @var AuthChoice $sender */
         $sender = $event->sender;
 
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
+        if (DeviceDetectorHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
-
-
     }
 
 }

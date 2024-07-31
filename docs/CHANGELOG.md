@@ -4,6 +4,8 @@ Changelog
 2.0.4 (Unreleased)
 ---------------------
 - Fix #41: Fix go service for multiline links
+- Chg: The minimal HumHub version is now 1.17
+- Chg: Use the new `DeviceDetectorHelper` helper and deprecate `MobileAppHelper::isAppRequest()`, `MobileAppHelper::isAppWithCustomFcm()` and `MobileAppHelper::isIosApp()` methods
 
 2.0.3 (June 24, 2024)
 ---------------------

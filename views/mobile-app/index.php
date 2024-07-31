@@ -3,11 +3,10 @@
 /* @var $this \humhub\modules\ui\view\components\View */
 
 use humhub\libs\Html;
-use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\FcmUser;
+use humhub\modules\ui\helpers\DeviceDetectorHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
-
 
 ?>
 
@@ -20,12 +19,12 @@ use yii\helpers\Url;
             </div>
             <div class="panel-body">
 
-                <?php if (MobileAppHelper::isAppRequest()): ?>
+                <?php if (DeviceDetectorHelper::isAppRequest()): ?>
                     <p class="alert alert-success">
                         <strong>App Detection</strong> - Current Request: Is App Request
                     </p>
 
-                    <?php if (MobileAppHelper::isAppWithCustomFcm()): ?>
+                    <?php if (DeviceDetectorHelper::isAppWithCustomFcm()): ?>
                         <p class="alert alert-success">
                             <strong>FCM Detection</strong> - App is using custom Firebase
                         </p>
@@ -52,7 +51,7 @@ use yii\helpers\Url;
                 <h4>Test Push Notification</h4>
 
                 <p>Make sure the <code>Mobile</code> checkbox is enabled for <a
-                            href="<?= Url::to(['/notification/user']); ?>">
+                        href="<?= Url::to(['/notification/user']); ?>">
                         Administrative Notifications!</a>. It may take a few minutes.
                 </p>
 
@@ -77,7 +76,7 @@ use yii\helpers\Url;
                 <?= Html::a(
                     'Execute via JS Channel',
                     '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message],
                 ) ?>
             </div>
         </div>
@@ -156,7 +155,7 @@ use yii\helpers\Url;
                 <?= Html::a(
                     'Execute via JS Channel',
                     '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message],
                 ) ?>
             </div>
         </div>
@@ -191,7 +190,7 @@ use yii\helpers\Url;
                 <?= Html::a(
                     'Execute via JS Channel',
                     '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
+                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message],
                 ) ?>
             </div>
         </div>
