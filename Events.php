@@ -11,7 +11,7 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
-use humhub\modules\ui\helpers\DeviceDetectorHelper;
+use humhub\helpers\DeviceDetectorHelper;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
