@@ -2,7 +2,7 @@
 
 namespace humhub\modules\fcmPush\helpers;
 
-use humhub\modules\ui\helpers\DeviceDetectorHelper;
+use humhub\helpers\DeviceDetectorHelper;
 use Yii;
 use yii\helpers\Json;
 use yii\helpers\Url;
