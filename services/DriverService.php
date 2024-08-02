@@ -7,7 +7,7 @@ use humhub\modules\fcmPush\driver\Fcm;
 use humhub\modules\fcmPush\driver\FcmLegacy;
 use humhub\modules\fcmPush\driver\Proxy;
 use humhub\modules\fcmPush\models\ConfigureForm;
-use humhub\modules\ui\helpers\DeviceDetectorHelper;
+use humhub\helpers\DeviceDetectorHelper;
 
 class DriverService
 {
