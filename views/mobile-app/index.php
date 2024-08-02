@@ -4,7 +4,7 @@
 
 use humhub\libs\Html;
 use humhub\modules\fcmPush\models\FcmUser;
-use humhub\modules\ui\helpers\DeviceDetectorHelper;
+use humhub\helpers\DeviceDetectorHelper;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
