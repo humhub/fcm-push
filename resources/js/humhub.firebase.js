@@ -47,8 +47,6 @@ humhub.module('firebase', function (module, require, $) {
                 return module.text('status.granted');
             case "denied":
                 return module.text('status.denied');
-            case "default":
-                return module.text('status.default');
             default:
                 return module.text('status.default');
         }
