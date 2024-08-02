@@ -2,11 +2,12 @@
 
 namespace humhub\modules\fcmPush\assets;
 
-use humhub\modules\fcmPush\Module;
-use humhub\modules\fcmPush\services\DriverService;
 use Yii;
 use yii\helpers\Url;
 use yii\web\AssetBundle;
+use humhub\widgets\Button;
+use humhub\modules\fcmPush\Module;
+use humhub\modules\fcmPush\services\DriverService;
 
 class FcmPushAsset extends AssetBundle
 {
@@ -32,13 +33,16 @@ class FcmPushAsset extends AssetBundle
             Yii::$app->view->registerJsConfig('firebase', [
                 'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
                 'senderId' => $pushDriver->getSenderId(),
-            ]);
-
-            Yii::$app->view->registerJsConfig('firebase', [
                 'text' => [
                     'status.granted' => Yii::t('FcmPushModule.base', 'Granted: Push Notifications are active on this browser.<br>You can disable it in browser settings for this site.'),
                     'status.denied' => Yii::t('FcmPushModule.base', 'Denied: You have blocked Push Notifications.<br>You can enable it in browser settings for this site.'),
-                    'status.default' => Yii::t('FcmPushModule.base', 'Default: Push Notifications are not yet enabled.<br><button id="enablePushBtn" class="btn btn-primary"><i class="fa fa-unlock"></i> Click here to enable</button>'),
+                    'status.default' => Yii::t('FcmPushModule.base', 'Default: Push Notifications are not yet enabled.')
+                    . '<br>'
+                    . Button::primary(Yii::t('FcmPushModule.base', 'Click here to enable'))
+                        ->icon('fa-unlock')
+                        ->id('enablePushBtn')
+                        ->sm()
+                        ->loader(false),
                     'status.not-supported' => Yii::t('FcmPushModule.base', 'Not Supported: This browser does not support notifications.'),
                 ],
             ]);
