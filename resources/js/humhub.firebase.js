@@ -39,16 +39,18 @@ humhub.module('firebase', function (module, require, $) {
      */
     const getNotificationPermissionContent = function () {
         if (!("Notification" in window)) {
-            return 'Not Supported: This browser does not support notifications.';
+            return module.text('status.not-supported');
         }
         console.log('Notification.permission:', Notification.permission);
         switch (Notification.permission) {
             case "granted":
-                return 'Granted: Push Notifications are active on this browser.<br>You can disable it in browser settings for this site.';
+                return module.text('status.granted');
             case "denied":
-                return 'Denied: You have blocked Push Notifications.<br>You can enable it in browser settings for this site.';
+                return module.text('status.denied');
+            case "default":
+                return module.text('status.default');
             default:
-                return 'Default: Push Notifications are not yet enabled.<br><a href="#" id="enablePushBtn"><i class="fa fa-unlock"></i> Click here to enable</a>';
+                return module.text('status.default');
         }
     }
 
