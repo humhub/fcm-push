@@ -72,23 +72,6 @@ humhub.module('firebase', function (module, require, $) {
     }
 
     /**
-     * Adds or updates the push notification permissions information in the UI.
-     * @param {string} permission - The current notification permission status.
-     * @param {boolean} rewrite - Whether to rewrite existing content or add new content.
-     */
-    const addPushNotificationPermissionsInfo = function (permission, rewrite = false) {
-        if (rewrite) {
-            const contentContainer = document.getElementById('notificationPermissions');
-            contentContainer.innerHTML = getNotificationPermissionContent()
-        } else {
-            const content = '<div class="panel panel-default panel-pn-permissions"><div class="panel-body" id="notificationPermissions">' + getNotificationPermissionContent() + '</div></div>';
-            $('.layout-sidebar-container').prepend($(content));
-        }
-
-        $('#enablePushBtn').on('click', showNotificationPermissionWindow);
-    }
-
-    /**
      * Handles tasks after service worker registration.
      * Requests notification permission and manages token retrieval and storage.
      * @param {ServiceWorkerRegistration} registration - The service worker registration object.
