@@ -7,7 +7,6 @@ use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
-use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -72,14 +71,6 @@ class Events
               return self.registration.showNotification(notificationTitle, notificationOptions);
             });
 JS;
-    }
-
-    public static function onNotificationInfoWidget($event)
-    {
-        /** @var BaseStack $baseStack */
-        $baseStack = $event->sender;
-
-        $baseStack->addWidget(PushNotificationInfoWidget::class);
     }
 
     public static function onLayoutAddonInit($event)
