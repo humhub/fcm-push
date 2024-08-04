@@ -10,18 +10,18 @@ humhub.module('firebase', function (module, require, $) {
 
     /**
      * Initializes the Firebase module.
-     * Sets up the Firebase app if not already initialized and configures message handling.
+     * Sets up the Firebase app and messaging, and defines behavior for message reception and token refresh.
+     * @function
      */
     const init = function () {
         if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: this.senderId()});
+            firebase.initializeApp({ messagingSenderId: this.senderId() });
             this.messaging = firebase.messaging();
 
             this.messaging.onMessage(function (payload) {
                 module.log.info("Received FCM Push Notification", payload);
             });
 
-            // Callback fired if Instance ID token is updated.
             this.messaging.onTokenRefresh(function () {
                 this.messaging.getToken().then(function (refreshedToken) {
                     this.deleteTokenLocalStore();
@@ -34,8 +34,9 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     /**
-     * Generates the appropriate content for notification permission status.
-     * @returns {string} HTML content describing the current notification permission status.
+     * Gets the content to display for notification permission status.
+     * @function
+     * @returns {string} The message corresponding to the current notification permission status.
      */
     const getNotificationPermissionContent = function () {
         if (!("Notification" in window)) {
@@ -53,10 +54,14 @@ humhub.module('firebase', function (module, require, $) {
     }
 
     /**
-     * Displays the notification permission request window.
-     * Handles the permission request process and updates the UI accordingly.
+     * Shows the notification permission window and handles the user's response.
+     * @function
      */
     const showNotificationPermissionWindow = function () {
+        /**
+         * Handles the notification permission result.
+         * @param {string} permission - The permission result.
+         */
         function handlePermission(permission) {
             addPushNotificationPermissionsInfo(permission, true);
         }
@@ -72,8 +77,23 @@ humhub.module('firebase', function (module, require, $) {
     }
 
     /**
-     * Handles tasks after service worker registration.
-     * Requests notification permission and manages token retrieval and storage.
+     * Adds information about push notification permissions to the UI.
+     * @function
+     * @param {string} permission - The notification permission status.
+     * @param {boolean} [isAfterRequest=false] - Indicates if this is after a permission request.
+     */
+    const addPushNotificationPermissionsInfo = function (permission, isAfterRequest = false) {
+        let content = getNotificationPermissionContent();
+        $('#pushNotificationPermissionInfo').html(content);
+
+        if (isAfterRequest && permission === 'granted') {
+            module.afterServiceWorkerRegistration();
+        }
+    }
+
+    /**
+     * Handles actions after the service worker registration.
+     * @function
      * @param {ServiceWorkerRegistration} registration - The service worker registration object.
      */
     const afterServiceWorkerRegistration = function (registration) {
@@ -103,7 +123,8 @@ humhub.module('firebase', function (module, require, $) {
 
     /**
      * Sends the FCM token to the server.
-     * @param {string} token - The FCM token to be sent.
+     * @function
+     * @param {string} token - The FCM token.
      */
     const sendTokenToServer = function (token) {
         const that = this;
@@ -112,7 +133,7 @@ humhub.module('firebase', function (module, require, $) {
             $.ajax({
                 method: "POST",
                 url: that.tokenUpdateUrl(),
-                data: {token: token},
+                data: { token: token },
                 success: function (data) {
                     that.setTokenLocalStore(token);
                 }
@@ -123,24 +144,27 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     /**
-     * Checks if the token has been sent to the server.
-     * @param {string} token - The token to check.
-     * @returns {boolean} True if the token has been sent to the server, false otherwise.
+     * Checks if the token has already been sent to the server.
+     * @function
+     * @param {string} token - The FCM token.
+     * @returns {boolean} Whether the token has been sent to the server.
      */
     const isTokenSentToServer = function (token) {
         return (this.getTokenLocalStore() === token);
     };
 
     /**
-     * Deletes the token from local storage.
+     * Deletes the locally stored FCM token.
+     * @function
      */
     const deleteTokenLocalStore = function () {
         window.localStorage.removeItem('fcmPushToken_' + this.senderId())
     };
 
     /**
-     * Stores the token in local storage with an expiry time.
-     * @param {string} token - The token to store.
+     * Sets the FCM token in local storage.
+     * @function
+     * @param {string} token - The FCM token.
      */
     const setTokenLocalStore = function (token) {
         const item = {
@@ -151,13 +175,13 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     /**
-     * Retrieves the token from local storage.
-     * @returns {string|null} The stored token if valid, null otherwise.
+     * Gets the FCM token from local storage.
+     * @function
+     * @returns {string|null} The FCM token or null if it doesn't exist or is expired.
      */
     const getTokenLocalStore = function () {
         const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
 
-        // if the item doesn't exist, return null
         if (!itemStr) {
             return null
         }
@@ -171,7 +195,8 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     /**
-     * Returns the URL for updating the token on the server.
+     * Gets the URL for updating the token on the server.
+     * @function
      * @returns {string} The token update URL.
      */
     const tokenUpdateUrl = function () {
@@ -179,7 +204,8 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     /**
-     * Returns the sender ID for FCM.
+     * Gets the sender ID from the module configuration.
+     * @function
      * @returns {string} The sender ID.
      */
     const senderId = function () {
@@ -196,11 +222,14 @@ humhub.module('firebase', function (module, require, $) {
         setTokenLocalStore: setTokenLocalStore,
         getTokenLocalStore: getTokenLocalStore,
         deleteTokenLocalStore: deleteTokenLocalStore,
+        showNotificationPermissionWindow: showNotificationPermissionWindow,
+        addPushNotificationPermissionsInfo: addPushNotificationPermissionsInfo
     });
 });
 
 /**
- * Global function to handle service worker registration for the Firebase module.
+ * Handles actions after the service worker registration (global scope).
+ * @function
  * @param {ServiceWorkerRegistration} registration - The service worker registration object.
  */
 function afterServiceWorkerRegistration(registration) {
