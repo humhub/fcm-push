@@ -5,7 +5,6 @@
 use humhub\modules\fcmPush\Events;
 use humhub\components\Controller;
 use humhub\modules\user\widgets\AuthChoice;
-use humhub\widgets\BaseStack;
 use humhub\widgets\LayoutAddons;
 use yii\base\Application;
 use humhub\modules\user\components\User;
