@@ -42,7 +42,6 @@ humhub.module('firebase', function (module, require, $) {
         if (!("Notification" in window)) {
             return module.text('status.not-supported');
         }
-        console.log('Notification.permission:', Notification.permission);
         switch (Notification.permission) {
             case "granted":
                 return module.text('status.granted');
