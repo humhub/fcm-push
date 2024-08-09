@@ -5,7 +5,6 @@ namespace humhub\modules\fcmPush\assets;
 use Yii;
 use yii\helpers\Url;
 use yii\web\AssetBundle;
-use humhub\widgets\Button;
 use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\DriverService;
 
