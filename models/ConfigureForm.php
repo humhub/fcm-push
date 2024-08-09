@@ -3,6 +3,8 @@
 namespace humhub\modules\fcmPush\models;
 
 use humhub\modules\fcmPush\Module;
+use humhub\modules\fcmPush\services\WellKnownService;
+use humhub\widgets\Link;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
@@ -10,6 +12,8 @@ use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
+    public $enableEmailGoService;
+
     public $humhubInstallId;
 
     public $senderId;
@@ -19,6 +23,12 @@ class ConfigureForm extends Model
     public $serverKey;
 
     public $humhubApiKey;
+
+    public $disableAuthChoicesIos;
+
+    public $fileAssetLinks;
+
+    public $fileAppleAssociation;
 
     /**
      * Validate JSON field params
@@ -35,8 +45,7 @@ class ConfigureForm extends Model
             if (isset($arrayCheck[$key])) {
                 if (empty($arrayCheck[$key])) {
                     $errors["empty"] .= $errors["empty"] == "" ? "\"$key\"" : ", \"$key\"";
-                }
-                else {
+                } else {
                     $condition = false;
                     switch ($value['type']) {
                         case "string":
@@ -78,8 +87,10 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
+            [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
+            [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
                 if (empty($this->$attribute)) {
                     return;
@@ -135,15 +146,34 @@ class ConfigureForm extends Model
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
+            'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
+            'fileAssetLinks' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', [
+                'fileName' => '"' . WellKnownService::getFileName('fileAssetLinks') . '"',
+            ]),
+            'fileAppleAssociation' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', [
+                'fileName' => '"' . WellKnownService::getFileName('fileAppleAssociation') . '"',
+            ]),
         ];
     }
 
     public function attributeHints()
     {
         return [
-            'humhubInstallId' => 'Use this ID to register your API Key.',
-            'serverKey' => 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained. ',
-            'json' => 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'
+            'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
+            'serverKey' => Yii::t('FcmPushModule.base', 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.'),
+            'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
+            'fileAssetLinks' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [
+                'fileNameLink' => Link::to(
+                    WellKnownService::getFileName('fileAssetLinks'),
+                    WellKnownService::getFileRoute('fileAssetLinks'),
+                )->target('_blank'),
+            ]),
+            'fileAppleAssociation' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [
+                'fileNameLink' => Link::to(
+                    WellKnownService::getFileName('fileAppleAssociation'),
+                    WellKnownService::getFileRoute('fileAppleAssociation'),
+                )->target('_blank'),
+            ]),
         ];
     }
 
@@ -157,11 +187,15 @@ class ConfigureForm extends Model
         /** @var \humhub\modules\admin\Module $adminModule */
         $adminModule = Yii::$app->getModule('admin');
 
+        $this->enableEmailGoService = $settings->get('enableEmailGoService', false);
         $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
         $this->json = $settings->get('json');
         $this->serverKey = $settings->get('serverKey');
         $this->humhubApiKey = $settings->get('humhubApiKey');
+        $this->disableAuthChoicesIos = $settings->get('disableAuthChoicesIos');
+        $this->fileAssetLinks = $settings->get('fileAssetLinks');
+        $this->fileAppleAssociation = $settings->get('fileAppleAssociation');
 
         return true;
     }
@@ -171,10 +205,14 @@ class ConfigureForm extends Model
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
+        $module->settings->set('enableEmailGoService', $this->enableEmailGoService);
         $module->settings->set('senderId', $this->senderId);
         $module->settings->set('json', $this->json);
         $module->settings->set('serverKey', $this->serverKey);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
+        $module->settings->set('disableAuthChoicesIos', $this->disableAuthChoicesIos);
+        $module->settings->set('fileAssetLinks', $this->fileAssetLinks);
+        $module->settings->set('fileAppleAssociation', $this->fileAppleAssociation);
 
         return true;
     }
@@ -186,7 +224,7 @@ class ConfigureForm extends Model
 
     public static function getInstance()
     {
-        $config = new static;
+        $config = new static();
         $config->loadSettings();
 
         return $config;

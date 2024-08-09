@@ -6,6 +6,7 @@ use humhub\modules\fcmPush\driver\DriverInterface;
 use humhub\modules\fcmPush\driver\Fcm;
 use humhub\modules\fcmPush\driver\FcmLegacy;
 use humhub\modules\fcmPush\driver\Proxy;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\ConfigureForm;
 
 class DriverService
@@ -72,6 +73,10 @@ class DriverService
 
     public function getMobileAppDriver(): ?DriverInterface
     {
+        if (MobileAppHelper::isAppWithCustomFcm()) {
+            return $this->getConfiguredDriverByType(Fcm::class);
+        }
+
         return $this->getConfiguredDriverByType(Proxy::class);
     }
 
@@ -93,6 +98,8 @@ class DriverService
                 return $driver;
             }
         }
+
+        return null;
     }
 
 

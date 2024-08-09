@@ -41,5 +41,15 @@ class TokenService
 
         return $fcmUser->save();
     }
-    
+
+    public function deleteToken(string $token): bool
+    {
+        $fcmUser = FcmUser::findOne(['token' => $token]);
+        if ($fcmUser) {
+            return $fcmUser->delete();
+        }
+
+        return false;
+    }
+
 }

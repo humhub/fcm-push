@@ -2,22 +2,19 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\MailerMessage;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
+use humhub\modules\notification\widgets\UserInfoWidget;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
+use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
-use humhub\modules\notification\widgets\UserInfoWidget;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
-use humhub\modules\user\widgets\AccountMenu;
-use humhub\modules\user\widgets\AccountSettingsMenu;
-use humhub\modules\ui\menu\MenuLink;
 use humhub\widgets\BaseStack;
 use Yii;
 use yii\base\Event;
