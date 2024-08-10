@@ -53,29 +53,6 @@ humhub.module('firebase', function (module, require, $) {
     }
 
     /**
-     * Shows the notification permission window and handles the user's response.
-     * @function
-     */
-    const showNotificationPermissionWindow = function () {
-        /**
-         * Handles the notification permission result.
-         * @param {string} permission - The permission result.
-         */
-        function handlePermission(permission) {
-            addPushNotificationPermissionsInfo(permission, true);
-        }
-
-        if (!("Notification" in window)) {
-            console.log("This browser does not support notifications.");
-            handlePermission("not-supported");
-        } else {
-            Notification.requestPermission().then((permission) => {
-                handlePermission(permission);
-            });
-        }
-    }
-
-    /**
      * Adds information about push notification permissions to the UI.
      * @function
      * @param {string} permission - The notification permission status.
@@ -221,7 +198,6 @@ humhub.module('firebase', function (module, require, $) {
         setTokenLocalStore: setTokenLocalStore,
         getTokenLocalStore: getTokenLocalStore,
         deleteTokenLocalStore: deleteTokenLocalStore,
-        showNotificationPermissionWindow: showNotificationPermissionWindow,
         addPushNotificationPermissionsInfo: addPushNotificationPermissionsInfo
     });
 });
