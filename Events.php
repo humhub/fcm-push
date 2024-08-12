@@ -2,12 +2,12 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\MailerMessage;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
+use humhub\modules\notification\widgets\UserInfoWidget;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
@@ -84,19 +84,10 @@ class Events
 JS;
     }
 
-    public static function onNotificationInfoWidget($event)
-    {
-        /** @var BaseStack $baseStack */
-        $baseStack = $event->sender;
-
-        $baseStack->addWidget(PushNotificationInfoWidget::class);
-
-    }
-
     public static function onLayoutAddonInit($event)
     {
         if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
-            MobileAppHelper::unregisterNotificationScript(); // Before Logout
+            MobileAppHelper::unregisterNotificationScript();
             MobileAppHelper::registerLogoutScript();
             Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
         }
@@ -123,6 +114,14 @@ JS;
 
     }
 
+    public static function onInitUserInfoWidget($event)
+    {
+        /* @var UserInfoWidget $widget */
+        $widget = $event->sender;
+
+        $widget->addWidget(widgets\PushNotificationInfoWidget::class);
+    }
+
     public static function onAfterLogout()
     {
         Yii::$app->session->set(self::SESSION_VAR_LOGOUT, 1);
@@ -143,7 +142,6 @@ JS;
         if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
-
 
     }
 

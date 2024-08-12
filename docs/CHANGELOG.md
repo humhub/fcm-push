@@ -4,6 +4,7 @@ Changelog
 2.0.4 (Unreleased)
 ---------------------
 - Fix #41: Fix go service for multiline links
+- Enh #24: Notification Grant Status
 
 2.0.3 (June 24, 2024)
 ---------------------
