@@ -55,8 +55,6 @@ humhub.module('firebase', function (module, require, $) {
     /**
      * Adds information about push notification permissions to the UI.
      * @function
-     * @param {string} permission - The notification permission status.
-     * @param {boolean} [isAfterRequest=false] - Indicates if this is after a permission request.
      */
     const addPushNotificationPermissionsInfo = function () {
         let content = getNotificationPermissionContent();
