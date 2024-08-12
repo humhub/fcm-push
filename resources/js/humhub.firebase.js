@@ -58,13 +58,9 @@ humhub.module('firebase', function (module, require, $) {
      * @param {string} permission - The notification permission status.
      * @param {boolean} [isAfterRequest=false] - Indicates if this is after a permission request.
      */
-    const addPushNotificationPermissionsInfo = function (permission, isAfterRequest = false) {
+    const addPushNotificationPermissionsInfo = function () {
         let content = getNotificationPermissionContent();
         $('#pushNotificationPermissionInfo').html(content);
-
-        if (isAfterRequest && permission === 'granted') {
-            module.afterServiceWorkerRegistration();
-        }
     }
 
     /**
