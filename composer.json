@@ -25,7 +25,10 @@
 
 
   "config": {
-    "process-timeout": 1800
+    "process-timeout": 1800,
+     "platform": {
+         "php": "8.1"
+     }
   },
   "repositories": [
     {
