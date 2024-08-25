@@ -774,16 +774,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v4.28.0RC2",
+            "version": "v4.28.0RC3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "ded3cb97000b07455a6c2d18e274fd34e21ef02f"
+                "reference": "1ec322ca49ff14116a210bde7a69b81e39b2c9ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/ded3cb97000b07455a6c2d18e274fd34e21ef02f",
-                "reference": "ded3cb97000b07455a6c2d18e274fd34e21ef02f",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/1ec322ca49ff14116a210bde7a69b81e39b2c9ee",
+                "reference": "1ec322ca49ff14116a210bde7a69b81e39b2c9ee",
                 "shasum": ""
             },
             "require": {
@@ -812,9 +812,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.28.0RC2"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.28.0RC3"
             },
-            "time": "2024-08-08T20:11:15+00:00"
+            "time": "2024-08-22T17:35:15+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -1444,12 +1444,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "b914d02a9d86fda9625320c0e8f426fade86928e"
+                "reference": "e0cd5d576c5ba031c20a1204fc4054fe323f2f92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/b914d02a9d86fda9625320c0e8f426fade86928e",
-                "reference": "b914d02a9d86fda9625320c0e8f426fade86928e",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/e0cd5d576c5ba031c20a1204fc4054fe323f2f92",
+                "reference": "e0cd5d576c5ba031c20a1204fc4054fe323f2f92",
                 "shasum": ""
             },
             "require": {
@@ -1538,7 +1538,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-17T08:11:50+00:00"
+            "time": "2024-08-22T14:13:28+00:00"
         },
         {
             "name": "mtdowling/jmespath.php",
@@ -1902,12 +1902,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/log.git",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001"
+                "reference": "79dff0b268932c640297f5208d6298f71855c03e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/log/zipball/fe5ea303b0887d5caefd3d431c3e61ad47037001",
-                "reference": "fe5ea303b0887d5caefd3d431c3e61ad47037001",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/79dff0b268932c640297f5208d6298f71855c03e",
+                "reference": "79dff0b268932c640297f5208d6298f71855c03e",
                 "shasum": ""
             },
             "require": {
@@ -1943,9 +1943,9 @@
                 "psr-3"
             ],
             "support": {
-                "source": "https://github.com/php-fig/log/tree/3.0.0"
+                "source": "https://github.com/php-fig/log/tree/3.0.1"
             },
-            "time": "2021-07-14T16:46:02+00:00"
+            "time": "2024-08-21T13:31:24+00:00"
         },
         {
             "name": "ralouphie/getallheaders",

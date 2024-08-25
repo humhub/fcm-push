@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.0.4 (August 25, 2024)
+2.0.5 (August 25, 2024)
 -----------------------
 - Fix #41: Fix go service for multiline links
 - Enh #47: Updated `kreait/firebase-php` to version 7.13+
