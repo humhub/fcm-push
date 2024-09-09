@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.7 (September 2, 2024)
+-------------------------
+- Fix #48: Fix go service for multiline links
+
 2.0.6 (August 25, 2024)
 -----------------------
 - Fix #41: Fix go service for multiline links

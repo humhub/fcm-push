@@ -60,13 +60,13 @@ class GoService
     public function processLinks($text): ?string
     {
         return $this->isConfigured()
-            ? preg_replace_callback('#(<a.+?href=")(' . $this->sitePattern . '.+?)(".*?>)#is', [$this, 'callbackReplaceLink'], $text)
+            ? preg_replace_callback('#(<a.+?href=")(' . $this->sitePattern . '[^"\r\n]*)#is', [$this, 'callbackReplaceLink'], $text)
             : $text;
     }
 
     private function callbackReplaceLink($matches)
     {
-        return $matches[1] . $this->buildUrl($matches[2]) . $matches[3];
+        return $matches[1] . $this->buildUrl($matches[2]);
     }
 
     public function buildUrl(string $url): string
