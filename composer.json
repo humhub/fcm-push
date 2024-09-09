@@ -3,7 +3,8 @@
   "description": "HumHub Firebase Module",
   "type": "library",
   "require": {
-    "kreait/firebase-php": "^6.0",
+    "php": ">=8.0",
+    "kreait/firebase-php": "^7.13.1",
     "npm-asset/firebase": "6.3.3"
   },
   "replace": {
@@ -25,9 +26,9 @@
 
   "config": {
     "process-timeout": 1800,
-    "platform": {
-      "php": "7.4"
-    }
+     "platform": {
+         "php": "8.1"
+     }
   },
   "repositories": [
     {
