@@ -12,5 +12,8 @@
         "minVersion": "1.14"
     },
     "version": "2.0.7",
-    "screenshots": []
+    "screenshots": [
+        "resources/screenshot1.PNG",
+        "resources/screenshot2.PNG"
+    ]
 }
