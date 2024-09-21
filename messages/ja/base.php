@@ -11,7 +11,7 @@ return array (
   'Install ID' => 'Install ID',
   'Link Redirection Service' => 'リンクリダイレクトサービス',
   'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'サービスアカウント JSONファイルの内容をここに貼り付けます。詳細についてはモジュールの説明を参照してください。',
-  'Please enable <a {attrs}>Pretty URLs</a> for proper working of the well-known files.' => '',
+  'Please enable <a {attrs}>Pretty URLs</a> for proper working of the well-known files.' => 'よく知られたファイルを正しく動作させるには、<a href="{attrs}">きれいなURL</a>を有効にしてください。',
   'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => '新しい「Firebase Cloud Messaging API (V1)」に切り替えて、上記のフィールドに JSONファイルを入力してください。古いレガシー APIは既存のインストールで一時的にのみ使用可能であり、サポートもメンテナンスも行われていません。',
   'Push Service (required for the mobile app) (Beta)' => 'プッシュ サービス (モバイル アプリに必要) (ベータ版)',
   'Sender ID' => '送信者 ID',
