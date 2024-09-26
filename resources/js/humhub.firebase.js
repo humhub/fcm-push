@@ -3,7 +3,12 @@ humhub.module('firebase', function (module, require, $) {
 
     const init = function () {
         if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: this.senderId()});
+            firebase.initializeApp({
+                messagingSenderId: this.senderId(),
+                projectId: module.config.projectId,
+                apiKey: module.config.apiKey,
+                appId: module.config.appId,
+            });
             this.messaging = firebase.messaging();
 
             this.messaging.onMessage(function (payload) {
@@ -11,7 +16,7 @@ humhub.module('firebase', function (module, require, $) {
             });
 
             // Callback fired if Instance ID token is updated.
-            this.messaging.onTokenRefresh(function () {
+            this.messaging.onBackgroundMessage(function () {
                 this.messaging.getToken().then(function (refreshedToken) {
                     this.deleteTokenLocalStore();
                     this.sendTokenToServer(refreshedToken);
@@ -28,13 +33,19 @@ humhub.module('firebase', function (module, require, $) {
 
         const that = this;
 
-        this.messaging.useServiceWorker(registration);
+        // this.messaging.useServiceWorker(registration);
 
         // Request for permission
-        this.messaging.requestPermission().then(function () {
-            //console.log('Notification permission granted.');
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') {
+                // console.log('Notification permission is not granted.');
+                return;
+            }
 
-            that.messaging.getToken().then(function (currentToken) {
+            that.messaging.getToken(messaging, {
+                vapidKey: 'YOUR_PUBLIC_VAPID_KEY',
+                serviceWorkerRegistration: registration
+            }).then(function (currentToken) {
                 if (currentToken) {
                     //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);

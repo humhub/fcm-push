@@ -17,14 +17,13 @@ class FirebaseAsset extends AssetBundle
 
     public $publishOptions = [
         'forceCopy' => false,
-
     ];
 
     public $sourcePath = '@fcm-push/vendor/npm-asset/firebase';
 
     public $js = [
-        'firebase-app.js',
-        'firebase-messaging.js',
+        'firebase-app-compat.js',
+        'firebase-messaging-compat.js',
         //'https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js',
         //'https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js'
     ];

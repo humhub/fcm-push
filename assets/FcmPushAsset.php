@@ -13,7 +13,7 @@ class FcmPushAsset extends AssetBundle
     public $defer = false;
 
     public $publishOptions = [
-        'forceCopy' => true,
+        'forceCopy' => false,
     ];
 
     public $sourcePath = '@fcm-push/resources/js';
@@ -32,11 +32,12 @@ class FcmPushAsset extends AssetBundle
             Yii::$app->view->registerJsConfig('firebase', [
                 'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
                 'senderId' => $pushDriver->getSenderId(),
+                'projectId' => $module->getConfigureForm()->humhubInstallId,
+                'apiKey' => $module->getConfigureForm()->humhubApiKey,
+                'appId' => $module->getConfigureForm()->humhubInstallId,
             ]);
-
-            return parent::register($view);
         }
 
-
+        return parent::register($view);
     }
 }
