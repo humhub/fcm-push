@@ -9,7 +9,6 @@ use Yii;
 
 class SendController extends \yii\console\Controller
 {
-
     public function actionSendToUser($userId, $title, $message)
     {
         /** @var Module $module */
@@ -23,7 +22,7 @@ class SendController extends \yii\console\Controller
             $message,
             null,
             null,
-            null
+            null,
         );
     }
 }

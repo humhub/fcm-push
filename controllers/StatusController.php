@@ -15,14 +15,14 @@ class StatusController extends Controller
     public function actionIndex()
     {
         if (!$this->module->isActivated) {
-            return $this->returnStatus(404,'FCM Module is not installed');
+            return $this->returnStatus(404, 'FCM Module is not installed');
         }
 
         if (!$this->module->getDriverService()->hasConfiguredDriver()) {
-            return $this->returnStatus(501,'Push Proxy is not configured');
+            return $this->returnStatus(501, 'Push Proxy is not configured');
         }
 
-        return $this->returnStatus(200,'OK, Push (Proxy) is correctly configured');
+        return $this->returnStatus(200, 'OK, Push (Proxy) is correctly configured');
     }
 
     private function returnStatus(int $code, string $message): Response

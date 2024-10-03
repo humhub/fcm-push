@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
@@ -21,7 +20,6 @@ use yii\base\Event;
 
 class Events
 {
-
     private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
     private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
 
@@ -133,7 +131,8 @@ JS;
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
     }
 
-    public static function onAuthChoiceBeforeRun(Event $event) {
+    public static function onAuthChoiceBeforeRun(Event $event)
+    {
         /** @var AuthChoice $sender */
         $sender = $event->sender;
 

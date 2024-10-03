@@ -31,7 +31,7 @@ class MessagingService
             $baseNotification->text(),
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
             null,
-            NotificationHumHub::findUnseen($user)->count()
+            NotificationHumHub::findUnseen($user)->count(),
         );
     }
 

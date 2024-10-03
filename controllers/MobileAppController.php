@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush\controllers;
 
-
 use humhub\modules\admin\components\Controller;
 use humhub\modules\admin\notifications\NewVersionAvailable;
 use humhub\modules\fcmPush\models\FcmUser;
@@ -11,7 +10,6 @@ use Yii;
 
 class MobileAppController extends Controller
 {
-
     /**
      * Renders the index view for the module
      *
