@@ -13,7 +13,6 @@ use Yii;
  */
 class AdminController extends Controller
 {
-
     public function actionIndex()
     {
 

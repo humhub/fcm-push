@@ -38,7 +38,7 @@ class Proxy extends Client implements DriverInterface
             'imageUrl' => $imageUrl,
             'iconUrl' => SiteIcon::getUrl(180),
             'url' => $url,
-            'notificationCount' => $notificationCount
+            'notificationCount' => $notificationCount,
         ];
 
         $response = $this->post('/push', $data)->send();

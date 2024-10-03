@@ -5,7 +5,6 @@
 
 use humhub\modules\fcmPush\Events;
 use humhub\components\Controller;
-
 //use humhub\modules\notification\widgets\NotificationInfoWidget;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\widgets\LayoutAddons;

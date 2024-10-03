@@ -19,7 +19,6 @@ use yii\db\ActiveRecord;
  */
 class FcmUser extends ActiveRecord
 {
-
     /**
      * @inheritDoc
      */
