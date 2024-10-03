@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.0.8 (Unreleased)
+-------------------------
+- Enh #52: Use PHP CS Fixer
+
 2.0.7 (September 2, 2024)
 -------------------------
 - Fix #48: Fix go service for multiline links
