@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "781d201cd7c30ddf087521a0a6ee4035",
+    "content-hash": "9340c21ec8230872325b5e0286c6dd4b",
     "packages": [
         {
             "name": "beste/clock",
@@ -1197,16 +1197,16 @@
         },
         {
             "name": "kreait/firebase-php",
-            "version": "7.x-dev",
+            "version": "7.15.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-php.git",
-                "reference": "b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee"
+                "reference": "4dbbc88539b71b16ebb5e4fc94ee2d7003ae13e2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee",
-                "reference": "b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/4dbbc88539b71b16ebb5e4fc94ee2d7003ae13e2",
+                "reference": "4dbbc88539b71b16ebb5e4fc94ee2d7003ae13e2",
                 "shasum": ""
             },
             "require": {
@@ -1252,7 +1252,6 @@
             "suggest": {
                 "google/cloud-firestore": "^1.0 to use the Firestore component"
             },
-            "default-branch": true,
             "type": "library",
             "extra": {
                 "branch-alias": {
@@ -1294,7 +1293,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-09T00:30:14+00:00"
+            "time": "2024-09-10T22:44:23+00:00"
         },
         {
             "name": "kreait/firebase-tokens",
@@ -1616,25 +1615,25 @@
         },
         {
             "name": "npm-asset/firebase",
-            "version": "10.6.0",
+            "version": "10.6.0-patch20231107192534",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/firebase/-/firebase-10.6.0.tgz"
+                "url": "https://registry.npmjs.org/firebase/-/firebase-10.6.0-20231107192534.tgz"
             },
             "require": {
                 "npm-asset/firebase--analytics": "0.10.0",
                 "npm-asset/firebase--analytics-compat": "0.2.6",
-                "npm-asset/firebase--app": "0.9.23",
+                "npm-asset/firebase--app": "0.9.23-patch20231107192534",
                 "npm-asset/firebase--app-check": "0.8.0",
                 "npm-asset/firebase--app-check-compat": "0.3.7",
-                "npm-asset/firebase--app-compat": "0.2.23",
+                "npm-asset/firebase--app-compat": "0.2.23-patch20231107192534",
                 "npm-asset/firebase--app-types": "0.9.0",
-                "npm-asset/firebase--auth": "1.4.0",
-                "npm-asset/firebase--auth-compat": "0.4.9",
+                "npm-asset/firebase--auth": "1.4.0-patch20231107192534",
+                "npm-asset/firebase--auth-compat": "0.4.9-patch20231107192534",
                 "npm-asset/firebase--database": "1.0.1",
                 "npm-asset/firebase--database-compat": "1.0.1",
                 "npm-asset/firebase--firestore": "4.3.2",
-                "npm-asset/firebase--firestore-compat": "0.3.22",
+                "npm-asset/firebase--firestore-compat": "0.3.22-patch20231107192534",
                 "npm-asset/firebase--functions": "0.10.0",
                 "npm-asset/firebase--functions-compat": "0.3.5",
                 "npm-asset/firebase--installations": "0.6.4",
@@ -1756,13 +1755,13 @@
         },
         {
             "name": "npm-asset/firebase--app-compat",
-            "version": "0.2.23",
+            "version": "0.2.23-patch20231107192534",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/app-compat/-/app-compat-0.2.23.tgz"
+                "url": "https://registry.npmjs.org/@firebase/app-compat/-/app-compat-0.2.23-20231107192534.tgz"
             },
             "require": {
-                "npm-asset/firebase--app": "0.9.23",
+                "npm-asset/firebase--app": "0.9.23-patch20231107192534",
                 "npm-asset/firebase--component": "0.6.4",
                 "npm-asset/firebase--logger": "0.4.0",
                 "npm-asset/firebase--util": "1.9.3",
@@ -1775,13 +1774,13 @@
         },
         {
             "name": "npm-asset/firebase--auth-compat",
-            "version": "0.4.9",
+            "version": "0.4.9-patch20231107192534",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/auth-compat/-/auth-compat-0.4.9.tgz"
+                "url": "https://registry.npmjs.org/@firebase/auth-compat/-/auth-compat-0.4.9-20231107192534.tgz"
             },
             "require": {
-                "npm-asset/firebase--auth": "1.4.0",
+                "npm-asset/firebase--auth": "1.4.0-patch20231107192534",
                 "npm-asset/firebase--auth-types": "0.12.0",
                 "npm-asset/firebase--component": "0.6.4",
                 "npm-asset/firebase--util": "1.9.3",
@@ -1859,10 +1858,10 @@
         },
         {
             "name": "npm-asset/firebase--firestore-compat",
-            "version": "0.3.22",
+            "version": "0.3.22-patch20231107192534",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/firestore-compat/-/firestore-compat-0.3.22.tgz"
+                "url": "https://registry.npmjs.org/@firebase/firestore-compat/-/firestore-compat-0.3.22-20231107192534.tgz"
             },
             "require": {
                 "npm-asset/firebase--component": "0.6.4",
@@ -2929,5 +2928,5 @@
     "platform-overrides": {
         "php": "8.1"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }

@@ -150,9 +150,9 @@ class ConfigureForm extends Model
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
             'firebaseProjectId' => Yii::t('FcmPushModule.base', 'Project ID'),
-            'firebaseApiKey' => Yii::t('FcmPushModule.base', 'API ID'),
+            'firebaseApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Application ID'),
-            'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'VAPID (Voluntary Application Server Identification) key'),
+            'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'VAPID key (Voluntary Application Server Identification)'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
             'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
@@ -169,6 +169,7 @@ class ConfigureForm extends Model
     {
         return [
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
+            'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging -> Web Push certificates -> Key pair'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.'),
             'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
             'fileAssetLinks' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [

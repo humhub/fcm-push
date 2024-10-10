@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.1.0 (Unreleased)
+-------------------------
+- Fix #51: Firebase not working anymore for web push notifications
+
+**This version requires extra settings in the module configuration.**
+
+Please read [the Installation page](https://marketplace.humhub.com/module/fcm-push/installation) and update the Firebase version in the CSP configuration.
+
 2.0.7 (September 2, 2024)
 -------------------------
 - Fix #48: Fix go service for multiline links
