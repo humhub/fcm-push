@@ -17,6 +17,12 @@ class ConfigureForm extends Model
     public $humhubInstallId;
 
     public $senderId;
+    public $firebaseProjectId;
+    public $firebaseApiKey;
+    public $firebaseAppId;
+    public $firebaseAuthDomain;
+    public $firebaseStorageBucket;
+    public $firebaseVapidKey;
 
     public $json;
 
@@ -89,6 +95,7 @@ class ConfigureForm extends Model
         return [
             [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
+            [['firebaseProjectId', 'firebaseApiKey', 'firebaseAppId', 'firebaseAuthDomain', 'firebaseStorageBucket', 'firebaseVapidKey'], 'string'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
             [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
@@ -144,6 +151,12 @@ class ConfigureForm extends Model
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Install ID'),
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
+            'firebaseProjectId' => Yii::t('FcmPushModule.base', 'Project ID'),
+            'firebaseApiKey' => Yii::t('FcmPushModule.base', 'API ID'),
+            'firebaseAppId' => Yii::t('FcmPushModule.base', 'Application ID'),
+            'firebaseAuthDomain' => Yii::t('FcmPushModule.base', 'Auth domain URL'),
+            'firebaseStorageBucket' => Yii::t('FcmPushModule.base', 'Storage bucket URL'),
+            'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'VAPID (Voluntary Application Server Identification) key'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
             'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
@@ -190,6 +203,12 @@ class ConfigureForm extends Model
         $this->enableEmailGoService = $settings->get('enableEmailGoService', false);
         $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
+        $this->firebaseProjectId = $settings->get('firebaseProjectId');
+        $this->firebaseApiKey = $settings->get('firebaseApiKey');
+        $this->firebaseAppId = $settings->get('firebaseAppId');
+        $this->firebaseAuthDomain = $settings->get('firebaseAuthDomain');
+        $this->firebaseStorageBucket = $settings->get('firebaseStorageBucket');
+        $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
         $this->json = $settings->get('json');
         $this->serverKey = $settings->get('serverKey');
         $this->humhubApiKey = $settings->get('humhubApiKey');
@@ -207,6 +226,12 @@ class ConfigureForm extends Model
 
         $module->settings->set('enableEmailGoService', $this->enableEmailGoService);
         $module->settings->set('senderId', $this->senderId);
+        $module->settings->set('firebaseProjectId', $this->firebaseProjectId);
+        $module->settings->set('firebaseApiKey', $this->firebaseApiKey);
+        $module->settings->set('firebaseAppId', $this->firebaseAppId);
+        $module->settings->set('firebaseAuthDomain', $this->firebaseAuthDomain);
+        $module->settings->set('firebaseStorageBucket', $this->firebaseStorageBucket);
+        $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
         $module->settings->set('json', $this->json);
         $module->settings->set('serverKey', $this->serverKey);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);

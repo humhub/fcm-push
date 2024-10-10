@@ -2,29 +2,42 @@
 
 namespace humhub\modules\fcmPush\assets;
 
+use humhub\components\assets\AssetBundle;
 use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\DriverService;
 use Yii;
 use yii\helpers\Url;
-use yii\web\AssetBundle;
 
 class FcmPushAsset extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public $defer = false;
 
-    public $publishOptions = [
-        'forceCopy' => false,
-    ];
+    /**
+     * @inheritdoc
+     */
+    public $forceCopy = true;
 
+    /**
+     * @inheritdoc
+     */
     public $sourcePath = '@fcm-push/resources/js';
 
+    /**
+     * @inheritdoc
+     */
     public $js = [
         'humhub.firebase.js',
     ];
 
+    /**
+     * @inheritdoc
+     */
     public static function register($view)
     {
-        /** @var Module $module */
+        /* @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
         $pushDriver = (new DriverService($module->getConfigureForm()))->getWebDriver();
@@ -32,9 +45,12 @@ class FcmPushAsset extends AssetBundle
             Yii::$app->view->registerJsConfig('firebase', [
                 'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
                 'senderId' => $pushDriver->getSenderId(),
-                'projectId' => $module->getConfigureForm()->humhubInstallId,
-                'apiKey' => $module->getConfigureForm()->humhubApiKey,
-                'appId' => $module->getConfigureForm()->humhubInstallId,
+                'projectId' => $module->getConfigureForm()->firebaseProjectId,
+                'apiKey' => $module->getConfigureForm()->firebaseApiKey,
+                'appId' => $module->getConfigureForm()->firebaseAppId,
+                'authDomain' => $module->getConfigureForm()->firebaseAuthDomain,
+                'storageBucket' => $module->getConfigureForm()->firebaseStorageBucket,
+                'vapidKey' => $module->getConfigureForm()->firebaseVapidKey,
             ]);
         }
 

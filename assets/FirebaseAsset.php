@@ -8,24 +8,32 @@
 
 namespace humhub\modules\fcmPush\assets;
 
-use humhub\modules\ui\view\components\View;
-use yii\web\AssetBundle;
+use humhub\components\assets\AssetBundle;
 
 class FirebaseAsset extends AssetBundle
 {
+    /**
+     * @inheritdoc
+     */
     public $defer = false;
 
-    public $publishOptions = [
-        'forceCopy' => false,
-    ];
+    /**
+     * @inheritdoc
+     */
+    public $forceCopy = true;
 
+    /**
+     * @inheritdoc
+     */
     public $sourcePath = '@fcm-push/vendor/npm-asset/firebase';
 
+    /**
+     * @inheritdoc
+     */
     public $js = [
         'firebase-app-compat.js',
         'firebase-messaging-compat.js',
         //'https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js',
         //'https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js'
     ];
-
 }

@@ -8,6 +8,8 @@ humhub.module('firebase', function (module, require, $) {
                 projectId: module.config.projectId,
                 apiKey: module.config.apiKey,
                 appId: module.config.appId,
+                authDomain: module.config.authDomain,
+                storageBucket: module.config.storageBucket,
             });
             this.messaging = firebase.messaging();
 
@@ -16,14 +18,17 @@ humhub.module('firebase', function (module, require, $) {
             });
 
             // Callback fired if Instance ID token is updated.
-            this.messaging.onBackgroundMessage(function () {
-                this.messaging.getToken().then(function (refreshedToken) {
-                    this.deleteTokenLocalStore();
-                    this.sendTokenToServer(refreshedToken);
-                }).catch(function (err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                });
-            });
+            // TODO: It is commented because of the error: "Could not initialize module:
+            //       humhub.modules.firebase FirebaseError: Messaging: This method is available
+            //       in a service worker context. (messaging/only-available-in-sw)."
+            // this.messaging.onBackgroundMessage(function () {
+            //     this.messaging.getToken().then(function (refreshedToken) {
+            //         this.deleteTokenLocalStore();
+            //         this.sendTokenToServer(refreshedToken);
+            //     }).catch(function (err) {
+            //         console.log('Unable to retrieve refreshed token ', err);
+            //     });
+            // });
         }
     };
 
@@ -43,8 +48,8 @@ humhub.module('firebase', function (module, require, $) {
             }
 
             that.messaging.getToken(messaging, {
-                vapidKey: 'YOUR_PUBLIC_VAPID_KEY',
-                serviceWorkerRegistration: registration
+                vapidKey: module.config.vapidKey,
+                serviceWorkerRegistration: registration,
             }).then(function (currentToken) {
                 if (currentToken) {
                     //console.log('Token: ' + currentToken);

@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush;
 
-
 use humhub\components\mail\Message;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
@@ -21,7 +20,6 @@ use yii\base\Event;
 
 class Events
 {
-
     private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
     private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
 
@@ -65,21 +63,25 @@ class Events
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
             // Give the service worker access to Firebase Messaging.
-            importScripts('{$bundle->baseUrl}/firebase-app.js');
-            importScripts('{$bundle->baseUrl}/firebase-messaging.js');
+            importScripts('{$bundle->baseUrl}/firebase-app-compat.js');
+            importScripts('{$bundle->baseUrl}/firebase-messaging-compat.js');
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
             //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
-        
-           firebase.initializeApp({messagingSenderId: "{$pushDriver->getSenderId()}"});
-            
-            const messaging = firebase.messaging();
-            messaging.setBackgroundMessageHandler(function(payload) {
-              const notificationTitle = payload.data.title;
-              const notificationOptions = {
-                body: payload.data.body,
-                icon: payload.data.icon
-              };
-              return self.registration.showNotification(notificationTitle, notificationOptions);
+
+            firebase.initializeApp({
+                messagingSenderId: "{$pushDriver->getSenderId()}",
+                projectId: "{$module->getConfigureForm()->firebaseProjectId}",
+                apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
+                appId: "{$module->getConfigureForm()->firebaseApiKey}"
+                authDomain: "{$module->getConfigureForm()->firebaseAuthDomain}",
+                storageBucket: "{$module->getConfigureForm()->firebaseStorageBucket}"
+            });
+
+            firebase.messaging().onBackgroundMessage(function(payload) {
+                return self.registration.showNotification(payload.notification.title, {
+                    body: payload.notification.body,
+                    image: payload.notification.image
+                });
             });
 JS;
     }
@@ -90,7 +92,6 @@ JS;
         $baseStack = $event->sender;
 
         $baseStack->addWidget(PushNotificationInfoWidget::class);
-
     }
 
     public static function onLayoutAddonInit($event)
@@ -120,7 +121,6 @@ JS;
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
-
     }
 
     public static function onAfterLogout()
@@ -133,7 +133,8 @@ JS;
         Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
     }
 
-    public static function onAuthChoiceBeforeRun(Event $event) {
+    public static function onAuthChoiceBeforeRun(Event $event)
+    {
         /** @var AuthChoice $sender */
         $sender = $event->sender;
 
@@ -143,8 +144,5 @@ JS;
         if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
-
-
     }
-
 }

@@ -453,16 +453,16 @@
         },
         {
             "name": "google/cloud-core",
-            "version": "v1.59.1",
+            "version": "v1.60.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-core.git",
-                "reference": "35aae23dc4d0b860b6c3733e5cf381a510b506d9"
+                "reference": "7d63ba4295b799dc63227b6c9daf9dc207650eb4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/35aae23dc4d0b860b6c3733e5cf381a510b506d9",
-                "reference": "35aae23dc4d0b860b6c3733e5cf381a510b506d9",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-core/zipball/7d63ba4295b799dc63227b6c9daf9dc207650eb4",
+                "reference": "7d63ba4295b799dc63227b6c9daf9dc207650eb4",
                 "shasum": ""
             },
             "require": {
@@ -513,22 +513,22 @@
             ],
             "description": "Google Cloud PHP shared dependency, providing functionality useful to all components.",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.59.1"
+                "source": "https://github.com/googleapis/google-cloud-php-core/tree/v1.60.0"
             },
-            "time": "2024-08-10T02:24:23+00:00"
+            "time": "2024-09-28T04:24:22+00:00"
         },
         {
             "name": "google/cloud-storage",
-            "version": "v1.42.1",
+            "version": "v1.43.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-cloud-php-storage.git",
-                "reference": "2a418cad887e44d08a86de19a878ea3607212edb"
+                "reference": "e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/2a418cad887e44d08a86de19a878ea3607212edb",
-                "reference": "2a418cad887e44d08a86de19a878ea3607212edb",
+                "url": "https://api.github.com/repos/googleapis/google-cloud-php-storage/zipball/e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc",
+                "reference": "e4a071bd5efaecd14fe82b0f4f7748d1acfb1cfc",
                 "shasum": ""
             },
             "require": {
@@ -570,9 +570,9 @@
             ],
             "description": "Cloud Storage Client for PHP",
             "support": {
-                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.42.1"
+                "source": "https://github.com/googleapis/google-cloud-php-storage/tree/v1.43.1"
             },
-            "time": "2024-07-08T23:14:13+00:00"
+            "time": "2024-10-05T04:59:14+00:00"
         },
         {
             "name": "google/common-protos",
@@ -781,16 +781,16 @@
         },
         {
             "name": "google/protobuf",
-            "version": "v4.28.2",
+            "version": "v4.29.0RC1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/protocolbuffers/protobuf-php.git",
-                "reference": "96021a9a8a5aa7770427b1e7ef1b2e543792684e"
+                "reference": "0f45d7463a68459fbb524d5a0fa0d6200b45b3ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/96021a9a8a5aa7770427b1e7ef1b2e543792684e",
-                "reference": "96021a9a8a5aa7770427b1e7ef1b2e543792684e",
+                "url": "https://api.github.com/repos/protocolbuffers/protobuf-php/zipball/0f45d7463a68459fbb524d5a0fa0d6200b45b3ad",
+                "reference": "0f45d7463a68459fbb524d5a0fa0d6200b45b3ad",
                 "shasum": ""
             },
             "require": {
@@ -819,9 +819,9 @@
                 "proto"
             ],
             "support": {
-                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.28.2"
+                "source": "https://github.com/protocolbuffers/protobuf-php/tree/v4.29.0RC1"
             },
-            "time": "2024-09-18T20:56:15+00:00"
+            "time": "2024-09-30T22:44:08+00:00"
         },
         {
             "name": "grpc/grpc",
@@ -1201,12 +1201,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/kreait/firebase-php.git",
-                "reference": "45713e50f16982bb62f9c573fe08d79d3140376f"
+                "reference": "b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/45713e50f16982bb62f9c573fe08d79d3140376f",
-                "reference": "45713e50f16982bb62f9c573fe08d79d3140376f",
+                "url": "https://api.github.com/repos/kreait/firebase-php/zipball/b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee",
+                "reference": "b46ed91f0b9019006b3edf2ff9c3f99c432fb3ee",
                 "shasum": ""
             },
             "require": {
@@ -1294,7 +1294,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-16T23:34:00+00:00"
+            "time": "2024-10-09T00:30:14+00:00"
         },
         {
             "name": "kreait/firebase-tokens",
@@ -2617,12 +2617,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "7839a5663b4dd1de8d90619d78199517ba8ea653"
+                "reference": "5b996d9736e50cb39fbf5d50485e1aacea30491e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/7839a5663b4dd1de8d90619d78199517ba8ea653",
-                "reference": "7839a5663b4dd1de8d90619d78199517ba8ea653",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/5b996d9736e50cb39fbf5d50485e1aacea30491e",
+                "reference": "5b996d9736e50cb39fbf5d50485e1aacea30491e",
                 "shasum": ""
             },
             "require": {
@@ -2702,7 +2702,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-09-23T21:07:05+00:00"
+            "time": "2024-10-07T21:53:55+00:00"
         },
         {
             "name": "rize/uri-template",
