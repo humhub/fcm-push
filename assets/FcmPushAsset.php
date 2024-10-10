@@ -18,11 +18,6 @@ class FcmPushAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $forceCopy = true;
-
-    /**
-     * @inheritdoc
-     */
     public $sourcePath = '@fcm-push/resources/js';
 
     /**
@@ -48,8 +43,6 @@ class FcmPushAsset extends AssetBundle
                 'projectId' => $module->getConfigureForm()->firebaseProjectId,
                 'apiKey' => $module->getConfigureForm()->firebaseApiKey,
                 'appId' => $module->getConfigureForm()->firebaseAppId,
-                'authDomain' => $module->getConfigureForm()->firebaseAuthDomain,
-                'storageBucket' => $module->getConfigureForm()->firebaseStorageBucket,
                 'vapidKey' => $module->getConfigureForm()->firebaseVapidKey,
             ]);
         }

@@ -65,16 +65,12 @@ class Events
             // Give the service worker access to Firebase Messaging.
             importScripts('{$bundle->baseUrl}/firebase-app-compat.js');
             importScripts('{$bundle->baseUrl}/firebase-messaging-compat.js');
-            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
-            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
 
             firebase.initializeApp({
                 messagingSenderId: "{$pushDriver->getSenderId()}",
                 projectId: "{$module->getConfigureForm()->firebaseProjectId}",
                 apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
                 appId: "{$module->getConfigureForm()->firebaseApiKey}"
-                authDomain: "{$module->getConfigureForm()->firebaseAuthDomain}",
-                storageBucket: "{$module->getConfigureForm()->firebaseStorageBucket}"
             });
 
             firebase.messaging().onBackgroundMessage(function(payload) {

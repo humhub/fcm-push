@@ -1,6 +1,4 @@
 humhub.module('firebase', function (module, require, $) {
-    let messaging;
-
     const init = function () {
         if (!firebase.apps.length) {
             firebase.initializeApp({
@@ -8,8 +6,6 @@ humhub.module('firebase', function (module, require, $) {
                 projectId: module.config.projectId,
                 apiKey: module.config.apiKey,
                 appId: module.config.appId,
-                authDomain: module.config.authDomain,
-                storageBucket: module.config.storageBucket,
             });
             this.messaging = firebase.messaging();
 
@@ -38,16 +34,16 @@ humhub.module('firebase', function (module, require, $) {
 
         const that = this;
 
-        // this.messaging.useServiceWorker(registration);
+        this.messaging.swRegistration = registration;
 
         // Request for permission
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
-                // console.log('Notification permission is not granted.');
+                module.log.info('Notification permission is not granted.');
                 return;
             }
 
-            that.messaging.getToken(messaging, {
+            that.messaging.getToken({
                 vapidKey: module.config.vapidKey,
                 serviceWorkerRegistration: registration,
             }).then(function (currentToken) {
@@ -128,20 +124,20 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     module.export({
-        init: init,
+        init,
 
-        isTokenSentToServer: isTokenSentToServer,
-        sendTokenToServer: sendTokenToServer,
-        afterServiceWorkerRegistration: afterServiceWorkerRegistration,
+        isTokenSentToServer,
+        sendTokenToServer,
+        afterServiceWorkerRegistration,
 
         // Config Vars
-        senderId: senderId,
-        tokenUpdateUrl: tokenUpdateUrl,
+        senderId,
+        tokenUpdateUrl,
 
         // LocalStore Helper
-        setTokenLocalStore: setTokenLocalStore,
-        getTokenLocalStore: getTokenLocalStore,
-        deleteTokenLocalStore: deleteTokenLocalStore,
+        setTokenLocalStore,
+        getTokenLocalStore,
+        deleteTokenLocalStore,
     });
 });
 

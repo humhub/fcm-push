@@ -20,11 +20,6 @@ class FirebaseAsset extends AssetBundle
     /**
      * @inheritdoc
      */
-    public $forceCopy = true;
-
-    /**
-     * @inheritdoc
-     */
     public $sourcePath = '@fcm-push/vendor/npm-asset/firebase';
 
     /**
@@ -33,7 +28,5 @@ class FirebaseAsset extends AssetBundle
     public $js = [
         'firebase-app-compat.js',
         'firebase-messaging-compat.js',
-        //'https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js',
-        //'https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js'
     ];
 }

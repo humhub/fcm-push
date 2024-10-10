@@ -20,8 +20,6 @@ class ConfigureForm extends Model
     public $firebaseProjectId;
     public $firebaseApiKey;
     public $firebaseAppId;
-    public $firebaseAuthDomain;
-    public $firebaseStorageBucket;
     public $firebaseVapidKey;
 
     public $json;
@@ -95,7 +93,7 @@ class ConfigureForm extends Model
         return [
             [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
-            [['firebaseProjectId', 'firebaseApiKey', 'firebaseAppId', 'firebaseAuthDomain', 'firebaseStorageBucket', 'firebaseVapidKey'], 'string'],
+            [['firebaseProjectId', 'firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
             [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
@@ -154,8 +152,6 @@ class ConfigureForm extends Model
             'firebaseProjectId' => Yii::t('FcmPushModule.base', 'Project ID'),
             'firebaseApiKey' => Yii::t('FcmPushModule.base', 'API ID'),
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Application ID'),
-            'firebaseAuthDomain' => Yii::t('FcmPushModule.base', 'Auth domain URL'),
-            'firebaseStorageBucket' => Yii::t('FcmPushModule.base', 'Storage bucket URL'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'VAPID (Voluntary Application Server Identification) key'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
             'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
@@ -206,8 +202,6 @@ class ConfigureForm extends Model
         $this->firebaseProjectId = $settings->get('firebaseProjectId');
         $this->firebaseApiKey = $settings->get('firebaseApiKey');
         $this->firebaseAppId = $settings->get('firebaseAppId');
-        $this->firebaseAuthDomain = $settings->get('firebaseAuthDomain');
-        $this->firebaseStorageBucket = $settings->get('firebaseStorageBucket');
         $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
         $this->json = $settings->get('json');
         $this->serverKey = $settings->get('serverKey');
@@ -229,8 +223,6 @@ class ConfigureForm extends Model
         $module->settings->set('firebaseProjectId', $this->firebaseProjectId);
         $module->settings->set('firebaseApiKey', $this->firebaseApiKey);
         $module->settings->set('firebaseAppId', $this->firebaseAppId);
-        $module->settings->set('firebaseAuthDomain', $this->firebaseAuthDomain);
-        $module->settings->set('firebaseStorageBucket', $this->firebaseStorageBucket);
         $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
         $module->settings->set('json', $this->json);
         $module->settings->set('serverKey', $this->serverKey);

@@ -42,8 +42,6 @@ use yii\helpers\Html;
         <?= $form->field($model, 'firebaseProjectId') ?>
         <?= $form->field($model, 'firebaseApiKey') ?>
         <?= $form->field($model, 'firebaseAppId') ?>
-        <?= $form->field($model, 'firebaseAuthDomain') ?>
-        <?= $form->field($model, 'firebaseStorageBucket') ?>
         <?= $form->field($model, 'firebaseVapidKey') ?>
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
         <?php if (!empty($model->serverKey)): ?>

@@ -70,8 +70,6 @@ class Fcm implements DriverInterface
             !empty($this->config->firebaseProjectId) &&
             !empty($this->config->firebaseApiKey) &&
             !empty($this->config->firebaseAppId) &&
-            !empty($this->config->firebaseAuthDomain) &&
-            !empty($this->config->firebaseStorageBucket) &&
             !empty($this->config->firebaseVapidKey);
     }
 }
