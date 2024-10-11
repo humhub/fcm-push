@@ -70,7 +70,7 @@ class Events
                 messagingSenderId: "{$pushDriver->getSenderId()}",
                 projectId: "{$module->getConfigureForm()->firebaseProjectId}",
                 apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
-                appId: "{$module->getConfigureForm()->firebaseApiKey}"
+                appId: "{$module->getConfigureForm()->firebaseAppId}"
             });
 
             firebase.messaging().onBackgroundMessage(function(payload) {
