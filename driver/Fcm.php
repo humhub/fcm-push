@@ -29,7 +29,7 @@ class Fcm implements DriverInterface
         if ($this->messaging === null) {
             Module::registerAutoloader();
 
-            $factory = (new Factory)->withServiceAccount($this->config->getJsonAsArray());
+            $factory = (new Factory())->withServiceAccount($this->config->getJsonAsArray());
             $this->messaging = $factory->createMessaging();
         }
 

@@ -35,15 +35,15 @@ class FcmLegacy extends Client implements DriverInterface
                 "title" => $title,
                 "body" => $body,
                 "icon" => SiteIcon::getUrl(180),
-                "click_action" => $url
+                "click_action" => $url,
             ],
             "data" => [
                 "title" => $title,
                 "body" => $body,
                 "icon" => SiteIcon::getUrl(180),
-                "url" => $url
+                "url" => $url,
             ],
-            "registration_ids" => $tokens
+            "registration_ids" => $tokens,
         ];
 
         $response = $this->post('send', $data)->send();

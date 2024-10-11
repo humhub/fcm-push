@@ -9,6 +9,10 @@ Changelog
 
 Please read [the Installation page](https://marketplace.humhub.com/module/fcm-push/installation) and update the Firebase version in the CSP configuration.
 
+2.0.8 (Unreleased)
+-------------------------
+- Enh #52: Use PHP CS Fixer
+
 2.0.7 (September 2, 2024)
 -------------------------
 - Fix #48: Fix go service for multiline links

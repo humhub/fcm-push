@@ -73,7 +73,7 @@ class MobileAppHelper
             Yii::$app->request->headers->has('x-humhub-app-bundle-id') &&
             !str_contains(
                 Yii::$app->request->headers->get('x-humhub-app-bundle-id', '', true),
-                'com.humhub.app'
+                'com.humhub.app',
             )
         );
 

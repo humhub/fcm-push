@@ -40,11 +40,11 @@ class TokenController extends Controller
 
         return $this->asJson([
             'success' => (
-            (new TokenService())->storeTokenForUser(
-                Yii::$app->user->getIdentity(),
-                $driver,
-                Yii::$app->request->post('token')
-            )
+                (new TokenService())->storeTokenForUser(
+                    Yii::$app->user->getIdentity(),
+                    $driver,
+                    Yii::$app->request->post('token'),
+                )
             ),
         ]);
     }
@@ -63,11 +63,11 @@ class TokenController extends Controller
 
         return $this->asJson([
             'success' => (
-            (new TokenService())->storeTokenForUser(
-                Yii::$app->user->getIdentity(),
-                $driver,
-                Yii::$app->request->post('token')
-            )
+                (new TokenService())->storeTokenForUser(
+                    Yii::$app->user->getIdentity(),
+                    $driver,
+                    Yii::$app->request->post('token'),
+                )
             ),
         ]);
     }
@@ -89,9 +89,9 @@ class TokenController extends Controller
 
         return $this->asJson([
             'success' => (
-            (new TokenService())->deleteToken(
-                Yii::$app->request->post('token')
-            )
+                (new TokenService())->deleteToken(
+                    Yii::$app->request->post('token'),
+                )
             ),
         ]);
     }
