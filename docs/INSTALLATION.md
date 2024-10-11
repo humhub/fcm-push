@@ -4,7 +4,7 @@ Installation
 1. Create a Google Firebase Account [Google Firebase Messaging](https://firebase.google.com/)
 2. Add a new project in the Firebase Console
 3. Go to: `Project Overview` -> `Project settings` -> `General`
-4. Click the "Add app" button and select the "</>" icon (Web platform)
+4. Click the "Add app" button and select the "</>" icon (Web platform) (create a new one even if you already have one)
 5. Give your app a nickname and click the "Register app" button
 6. Firebase will provide you with a configuration object
 7. Copy the `messagingSenderId` into the `Sender ID` field in HumHub
