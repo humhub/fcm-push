@@ -40,7 +40,7 @@ class FcmPushAsset extends AssetBundle
             Yii::$app->view->registerJsConfig('firebase', [
                 'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
                 'senderId' => $pushDriver->getSenderId(),
-                'projectId' => $module->getConfigureForm()->firebaseProjectId,
+                'projectId' => $module->getConfigureForm()->getJsonParam('project_id'),
                 'apiKey' => $module->getConfigureForm()->firebaseApiKey,
                 'appId' => $module->getConfigureForm()->firebaseAppId,
                 'vapidKey' => $module->getConfigureForm()->firebaseVapidKey,

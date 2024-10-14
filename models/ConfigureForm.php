@@ -17,7 +17,6 @@ class ConfigureForm extends Model
     public $humhubInstallId;
 
     public $senderId;
-    public $firebaseProjectId;
     public $firebaseApiKey;
     public $firebaseAppId;
     public $firebaseVapidKey;
@@ -93,7 +92,7 @@ class ConfigureForm extends Model
         return [
             [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
-            [['firebaseProjectId', 'firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
+            [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['serverKey', 'json', 'humhubApiKey'], 'safe'],
             [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
@@ -149,7 +148,6 @@ class ConfigureForm extends Model
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Install ID'),
             'humhubApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'senderId' => Yii::t('FcmPushModule.base', 'Sender ID'),
-            'firebaseProjectId' => Yii::t('FcmPushModule.base', 'Project ID'),
             'firebaseApiKey' => Yii::t('FcmPushModule.base', 'API Key'),
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Application ID'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'VAPID key (Voluntary Application Server Identification)'),
@@ -200,7 +198,6 @@ class ConfigureForm extends Model
         $this->enableEmailGoService = $settings->get('enableEmailGoService', false);
         $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
-        $this->firebaseProjectId = $settings->get('firebaseProjectId');
         $this->firebaseApiKey = $settings->get('firebaseApiKey');
         $this->firebaseAppId = $settings->get('firebaseAppId');
         $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
@@ -221,7 +218,6 @@ class ConfigureForm extends Model
 
         $module->settings->set('enableEmailGoService', $this->enableEmailGoService);
         $module->settings->set('senderId', $this->senderId);
-        $module->settings->set('firebaseProjectId', $this->firebaseProjectId);
         $module->settings->set('firebaseApiKey', $this->firebaseApiKey);
         $module->settings->set('firebaseAppId', $this->firebaseAppId);
         $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
@@ -238,6 +234,11 @@ class ConfigureForm extends Model
     public function getJsonAsArray()
     {
         return Json::decode($this->json);
+    }
+
+    public function getJsonParam(string $param): ?string
+    {
+        return $this->getJsonAsArray()[$param] ?? null;
     }
 
     public static function getInstance()

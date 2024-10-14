@@ -68,7 +68,7 @@ class Events
 
             firebase.initializeApp({
                 messagingSenderId: "{$pushDriver->getSenderId()}",
-                projectId: "{$module->getConfigureForm()->firebaseProjectId}",
+                projectId: "{$module->getConfigureForm()->getJsonParam('project_id')}",
                 apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
                 appId: "{$module->getConfigureForm()->firebaseAppId}"
             });

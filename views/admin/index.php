@@ -39,7 +39,6 @@ use yii\helpers\Html;
         </p>
         <?= Button::info('Installation documentation')->link('https://marketplace.humhub.com/module/fcm-push/installation')->options(['target' => '_blank'])->loader(false) ?>
         <?= $form->field($model, 'senderId') ?>
-        <?= $form->field($model, 'firebaseProjectId') ?>
         <?= $form->field($model, 'firebaseApiKey') ?>
         <?= $form->field($model, 'firebaseAppId') ?>
         <?= $form->field($model, 'firebaseVapidKey') ?>
