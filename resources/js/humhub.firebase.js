@@ -8,30 +8,10 @@ humhub.module('firebase', function (module, require, $) {
                 appId: module.config.appId,
             });
             this.messaging = firebase.messaging();
-
-            this.messaging.onMessage(function (payload) {
-                module.log.info("Received FCM Push Notification", payload);
-            });
-
-            // Callback fired if Instance ID token is updated.
-            // TODO: It is commented because of the error: "Could not initialize module:
-            //       humhub.modules.firebase FirebaseError: Messaging: This method is available
-            //       in a service worker context. (messaging/only-available-in-sw)."
-            // this.messaging.onBackgroundMessage(function () {
-            //     this.messaging.getToken().then(function (refreshedToken) {
-            //         this.deleteTokenLocalStore();
-            //         this.sendTokenToServer(refreshedToken);
-            //     }).catch(function (err) {
-            //         console.log('Unable to retrieve refreshed token ', err);
-            //     });
-            // });
         }
     };
 
     const afterServiceWorkerRegistration = function (registration) {
-        //console.log("After Service Worker Registration");
-        //console.log(registration);
-
         const that = this;
 
         this.messaging.swRegistration = registration;
@@ -48,7 +28,6 @@ humhub.module('firebase', function (module, require, $) {
                 serviceWorkerRegistration: registration,
             }).then(function (currentToken) {
                 if (currentToken) {
-                    //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);
                 } else {
                     module.log.info('No Instance ID token available. Request permission to generate one.');
@@ -78,8 +57,6 @@ humhub.module('firebase', function (module, require, $) {
                     that.setTokenLocalStore(token);
                 }
             });
-        } else {
-            //console.log('Token already sent to server so won\'t send it again unless it changes');
         }
     };
 

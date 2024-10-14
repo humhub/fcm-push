@@ -72,13 +72,6 @@ class Events
                 apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
                 appId: "{$module->getConfigureForm()->firebaseAppId}"
             });
-
-            firebase.messaging().onBackgroundMessage(function(payload) {
-                return self.registration.showNotification(payload.notification.title, {
-                    body: payload.notification.body,
-                    image: payload.notification.image
-                });
-            });
 JS;
     }
 
