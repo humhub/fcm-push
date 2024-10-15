@@ -5,7 +5,6 @@ namespace humhub\modules\fcmPush\driver;
 use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
-use humhub\modules\notification\models\Notification as NotificationHumHub;
 use Kreait\Firebase\Contract\Messaging;
 use Kreait\Firebase\Exception\FirebaseException;
 use Kreait\Firebase\Exception\MessagingException;
@@ -34,7 +33,7 @@ class Fcm implements DriverInterface
         }
 
         $message = CloudMessage::new()
-            ->withNotification(Notification::create($title, $body))
+            ->withNotification(Notification::create($title, $body, $imageUrl))
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
             ->withData(['url' => $url, 'notification_count' => $notificationCount]);
 
