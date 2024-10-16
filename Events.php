@@ -69,9 +69,12 @@ class Events
             firebase.initializeApp({
                 messagingSenderId: "{$pushDriver->getSenderId()}",
                 projectId: "{$module->getConfigureForm()->getJsonParam('project_id')}",
+                appId: "{$module->getConfigureForm()->firebaseAppId}",
                 apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
-                appId: "{$module->getConfigureForm()->firebaseAppId}"
             });
+
+            // Initialize Firebase Cloud Messaging and get a reference to the service
+            const messaging = firebase.messaging();
 JS;
     }
 

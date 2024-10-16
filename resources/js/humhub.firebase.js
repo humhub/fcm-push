@@ -9,6 +9,10 @@ humhub.module('firebase', function (module, require, $) {
             });
             this.messaging = firebase.messaging();
         }
+
+        this.messaging.onMessage((payload) => {
+            console.log('Suppressed push notification. App has already focus.', payload);
+        });
     };
 
     const afterServiceWorkerRegistration = function (registration) {
