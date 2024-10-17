@@ -63,22 +63,18 @@ class Events
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
             // Give the service worker access to Firebase Messaging.
-            importScripts('{$bundle->baseUrl}/firebase-app.js');
-            importScripts('{$bundle->baseUrl}/firebase-messaging.js');
-            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js');
-            //importScripts('https://www.gstatic.com/firebasejs/6.3.3/firebase-messaging.js');
-        
-           firebase.initializeApp({messagingSenderId: "{$pushDriver->getSenderId()}"});
-            
-            const messaging = firebase.messaging();
-            messaging.setBackgroundMessageHandler(function(payload) {
-              const notificationTitle = payload.data.title;
-              const notificationOptions = {
-                body: payload.data.body,
-                icon: payload.data.icon
-              };
-              return self.registration.showNotification(notificationTitle, notificationOptions);
+            importScripts('{$bundle->baseUrl}/firebase-app-compat.js');
+            importScripts('{$bundle->baseUrl}/firebase-messaging-compat.js');
+
+            firebase.initializeApp({
+                messagingSenderId: "{$pushDriver->getSenderId()}",
+                projectId: "{$module->getConfigureForm()->getJsonParam('project_id')}",
+                appId: "{$module->getConfigureForm()->firebaseAppId}",
+                apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
             });
+
+            // Initialize Firebase Cloud Messaging and get a reference to the service
+            firebase.messaging();
 JS;
     }
 
@@ -88,7 +84,6 @@ JS;
         $baseStack = $event->sender;
 
         $baseStack->addWidget(PushNotificationInfoWidget::class);
-
     }
 
     public static function onLayoutAddonInit($event)
@@ -118,7 +113,6 @@ JS;
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
-
     }
 
     public static function onAfterLogout()
@@ -142,8 +136,5 @@ JS;
         if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
-
-
     }
-
 }
