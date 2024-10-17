@@ -74,7 +74,7 @@ class Events
             });
 
             // Initialize Firebase Cloud Messaging and get a reference to the service
-            const messaging = firebase.messaging();
+            firebase.messaging();
 JS;
     }
 
