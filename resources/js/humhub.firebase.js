@@ -1,42 +1,37 @@
 humhub.module('firebase', function (module, require, $) {
-    let messaging;
-
     const init = function () {
         if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: this.senderId()});
+            firebase.initializeApp({
+                messagingSenderId: this.senderId(),
+                projectId: module.config.projectId,
+                apiKey: module.config.apiKey,
+                appId: module.config.appId,
+            });
             this.messaging = firebase.messaging();
-
-            this.messaging.onMessage(function (payload) {
-                module.log.info("Received FCM Push Notification", payload);
-            });
-
-            // Callback fired if Instance ID token is updated.
-            this.messaging.onTokenRefresh(function () {
-                this.messaging.getToken().then(function (refreshedToken) {
-                    this.deleteTokenLocalStore();
-                    this.sendTokenToServer(refreshedToken);
-                }).catch(function (err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                });
-            });
         }
+
+        this.messaging.onMessage((payload) => {
+            console.log('Suppressed push notification. App has already focus.', payload);
+        });
     };
 
     const afterServiceWorkerRegistration = function (registration) {
-        //console.log("After Service Worker Registration");
-        //console.log(registration);
-
         const that = this;
 
-        this.messaging.useServiceWorker(registration);
+        this.messaging.swRegistration = registration;
 
         // Request for permission
-        this.messaging.requestPermission().then(function () {
-            //console.log('Notification permission granted.');
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') {
+                module.log.info('Notification permission is not granted.');
+                return;
+            }
 
-            that.messaging.getToken().then(function (currentToken) {
+            that.messaging.getToken({
+                vapidKey: module.config.vapidKey,
+                serviceWorkerRegistration: registration,
+            }).then(function (currentToken) {
                 if (currentToken) {
-                    //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);
                 } else {
                     module.log.info('No Instance ID token available. Request permission to generate one.');
@@ -66,8 +61,6 @@ humhub.module('firebase', function (module, require, $) {
                     that.setTokenLocalStore(token);
                 }
             });
-        } else {
-            //console.log('Token already sent to server so won\'t send it again unless it changes');
         }
     };
 
@@ -112,20 +105,20 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     module.export({
-        init: init,
+        init,
 
-        isTokenSentToServer: isTokenSentToServer,
-        sendTokenToServer: sendTokenToServer,
-        afterServiceWorkerRegistration: afterServiceWorkerRegistration,
+        isTokenSentToServer,
+        sendTokenToServer,
+        afterServiceWorkerRegistration,
 
         // Config Vars
-        senderId: senderId,
-        tokenUpdateUrl: tokenUpdateUrl,
+        senderId,
+        tokenUpdateUrl,
 
         // LocalStore Helper
-        setTokenLocalStore: setTokenLocalStore,
-        getTokenLocalStore: getTokenLocalStore,
-        deleteTokenLocalStore: deleteTokenLocalStore,
+        setTokenLocalStore,
+        getTokenLocalStore,
+        deleteTokenLocalStore,
     });
 });
 

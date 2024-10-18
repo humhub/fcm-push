@@ -38,7 +38,10 @@ use yii\helpers\Html;
             <?= Yii::t('FcmPushModule.base', 'To send Firebase push notifications with your own Firebase project, enter your access details here.') ?>
         </p>
         <?= Button::info('Installation documentation')->link('https://marketplace.humhub.com/module/fcm-push/installation')->options(['target' => '_blank'])->loader(false) ?>
-        <?= $form->field($model, 'senderId'); ?>
+        <?= $form->field($model, 'senderId') ?>
+        <?= $form->field($model, 'firebaseApiKey') ?>
+        <?= $form->field($model, 'firebaseAppId') ?>
+        <?= $form->field($model, 'firebaseVapidKey') ?>
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
         <?php if (!empty($model->serverKey)): ?>
             <?= $form->field($model, 'serverKey')->textInput(); ?>

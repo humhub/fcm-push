@@ -30,7 +30,7 @@ class MessagingService
             Yii::$app->name,
             $baseNotification->text(),
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
-            null,
+            SiteIcon::getUrl(180),
             NotificationHumHub::findUnseen($user)->count(),
         );
     }
