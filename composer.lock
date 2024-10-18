@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9340c21ec8230872325b5e0286c6dd4b",
+    "content-hash": "ce4a63a3c2e0877290b6801fde964de7",
     "packages": [
         {
             "name": "beste/clock",
@@ -1000,12 +1000,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8"
+                "reference": "f9c436286ab2892c7db7be8c8da4ef61ccf7b455"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8",
-                "reference": "6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/f9c436286ab2892c7db7be8c8da4ef61ccf7b455",
+                "reference": "f9c436286ab2892c7db7be8c8da4ef61ccf7b455",
                 "shasum": ""
             },
             "require": {
@@ -1060,7 +1060,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.0.3"
+                "source": "https://github.com/guzzle/promises/tree/2.0.4"
             },
             "funding": [
                 {
@@ -1076,7 +1076,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-18T10:29:17+00:00"
+            "time": "2024-10-17T10:06:22+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1615,38 +1615,40 @@
         },
         {
             "name": "npm-asset/firebase",
-            "version": "10.6.0-patch20231107192534",
+            "version": "10.14.1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/firebase/-/firebase-10.6.0-20231107192534.tgz"
+                "url": "https://registry.npmjs.org/firebase/-/firebase-10.14.1.tgz"
             },
             "require": {
-                "npm-asset/firebase--analytics": "0.10.0",
-                "npm-asset/firebase--analytics-compat": "0.2.6",
-                "npm-asset/firebase--app": "0.9.23-patch20231107192534",
-                "npm-asset/firebase--app-check": "0.8.0",
-                "npm-asset/firebase--app-check-compat": "0.3.7",
-                "npm-asset/firebase--app-compat": "0.2.23-patch20231107192534",
-                "npm-asset/firebase--app-types": "0.9.0",
-                "npm-asset/firebase--auth": "1.4.0-patch20231107192534",
-                "npm-asset/firebase--auth-compat": "0.4.9-patch20231107192534",
-                "npm-asset/firebase--database": "1.0.1",
-                "npm-asset/firebase--database-compat": "1.0.1",
-                "npm-asset/firebase--firestore": "4.3.2",
-                "npm-asset/firebase--firestore-compat": "0.3.22-patch20231107192534",
-                "npm-asset/firebase--functions": "0.10.0",
-                "npm-asset/firebase--functions-compat": "0.3.5",
-                "npm-asset/firebase--installations": "0.6.4",
-                "npm-asset/firebase--installations-compat": "0.2.4",
-                "npm-asset/firebase--messaging": "0.12.4",
-                "npm-asset/firebase--messaging-compat": "0.2.4",
-                "npm-asset/firebase--performance": "0.6.4",
-                "npm-asset/firebase--performance-compat": "0.2.4",
-                "npm-asset/firebase--remote-config": "0.4.4",
-                "npm-asset/firebase--remote-config-compat": "0.2.4",
-                "npm-asset/firebase--storage": "0.11.2",
-                "npm-asset/firebase--storage-compat": "0.3.2",
-                "npm-asset/firebase--util": "1.9.3"
+                "npm-asset/firebase--analytics": "0.10.8",
+                "npm-asset/firebase--analytics-compat": "0.2.14",
+                "npm-asset/firebase--app": "0.10.13",
+                "npm-asset/firebase--app-check": "0.8.8",
+                "npm-asset/firebase--app-check-compat": "0.3.15",
+                "npm-asset/firebase--app-compat": "0.2.43",
+                "npm-asset/firebase--app-types": "0.9.2",
+                "npm-asset/firebase--auth": "1.7.9",
+                "npm-asset/firebase--auth-compat": "0.5.14",
+                "npm-asset/firebase--data-connect": "0.1.0",
+                "npm-asset/firebase--database": "1.0.8",
+                "npm-asset/firebase--database-compat": "1.0.8",
+                "npm-asset/firebase--firestore": "4.7.3",
+                "npm-asset/firebase--firestore-compat": "0.3.38",
+                "npm-asset/firebase--functions": "0.11.8",
+                "npm-asset/firebase--functions-compat": "0.3.14",
+                "npm-asset/firebase--installations": "0.6.9",
+                "npm-asset/firebase--installations-compat": "0.2.9",
+                "npm-asset/firebase--messaging": "0.12.12",
+                "npm-asset/firebase--messaging-compat": "0.2.12",
+                "npm-asset/firebase--performance": "0.6.9",
+                "npm-asset/firebase--performance-compat": "0.2.9",
+                "npm-asset/firebase--remote-config": "0.4.9",
+                "npm-asset/firebase--remote-config-compat": "0.2.9",
+                "npm-asset/firebase--storage": "0.13.2",
+                "npm-asset/firebase--storage-compat": "0.3.12",
+                "npm-asset/firebase--util": "1.10.0",
+                "npm-asset/firebase--vertexai-preview": "0.0.4"
             },
             "type": "npm-asset",
             "license": [
@@ -1655,16 +1657,16 @@
         },
         {
             "name": "npm-asset/firebase--analytics",
-            "version": "0.10.0",
+            "version": "0.10.8",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/analytics/-/analytics-0.10.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/analytics/-/analytics-0.10.8.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--installations": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--installations": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1674,16 +1676,16 @@
         },
         {
             "name": "npm-asset/firebase--analytics-compat",
-            "version": "0.2.6",
+            "version": "0.2.14",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/analytics-compat/-/analytics-compat-0.2.6.tgz"
+                "url": "https://registry.npmjs.org/@firebase/analytics-compat/-/analytics-compat-0.2.14.tgz"
             },
             "require": {
-                "npm-asset/firebase--analytics": "0.10.0",
-                "npm-asset/firebase--analytics-types": "0.8.0",
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--analytics": "0.10.8",
+                "npm-asset/firebase--analytics-types": "0.8.2",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1693,10 +1695,10 @@
         },
         {
             "name": "npm-asset/firebase--analytics-types",
-            "version": "0.8.0",
+            "version": "0.8.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/analytics-types/-/analytics-types-0.8.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/analytics-types/-/analytics-types-0.8.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1705,15 +1707,15 @@
         },
         {
             "name": "npm-asset/firebase--app-check",
-            "version": "0.8.0",
+            "version": "0.8.8",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/app-check/-/app-check-0.8.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/app-check/-/app-check-0.8.8.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1723,17 +1725,17 @@
         },
         {
             "name": "npm-asset/firebase--app-check-compat",
-            "version": "0.3.7",
+            "version": "0.3.15",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/app-check-compat/-/app-check-compat-0.3.7.tgz"
+                "url": "https://registry.npmjs.org/@firebase/app-check-compat/-/app-check-compat-0.3.15.tgz"
             },
             "require": {
-                "npm-asset/firebase--app-check": "0.8.0",
-                "npm-asset/firebase--app-check-types": "0.5.0",
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--app-check": "0.8.8",
+                "npm-asset/firebase--app-check-types": "0.5.2",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1742,11 +1744,23 @@
             ]
         },
         {
-            "name": "npm-asset/firebase--app-check-types",
-            "version": "0.5.0",
+            "name": "npm-asset/firebase--app-check-interop-types",
+            "version": "0.3.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/app-check-types/-/app-check-types-0.5.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/app-check-interop-types/-/app-check-interop-types-0.3.2.tgz"
+            },
+            "type": "npm-asset",
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "name": "npm-asset/firebase--app-check-types",
+            "version": "0.5.2",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@firebase/app-check-types/-/app-check-types-0.5.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1755,16 +1769,16 @@
         },
         {
             "name": "npm-asset/firebase--app-compat",
-            "version": "0.2.23-patch20231107192534",
+            "version": "0.2.43",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/app-compat/-/app-compat-0.2.23-20231107192534.tgz"
+                "url": "https://registry.npmjs.org/@firebase/app-compat/-/app-compat-0.2.43.tgz"
             },
             "require": {
-                "npm-asset/firebase--app": "0.9.23-patch20231107192534",
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--app": "0.10.13",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1774,18 +1788,30 @@
         },
         {
             "name": "npm-asset/firebase--auth-compat",
-            "version": "0.4.9-patch20231107192534",
+            "version": "0.5.14",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/auth-compat/-/auth-compat-0.4.9-20231107192534.tgz"
+                "url": "https://registry.npmjs.org/@firebase/auth-compat/-/auth-compat-0.5.14.tgz"
             },
             "require": {
-                "npm-asset/firebase--auth": "1.4.0-patch20231107192534",
-                "npm-asset/firebase--auth-types": "0.12.0",
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--util": "1.9.3",
-                "npm-asset/node-fetch": "2.6.7",
-                "npm-asset/tslib": ">=2.1.0,<3.0.0"
+                "npm-asset/firebase--auth": "1.7.9",
+                "npm-asset/firebase--auth-types": "0.12.2",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--util": "1.10.0",
+                "npm-asset/tslib": ">=2.1.0,<3.0.0",
+                "npm-asset/undici": "6.19.7"
+            },
+            "type": "npm-asset",
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "name": "npm-asset/firebase--auth-interop-types",
+            "version": "0.2.3",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@firebase/auth-interop-types/-/auth-interop-types-0.2.3.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1794,10 +1820,10 @@
         },
         {
             "name": "npm-asset/firebase--auth-types",
-            "version": "0.12.0",
+            "version": "0.12.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/auth-types/-/auth-types-0.12.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/auth-types/-/auth-types-0.12.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1806,13 +1832,32 @@
         },
         {
             "name": "npm-asset/firebase--component",
-            "version": "0.6.4",
+            "version": "0.6.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/component/-/component-0.6.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/component/-/component-0.6.9.tgz"
             },
             "require": {
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--util": "1.10.0",
+                "npm-asset/tslib": ">=2.1.0,<3.0.0"
+            },
+            "type": "npm-asset",
+            "license": [
+                "Apache-2.0"
+            ]
+        },
+        {
+            "name": "npm-asset/firebase--data-connect",
+            "version": "0.1.0",
+            "dist": {
+                "type": "tar",
+                "url": "https://registry.npmjs.org/@firebase/data-connect/-/data-connect-0.1.0.tgz"
+            },
+            "require": {
+                "npm-asset/firebase--auth-interop-types": "0.2.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1822,17 +1867,17 @@
         },
         {
             "name": "npm-asset/firebase--database-compat",
-            "version": "1.0.1",
+            "version": "1.0.8",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/database-compat/-/database-compat-1.0.1.tgz"
+                "url": "https://registry.npmjs.org/@firebase/database-compat/-/database-compat-1.0.8.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--database": "1.0.1",
-                "npm-asset/firebase--database-types": "1.0.0",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--database": "1.0.8",
+                "npm-asset/firebase--database-types": "1.0.5",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1842,14 +1887,14 @@
         },
         {
             "name": "npm-asset/firebase--database-types",
-            "version": "1.0.0",
+            "version": "1.0.5",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/database-types/-/database-types-1.0.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/database-types/-/database-types-1.0.5.tgz"
             },
             "require": {
-                "npm-asset/firebase--app-types": "0.9.0",
-                "npm-asset/firebase--util": "1.9.3"
+                "npm-asset/firebase--app-types": "0.9.2",
+                "npm-asset/firebase--util": "1.10.0"
             },
             "type": "npm-asset",
             "license": [
@@ -1858,16 +1903,16 @@
         },
         {
             "name": "npm-asset/firebase--firestore-compat",
-            "version": "0.3.22-patch20231107192534",
+            "version": "0.3.38",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/firestore-compat/-/firestore-compat-0.3.22-20231107192534.tgz"
+                "url": "https://registry.npmjs.org/@firebase/firestore-compat/-/firestore-compat-0.3.38.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--firestore": "4.3.2",
-                "npm-asset/firebase--firestore-types": "3.0.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--firestore": "4.7.3",
+                "npm-asset/firebase--firestore-types": "3.0.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1877,10 +1922,10 @@
         },
         {
             "name": "npm-asset/firebase--firestore-types",
-            "version": "3.0.0",
+            "version": "3.0.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/firestore-types/-/firestore-types-3.0.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/firestore-types/-/firestore-types-3.0.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1889,16 +1934,16 @@
         },
         {
             "name": "npm-asset/firebase--functions-compat",
-            "version": "0.3.5",
+            "version": "0.3.14",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/functions-compat/-/functions-compat-0.3.5.tgz"
+                "url": "https://registry.npmjs.org/@firebase/functions-compat/-/functions-compat-0.3.14.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--functions": "0.10.0",
-                "npm-asset/firebase--functions-types": "0.6.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--functions": "0.11.8",
+                "npm-asset/firebase--functions-types": "0.6.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1908,10 +1953,10 @@
         },
         {
             "name": "npm-asset/firebase--functions-types",
-            "version": "0.6.0",
+            "version": "0.6.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/functions-types/-/functions-types-0.6.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/functions-types/-/functions-types-0.6.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1920,16 +1965,16 @@
         },
         {
             "name": "npm-asset/firebase--installations-compat",
-            "version": "0.2.4",
+            "version": "0.2.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/installations-compat/-/installations-compat-0.2.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/installations-compat/-/installations-compat-0.2.9.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--installations": "0.6.4",
-                "npm-asset/firebase--installations-types": "0.5.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--installations": "0.6.9",
+                "npm-asset/firebase--installations-types": "0.5.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1939,10 +1984,10 @@
         },
         {
             "name": "npm-asset/firebase--installations-types",
-            "version": "0.5.0",
+            "version": "0.5.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/installations-types/-/installations-types-0.5.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/installations-types/-/installations-types-0.5.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -1951,10 +1996,10 @@
         },
         {
             "name": "npm-asset/firebase--logger",
-            "version": "0.4.0",
+            "version": "0.4.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/logger/-/logger-0.4.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/logger/-/logger-0.4.2.tgz"
             },
             "require": {
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
@@ -1966,15 +2011,15 @@
         },
         {
             "name": "npm-asset/firebase--messaging-compat",
-            "version": "0.2.4",
+            "version": "0.2.12",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/messaging-compat/-/messaging-compat-0.2.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/messaging-compat/-/messaging-compat-0.2.12.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--messaging": "0.12.4",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--messaging": "0.12.12",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -1984,17 +2029,17 @@
         },
         {
             "name": "npm-asset/firebase--performance-compat",
-            "version": "0.2.4",
+            "version": "0.2.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/performance-compat/-/performance-compat-0.2.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/performance-compat/-/performance-compat-0.2.9.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--performance": "0.6.4",
-                "npm-asset/firebase--performance-types": "0.2.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--performance": "0.6.9",
+                "npm-asset/firebase--performance-types": "0.2.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -2004,10 +2049,10 @@
         },
         {
             "name": "npm-asset/firebase--performance-types",
-            "version": "0.2.0",
+            "version": "0.2.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/performance-types/-/performance-types-0.2.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/performance-types/-/performance-types-0.2.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -2016,16 +2061,16 @@
         },
         {
             "name": "npm-asset/firebase--remote-config",
-            "version": "0.4.4",
+            "version": "0.4.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/remote-config/-/remote-config-0.4.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/remote-config/-/remote-config-0.4.9.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--installations": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--installations": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -2035,17 +2080,17 @@
         },
         {
             "name": "npm-asset/firebase--remote-config-compat",
-            "version": "0.2.4",
+            "version": "0.2.9",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/remote-config-compat/-/remote-config-compat-0.2.4.tgz"
+                "url": "https://registry.npmjs.org/@firebase/remote-config-compat/-/remote-config-compat-0.2.9.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--logger": "0.4.0",
-                "npm-asset/firebase--remote-config": "0.4.4",
-                "npm-asset/firebase--remote-config-types": "0.3.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--remote-config": "0.4.9",
+                "npm-asset/firebase--remote-config-types": "0.3.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -2055,10 +2100,10 @@
         },
         {
             "name": "npm-asset/firebase--remote-config-types",
-            "version": "0.3.0",
+            "version": "0.3.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/remote-config-types/-/remote-config-types-0.3.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/remote-config-types/-/remote-config-types-0.3.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -2067,16 +2112,16 @@
         },
         {
             "name": "npm-asset/firebase--storage-compat",
-            "version": "0.3.2",
+            "version": "0.3.12",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/storage-compat/-/storage-compat-0.3.2.tgz"
+                "url": "https://registry.npmjs.org/@firebase/storage-compat/-/storage-compat-0.3.12.tgz"
             },
             "require": {
-                "npm-asset/firebase--component": "0.6.4",
-                "npm-asset/firebase--storage": "0.11.2",
-                "npm-asset/firebase--storage-types": "0.8.0",
-                "npm-asset/firebase--util": "1.9.3",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--storage": "0.13.2",
+                "npm-asset/firebase--storage-types": "0.8.2",
+                "npm-asset/firebase--util": "1.10.0",
                 "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
@@ -2086,10 +2131,10 @@
         },
         {
             "name": "npm-asset/firebase--storage-types",
-            "version": "0.8.0",
+            "version": "0.8.2",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/@firebase/storage-types/-/storage-types-0.8.0.tgz"
+                "url": "https://registry.npmjs.org/@firebase/storage-types/-/storage-types-0.8.2.tgz"
             },
             "type": "npm-asset",
             "license": [
@@ -2097,30 +2142,22 @@
             ]
         },
         {
-            "name": "npm-asset/node-fetch",
-            "version": "2.6.7",
+            "name": "npm-asset/firebase--vertexai-preview",
+            "version": "0.0.4",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/node-fetch/-/node-fetch-2.6.7.tgz"
+                "url": "https://registry.npmjs.org/@firebase/vertexai-preview/-/vertexai-preview-0.0.4.tgz"
             },
             "require": {
-                "npm-asset/whatwg-url": ">=5.0.0,<6.0.0"
+                "npm-asset/firebase--app-check-interop-types": "0.3.2",
+                "npm-asset/firebase--component": "0.6.9",
+                "npm-asset/firebase--logger": "0.4.2",
+                "npm-asset/firebase--util": "1.10.0",
+                "npm-asset/tslib": ">=2.1.0,<3.0.0"
             },
             "type": "npm-asset",
             "license": [
-                "MIT"
-            ]
-        },
-        {
-            "name": "npm-asset/tr46",
-            "version": "0.0.3",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/tr46/-/tr46-0.0.3.tgz"
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
+                "Apache-2.0"
             ]
         },
         {
@@ -2133,34 +2170,6 @@
             "type": "npm-asset",
             "license": [
                 "0BSD"
-            ]
-        },
-        {
-            "name": "npm-asset/webidl-conversions",
-            "version": "3.0.1",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-3.0.1.tgz"
-            },
-            "type": "npm-asset",
-            "license": [
-                "BSD-2-Clause"
-            ]
-        },
-        {
-            "name": "npm-asset/whatwg-url",
-            "version": "5.0.0",
-            "dist": {
-                "type": "tar",
-                "url": "https://registry.npmjs.org/whatwg-url/-/whatwg-url-5.0.0.tgz"
-            },
-            "require": {
-                "npm-asset/tr46": "~0.0.3",
-                "npm-asset/webidl-conversions": ">=3.0.0,<4.0.0"
-            },
-            "type": "npm-asset",
-            "license": [
-                "MIT"
             ]
         },
         {
@@ -2616,12 +2625,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "5b996d9736e50cb39fbf5d50485e1aacea30491e"
+                "reference": "9e8aa057ba5384e5888954c828f8de90ccd3ca4c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/5b996d9736e50cb39fbf5d50485e1aacea30491e",
-                "reference": "5b996d9736e50cb39fbf5d50485e1aacea30491e",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/9e8aa057ba5384e5888954c828f8de90ccd3ca4c",
+                "reference": "9e8aa057ba5384e5888954c828f8de90ccd3ca4c",
                 "shasum": ""
             },
             "require": {
@@ -2701,7 +2710,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-10-07T21:53:55+00:00"
+            "time": "2024-10-14T21:21:59+00:00"
         },
         {
             "name": "rize/uri-template",
@@ -2771,12 +2780,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1"
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1",
-                "reference": "0e0d29ce1f20deffb4ab1b016a7257c4f1e789a1",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/63afe740e99a13ba87ec199bb07bbdee937a5b62",
+                "reference": "63afe740e99a13ba87ec199bb07bbdee937a5b62",
                 "shasum": ""
             },
             "require": {
@@ -2786,7 +2795,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "3.5-dev"
+                    "dev-main": "3.6-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -2815,7 +2824,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.5.0"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/main"
             },
             "funding": [
                 {
@@ -2831,7 +2840,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-18T09:32:20+00:00"
+            "time": "2024-09-25T14:21:43+00:00"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -2918,13 +2927,13 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.0"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "platform-overrides": {
         "php": "8.1"
     },
