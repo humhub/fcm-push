@@ -32,7 +32,8 @@
 
 ![Firebase Setup - Step 5.1](images/firebase-step-5-1.png)
 
-**5.2.** Under **Service Accounts**, select your account.\
+**5.2.** Under **Service Accounts**, select your account.
+
 _**Note:** In some instances, it may take longer for Google to generate the account automatically. In rare cases where the account is not generated, please create one by clicking on "Create Service Account"._
 
 ![Firebase Setup - Step 5.2](images/firebase-step-5-2.png)
@@ -59,7 +60,7 @@ _**Note:** In some instances, it may take longer for Google to generate the acco
 
 If you have customized your [CSP header](https://docs.humhub.org/docs/admin/security#web-security-configuration), make sure to allow the following URLs:
 
-```PHP
+```
 "script-src" => [
     "self" => true,
     "allow" => [
