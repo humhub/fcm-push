@@ -23,8 +23,6 @@ class ConfigureForm extends Model
 
     public $json;
 
-    public $serverKey;
-
     public $humhubApiKey;
 
     public $disableAuthChoicesIos;
@@ -93,7 +91,7 @@ class ConfigureForm extends Model
             [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
-            [['serverKey', 'json', 'humhubApiKey'], 'safe'],
+            [['json', 'humhubApiKey'], 'safe'],
             [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
                 if (empty($this->$attribute)) {
@@ -152,7 +150,6 @@ class ConfigureForm extends Model
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Web App ID'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Key pair of the Web Push certificates'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
-            'serverKey' => Yii::t('FcmPushModule.base', 'Cloud Messaging API (Legacy)'),
             'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
             'fileAssetLinks' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', [
                 'fileName' => '"' . WellKnownService::getFileName('fileAssetLinks') . '"',
@@ -168,7 +165,6 @@ class ConfigureForm extends Model
         return [
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging -> Web Push certificates -> Key pair'),
-            'serverKey' => Yii::t('FcmPushModule.base', 'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.'),
             'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
             'fileAssetLinks' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [
                 'fileNameLink' => Link::to(
@@ -202,7 +198,6 @@ class ConfigureForm extends Model
         $this->firebaseAppId = $settings->get('firebaseAppId');
         $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
         $this->json = $settings->get('json');
-        $this->serverKey = $settings->get('serverKey');
         $this->humhubApiKey = $settings->get('humhubApiKey');
         $this->disableAuthChoicesIos = $settings->get('disableAuthChoicesIos');
         $this->fileAssetLinks = $settings->get('fileAssetLinks');
@@ -222,7 +217,6 @@ class ConfigureForm extends Model
         $module->settings->set('firebaseAppId', $this->firebaseAppId);
         $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
         $module->settings->set('json', $this->json);
-        $module->settings->set('serverKey', $this->serverKey);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
         $module->settings->set('disableAuthChoicesIos', $this->disableAuthChoicesIos);
         $module->settings->set('fileAssetLinks', $this->fileAssetLinks);
