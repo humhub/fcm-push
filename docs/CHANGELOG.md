@@ -1,18 +1,15 @@
 Changelog
 =========
 
-2.1.0 (Unreleased)
--------------------------
+2.1.0 (October 21, 2024)
+------------------------
 - Fix #51: Firebase not working anymore for web push notifications
 - Fix #54: Remove obsolete driver FcmLegacy
+- Enh #52: Use PHP CS Fixer
 
 **This version requires extra settings in the module configuration.**
 
 Please read [the Installation page](https://marketplace.humhub.com/module/fcm-push/installation) and update the Firebase version in the CSP configuration.
-
-2.0.8 (Unreleased)
--------------------------
-- Enh #52: Use PHP CS Fixer
 
 2.0.7 (September 2, 2024)
 -------------------------
