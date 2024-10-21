@@ -43,9 +43,6 @@ use yii\helpers\Html;
         <?= $form->field($model, 'firebaseAppId') ?>
         <?= $form->field($model, 'firebaseVapidKey') ?>
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
-        <?php if (!empty($model->serverKey)): ?>
-            <?= $form->field($model, 'serverKey')->textInput(); ?>
-        <?php endif; ?>
         <br/>
 
 

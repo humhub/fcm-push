@@ -4,6 +4,7 @@ Changelog
 2.1.0 (Unreleased)
 -------------------------
 - Fix #51: Firebase not working anymore for web push notifications
+- Fix #54: Remove obsolete driver FcmLegacy
 
 **This version requires extra settings in the module configuration.**
 
