@@ -84,16 +84,10 @@ class MobileAppHelper
         Yii::$app->view->registerJs('if (window.flutterChannel) { window.flutterChannel.postMessage(\'' . $msg . '\'); }');
     }
 
-    public static function isIosApp()
+    public static function isIosApp(): bool
     {
-        $headers = Yii::$app->request->headers;
-
-        if (static::isAppRequest() &&
-            $headers->has('user-agent') &&
-            str_contains($headers->get('user-agent', '', true), 'iPhone')) {
-
-            return true;
-        }
+        return
+            static::isAppRequest()
+            && Yii::$app->request->headers->get('x-humhub-app-is-ios');
     }
-
 }
