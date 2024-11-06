@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => '<strong>FireBase Messaging</strong> konfiguráció',
     'API Key' => 'API Kulcs',
-    'Cloud Messaging API (Legacy)' => 'Cloud Messaging API (örökölt)',
     'Disable AuthChoices on iOS App' => 'Az AuthChoices letiltása az iOS alkalmazásban',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Link-átirányítási szolgáltatás engedélyezése. Ahhoz, hogy a linkek a mobileszközökön az alkalmazásban nyíljanak meg, nem pedig a mobilböngészőben, minden hivatkozást (például értesítő e-maileket) a HumHub proxyszerveren keresztül kell irányítani. (Kísérleti funkciók // <a href="{url}">Adatvédelmi irányelvek</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (szükséges a böngésző és a PWA értesítésekhez)',
@@ -12,7 +11,6 @@ return [
     'Install ID' => 'Telepítési azonosító',
     'Link Redirection Service' => 'Link átirányítási szolgáltatás',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'Illessze be ide a szolgáltatásfiók JSON-fájljainak tartalmát. További információkat a modul útmutatójában talál.',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => 'Kérjük, váltson az új „Firebase Cloud Messaging API-ra (V1)”, és írjon be egy JSON-fájlt a fenti mezőbe. A régi örökölt API csak átmenetileg érhető el a meglévő telepítésekhez, és már nem támogatott vagy karbantartott.',
     'Push Service (required for the mobile app) (Beta)' => 'Push szolgáltatás (a mobilalkalmazáshoz szükséges) (béta)',
     'Sender ID' => 'Feladó azonosítója',
     'Service Account (JSON file)' => 'Szolgáltatásfiók (JSON-fájl)',

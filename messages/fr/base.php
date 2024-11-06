@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => 'Configuration de <strong>FireBase Messaging</strong>',
     'API Key' => 'Clé d’API',
-    'Cloud Messaging API (Legacy)' => 'API de messagerie cloud (Legacy)',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Activer le service de redirection de liens. Afin que les liens s\'ouvrent dans l\'application sur les appareils mobiles, plutôt que dans le navigateur mobile, tous les liens (par exemple, les e-mails de notification) doivent être acheminés via le serveur proxy HumHub. (Fonctionnalités expérimentales // <a href="{url}">Politique de confidentialité</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (nécessaire pour les notifications du navigateur et des applications Web progressives)',
     'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.' => 'Pour les utilisateurs de l\'application mobile HumHub, les notifications push peuvent être envoyées via le service de push HumHub. Si vous souhaitez utiliser ce service, veuillez entrer votre clé d\'accès ci-dessous. Veuillez noter que cette passerelle de push n\'est disponible que pour les utilisateurs de l\'application mobile officielle HumHub.',
@@ -19,7 +18,6 @@ return [
     'Key pair of the Web Push certificates' => '',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => '',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => '',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => '',
     'URL to the file {fileNameLink}' => '',
     'Use this ID to register your API Key.' => '',
     'Web API Key' => '',

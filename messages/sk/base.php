@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => 'Konfigurácia <strong>FireBase Messaging</strong>',
     'API Key' => 'API kľúč',
-    'Cloud Messaging API (Legacy)' => 'Cloud Messaging API (staršie)',
     'Disable AuthChoices on iOS App' => 'Zakázať AuthChoices v aplikácii pre iOS',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Povoliť službu presmerovania odkazov. Aby sa odkazy otvárali v aplikácii na mobilných zariadeniach a nie v mobilnom prehliadači, všetky odkazy (napr. e-maily s upozornením) musia byť smerované cez proxy server HumHub. (Experimentálne funkcie // <a href="{url}">Zásady ochrany osobných údajov</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (vyžaduje sa pre upozornenia prehliadača a PWA)',
@@ -13,7 +12,6 @@ return [
     'Link Redirection Service' => 'Služba presmerovania odkazov',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'Prilepte obsah súborov JSON účtu služby sem. Viac informácií nájdete v pokynoch k modulu.',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => 'Povoľte <a href="{url}" target="_blank">Pretty URLs</a> pre správne fungovanie známych súborov.',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => 'Prosím prepnite na nové „Firebase Cloud Messaging API (V1)“ a do poľa vyššie zadajte súbor JSON. Staršie API je k dispozícii len dočasne pre existujúce inštalácie a už nie je podporované ani udržiavané.',
     'Push Service (required for the mobile app) (Beta)' => 'Služba Push (vyžaduje sa pre mobilnú aplikáciu) (Beta)',
     'Sender ID' => 'ID odosielateľa',
     'Service Account (JSON file)' => 'Servisný účet (súbor JSON)',

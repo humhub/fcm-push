@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => '<strong>FireBase Messaging</strong> Konfiguration',
     'API Key' => 'API Key',
-    'Cloud Messaging API (Legacy)' => 'Cloud Messaging API (Legacy)',
     'Disable AuthChoices on iOS App' => 'AuthChoices für iOS App deaktivieren',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Aktiviere den Link-Umleitungsdienst. Damit Links auf mobilen Geräten in der App und nicht im mobilen Browser geöffnet werden, müssen alle Links (z. B. Benachrichtigungs-E-Mails) über den HumHub-Proxyserver umgeleitet werden. (Experimentelle Funktionen // <a href="{url}">Privacy Policy</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (erforderlich für Browser- und PWA-Benachrichtigungen)',
@@ -19,7 +18,6 @@ return [
     'Key pair of the Web Push certificates' => '',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => '',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => '',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => '',
     'URL to the file {fileNameLink}' => '',
     'Use this ID to register your API Key.' => '',
     'Web API Key' => '',

@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => '<strong>Configuração do FireBase Messaging</strong>',
     'API Key' => 'Chave API',
-    'Cloud Messaging API (Legacy)' => 'API de mensagens em nuvem (antigo)',
     'Disable AuthChoices on iOS App' => 'Desabilitar AuthChoices no aplicativo iOS',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Habilitar o Serviço de Redirecionamento de Link. Para que os links abram no aplicativo em dispositivos móveis, em vez de no navegador móvel, todos os links (por exemplo, e-mails de notificação) precisam ser roteados pelo servidor proxy HumHub. (Recursos Experimentais // <a href="{url}">Política de Privacidade</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (necessário para notificações do navegador e PWA)',
@@ -13,7 +12,6 @@ return [
     'Link Redirection Service' => 'Serviço de redirecionamento de links',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'Cole o conteúdo dos arquivos JSON da conta de serviço aqui. Você pode encontrar mais informações nas instruções do módulo.',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => 'Por favor, habilite <a href="{url}" target="_blank">Pretty URLs</a> para o funcionamento adequado dos arquivos conhecidos.',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => 'Mude para a nova "Firebase Cloud Messaging API (V1)" e insira um arquivo JSON no campo acima. A antiga API legada está disponível apenas temporariamente para instalações existentes e não é mais suportada ou mantida.',
     'Push Service (required for the mobile app) (Beta)' => 'Serviço Push (necessário para o aplicativo móvel) (Beta)',
     'Sender ID' => 'ID do remetente',
     'Service Account (JSON file)' => 'Conta de serviço (arquivo JSON)',

@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => 'إعداد <strong>FireBase مراسلات</strong>',
     'API Key' => 'مفتاح واجهة برمجة التطبيقات',
-    'Cloud Messaging API (Legacy)' => 'واجهة برمجة تطبيقات المراسلة السحابية (القديمة)',
     'Disable AuthChoices on iOS App' => 'تعطيل AuthChoices على تطبيق iOS',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'تمكين خدمة إعادة توجيه الارتباط. لكي يتم فتح الروابط في التطبيق على الأجهزة المحمولة، بدلاً من متصفح الهاتف المحمول، يجب توجيه جميع الروابط (مثل رسائل البريد الإلكتروني الخاصة بالإشعارات) عبر خادم وكيل HumHub. (الميزات التجريبية // <a href="{url}">سياسة الخصوصية</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'مراسلاتFirebase السحابية (مطلوب لإشعارات المتصفح وPWA)',
@@ -12,7 +11,6 @@ return [
     'Install ID' => 'معرف التثبيت',
     'Link Redirection Service' => 'خدمة إعادة توجيه الرابط',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'الصق محتوى ملفات JSON لحساب الخدمة هنا. يمكنك العثور على مزيد من المعلومات في تعليمات الوحدة.',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => 'الرجاء التبديل إلى "Firebase Cloud Messaging API (V1)" الجديد وإدخال ملف JSON في الحقل أعلاه. واجهة برمجة التطبيقات القديمة متاحة مؤقتًا فقط للتثبيتات الحالية ولم تعد مدعومة أو تتم صيانتها.',
     'Push Service (required for the mobile app) (Beta)' => 'خدمة الدفع (مطلوبة لتطبيق الهاتف المحمول) (تجريبية)',
     'Sender ID' => 'معرف المرسل',
     'Service Account (JSON file)' => 'حساب الخدمة (ملف JSON)',

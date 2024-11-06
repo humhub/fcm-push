@@ -3,7 +3,6 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => 'Configuración de la <strong>Mensajería FireBase</strong>',
     'API Key' => 'Clave de la API',
-    'Cloud Messaging API (Legacy)' => 'API de la mensajería en la nube (Antigua)',
     'Disable AuthChoices on iOS App' => 'Desactivar métodos de autenticación en la app iOS',
     'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)' => 'Activar el Servicio de Redirección de Enlaces. Para que estos enlaces se abran en la aplicación para dispositivos móviles en lugar de en el navegador móvil, todos los enlaces (por ejemplo los correos de notificación) deben ser gestionados por el servidor proxy de Humhub. (Funciones experimentales // <a href="{url}">Política de privacidad</a>)',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Mensajería Firebase en la Nube (requerida para notificaciones en el navegador y en PWA)',
@@ -12,7 +11,6 @@ return [
     'Install ID' => 'ID de instalación',
     'Link Redirection Service' => 'Servicio de Redirección de Enlaces',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'Pega aquí el contenido de los ficheros JSON de la cuenta del servicio. Puedes encontrar más información en las instrucciones del módulo.',
-    'Please switch to the new "Firebase Cloud Messaging API (V1)" and enter a JSON file in the field above. The old legacy API is only temporarily available for existing installations and is no longer supported or maintained.' => 'Por favor cambia a la nueva “API Firebase Cloud (V1” e introduce un fichero JSON el campo superior. La antigua API sólo estará disponible temporalmente y ya no está soportada ni mantenida.',
     'Push Service (required for the mobile app) (Beta)' => 'Servicio Push (necesario para la aplicación móvil) (Beta)',
     'Sender ID' => 'ID de remitente',
     'Service Account (JSON file)' => 'Cuenta de Servicio (fichero JSON)',
