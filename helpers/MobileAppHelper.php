@@ -86,14 +86,13 @@ class MobileAppHelper
 
     public static function isIosApp()
     {
-        $headers = Yii::$app->request->headers;
-
-        if (static::isAppRequest() &&
-            $headers->has('user-agent') &&
-            str_contains($headers->get('user-agent', '', true), 'iPhone')) {
-
-            return true;
-        }
+        return
+            static::isAppRequest()
+            && Yii::$app->request->headers->has('x-humhub-app-is-ios')
+            && !str_contains(
+                Yii::$app->request->headers->get('x-humhub-app-is-ios', '', true),
+                '1',
+            );
     }
 
 }

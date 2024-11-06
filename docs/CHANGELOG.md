@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.1 (unreleased)
+------------------------
+- Fix: iOS mobile app detection for iPad devices
+
 2.1.0 (October 21, 2024)
 ------------------------
 - Fix #51: Firebase not working anymore for web push notifications
