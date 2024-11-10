@@ -1,101 +1,80 @@
-/**
- * @fileoverview HumHub Firebase Module
- * This module handles Firebase Cloud Messaging (FCM) integration for HumHub.
- * It manages notification permissions, token handling, and message reception.
- * @module firebase
- */
-
 humhub.module('firebase', function (module, require, $) {
     let messaging;
 
-    /**
-     * Initializes the Firebase module.
-     * Sets up the Firebase app and messaging, and defines behavior for message reception and token refresh.
-     * @function
-     */
-    const init = function () {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({ messagingSenderId: this.senderId() });
-            this.messaging = firebase.messaging();
-
-            this.messaging.onMessage(function (payload) {
-                module.log.info("Received FCM Push Notification", payload);
-            });
-
-            this.messaging.onTokenRefresh(function () {
-                this.messaging.getToken().then(function (refreshedToken) {
-                    this.deleteTokenLocalStore();
-                    this.sendTokenToServer(refreshedToken);
-                }).catch(function (err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                });
-            });
+    // Default configuration with status messages
+    const defaultConfig = {
+        statusTexts: {
+            granted: '',
+            denied: '',
+            default: '',
+            not_supported: ''
         }
     };
 
-    /**
-     * Gets the content to display for notification permission status.
-     * @function
-     * @returns {string} The message corresponding to the current notification permission status.
-     */
-    const getNotificationPermissionContent = function () {
-        if (!("Notification" in window)) {
-            return module.text('status.not-supported');
-        }
-        switch (Notification.permission) {
-            case "granted":
-                return module.text('status.granted');
-            case "denied":
-                return module.text('status.denied');
-            default:
-                return module.text('status.default');
-        }
-    }
+    // Merge default config with module.config
+    module.config = {...defaultConfig, ...module.config};
 
-    /**
-     * Adds information about push notification permissions to the UI.
-     * @function
-     */
-    const addPushNotificationPermissionsInfo = function () {
-        let content = getNotificationPermissionContent();
-        $('#pushNotificationPermissionInfo').html(content);
-    }
+    const init = function () {
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                messagingSenderId: this.senderId(),
+                projectId: module.config.projectId,
+                apiKey: module.config.apiKey,
+                appId: module.config.appId,
+            });
+            this.messaging = firebase.messaging();
+        }
 
-    /**
-     * Handles actions after the service worker registration.
-     * @function
-     * @param {ServiceWorkerRegistration} registration - The service worker registration object.
-     */
+        this.messaging.onMessage((payload) => {
+            console.log('Suppressed push notification. App has already focus.', payload);
+        });
+
+        // Initialize status display
+        $(document).ready(() => {
+            this.updatePushStatus();
+            $(document).on('click', '#enablePushBtn', () => {
+                Notification.requestPermission().then((permission) => {
+                    this.updatePushStatus();
+                });
+            });
+        });
+    };
+
     const afterServiceWorkerRegistration = function (registration) {
         const that = this;
 
-        this.messaging.useServiceWorker(registration);
+        this.messaging.swRegistration = registration;
 
-        this.messaging.requestPermission().then(function () {
-            addPushNotificationPermissionsInfo('granted');
+        // Request for permission
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') {
+                module.log.info('Notification permission is not granted.');
+                that.updatePushStatus(); // Update status after permission check
+                return;
+            }
 
-            that.messaging.getToken().then(function (currentToken) {
+            that.messaging.getToken({
+                vapidKey: module.config.vapidKey,
+                serviceWorkerRegistration: registration,
+            }).then(function (currentToken) {
                 if (currentToken) {
                     that.sendTokenToServer(currentToken);
                 } else {
                     module.log.info('No Instance ID token available. Request permission to generate one.');
                     that.deleteTokenLocalStore();
                 }
+                that.updatePushStatus(); // Update status after token handling
             }).catch(function (err) {
                 module.log.error('An error occurred while retrieving token. ', err);
                 that.deleteTokenLocalStore();
+                that.updatePushStatus(); // Update status on error
             });
         }).catch(function (err) {
             module.log.info('Could not get Push Notification permission!', err);
-            addPushNotificationPermissionsInfo(Notification.permission);
+            that.updatePushStatus(); // Update status on permission error
         });
     };
 
-    /**
-     * Sends the FCM token to the server.
-     * @function
-     * @param {string} token - The FCM token.
-     */
     const sendTokenToServer = function (token) {
         const that = this;
         if (!that.isTokenSentToServer(token)) {
@@ -103,60 +82,40 @@ humhub.module('firebase', function (module, require, $) {
             $.ajax({
                 method: "POST",
                 url: that.tokenUpdateUrl(),
-                data: { token: token },
+                data: {token: token},
                 success: function (data) {
                     that.setTokenLocalStore(token);
+                    that.updatePushStatus(); // Update status after successful token storage
                 }
             });
-        } else {
-            //console.log('Token already sent to server so won\'t send it again unless it changes');
         }
     };
 
-    /**
-     * Checks if the token has already been sent to the server.
-     * @function
-     * @param {string} token - The FCM token.
-     * @returns {boolean} Whether the token has been sent to the server.
-     */
     const isTokenSentToServer = function (token) {
         return (this.getTokenLocalStore() === token);
     };
 
-    /**
-     * Deletes the locally stored FCM token.
-     * @function
-     */
     const deleteTokenLocalStore = function () {
-        window.localStorage.removeItem('fcmPushToken_' + this.senderId())
+        window.localStorage.removeItem('fcmPushToken_' + this.senderId());
     };
 
-    /**
-     * Sets the FCM token in local storage.
-     * @function
-     * @param {string} token - The FCM token.
-     */
     const setTokenLocalStore = function (token) {
         const item = {
             value: token,
             expiry: (Date.now() / 1000) + (24 * 60 * 60),
         };
-        window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item))
+        window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item));
     };
 
-    /**
-     * Gets the FCM token from local storage.
-     * @function
-     * @returns {string|null} The FCM token or null if it doesn't exist or is expired.
-     */
     const getTokenLocalStore = function () {
-        const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
+        const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId());
 
+        // if the item doesn't exist, return null
         if (!itemStr) {
-            return null
+            return null;
         }
-        const item = JSON.parse(itemStr)
-        const now = (Date.now() / 1000)
+        const item = JSON.parse(itemStr);
+        const now = (Date.now() / 1000);
         if (now > item.expiry) {
             this.deleteTokenLocalStore();
             return null;
@@ -164,43 +123,63 @@ humhub.module('firebase', function (module, require, $) {
         return item.value;
     };
 
-    /**
-     * Gets the URL for updating the token on the server.
-     * @function
-     * @returns {string} The token update URL.
-     */
     const tokenUpdateUrl = function () {
         return module.config.tokenUpdateUrl;
     };
 
-    /**
-     * Gets the sender ID from the module configuration.
-     * @function
-     * @returns {string} The sender ID.
-     */
     const senderId = function () {
         return module.config.senderId;
     };
 
+    // Status check functions
+    const isGranted = function() {
+        return ("Notification" in window) && Notification.permission === "granted";
+    };
+
+    const isDenied = function() {
+        return ("Notification" in window) && Notification.permission === "denied";
+    };
+
+    const isDefault = function() {
+        return ("Notification" in window) && Notification.permission === "default";
+    };
+
+    // Function to update push notification status with error handling
+    const updatePushStatus = function() {
+        if (!("Notification" in window)) {
+            $('#pushNotificationStatus').html(module.config.statusTexts['not-supported']);
+            return;
+        }
+        
+        const status = Notification.permission;
+        const statusMessage = module.config.statusTexts[status] || 
+            module.config.statusTexts['default'];
+        $('#pushNotificationStatus').html(statusMessage);
+    };
+
     module.export({
-        init: init,
-        isTokenSentToServer: isTokenSentToServer,
-        sendTokenToServer: sendTokenToServer,
-        afterServiceWorkerRegistration: afterServiceWorkerRegistration,
-        senderId: senderId,
-        tokenUpdateUrl: tokenUpdateUrl,
-        setTokenLocalStore: setTokenLocalStore,
-        getTokenLocalStore: getTokenLocalStore,
-        deleteTokenLocalStore: deleteTokenLocalStore,
-        addPushNotificationPermissionsInfo: addPushNotificationPermissionsInfo
+        init,
+        isTokenSentToServer,
+        sendTokenToServer,
+        afterServiceWorkerRegistration,
+        
+        // Config Vars
+        senderId,
+        tokenUpdateUrl,
+        
+        // LocalStore Helper
+        setTokenLocalStore,
+        getTokenLocalStore,
+        deleteTokenLocalStore,
+        
+        // Status Functions
+        updatePushStatus,
+        isGranted,
+        isDenied,
+        isDefault
     });
 });
 
-/**
- * Handles actions after the service worker registration (global scope).
- * @function
- * @param {ServiceWorkerRegistration} registration - The service worker registration object.
- */
 function afterServiceWorkerRegistration(registration) {
     humhub.modules.firebase.afterServiceWorkerRegistration(registration);
 }
