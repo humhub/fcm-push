@@ -11,6 +11,8 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
+use humhub\modules\ui\menu\MenuLink;
+use humhub\modules\user\widgets\AccountTopMenu;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -90,7 +92,7 @@ JS;
     {
         if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
             MobileAppHelper::unregisterNotificationScript(); // Before Logout
-            MobileAppHelper::registerLogoutScript();
+            MobileAppHelper::registerShowOpenerScript();
             Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
         }
 
@@ -136,5 +138,24 @@ JS;
         if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
+    }
+
+    public static function onAccountTopMenuInit(Event $event)
+    {
+        if (!MobileAppHelper::isMultiInstanceApp()) {
+            return;
+        }
+
+        /** @var AccountTopMenu $menu */
+        $menu = $event->sender;
+
+        $menu->addEntry(new MenuLink([
+            'label' => Yii::t('FcmPushModule.base', 'Switch network'),
+            'url' => ['/fcm-push/mobile-app/instance-opener'],
+            'icon' => 'arrows-h',
+            'sortOrder' => 699, // Just before "Logout"
+            'isActive' => true,
+            'isVisible' => true,
+        ]));
     }
 }

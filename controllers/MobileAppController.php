@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\controllers;
 
 use humhub\modules\admin\components\Controller;
 use humhub\modules\admin\notifications\NewVersionAvailable;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\FcmUser;
 use humhub\modules\user\models\User;
 use Yii;
@@ -41,6 +42,15 @@ class MobileAppController extends Controller
         }
 
         return $this->render('index');
+    }
+
+    public function actionInstanceOpener()
+    {
+        // Send to the mobile app to display the instance opener
+        MobileAppHelper::registerShowOpenerScript();
+
+        // Stay in the same page, for when we come back from the mobile app to this instance
+        return $this->redirect(Yii::$app->request->referrer);
     }
 
 }
