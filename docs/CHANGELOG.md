@@ -4,7 +4,7 @@ Changelog
 2.1.1 (unreleased)
 ------------------------
 - Fix #58: iOS mobile app detection for iPad devices
-- Enh: For Multi-Instance apps, add a new item in the account menu to display the Opener app page, allowing to switch to the other HumHub instance
+- Enh #60: For Multi-Instance apps, add a new item in the account menu to display the Opener app page, allowing to switch to the other HumHub instance
 
 2.1.0 (October 21, 2024)
 ------------------------
