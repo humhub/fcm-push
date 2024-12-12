@@ -21,7 +21,7 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
-    public static function registerLogoutScript()
+    public static function registerShowOpenerScript()
     {
         if (!static::isAppRequest()) {
             return;
@@ -89,5 +89,12 @@ class MobileAppHelper
         return
             static::isAppRequest()
             && Yii::$app->request->headers->get('x-humhub-app-is-ios');
+    }
+
+    public static function isMultiInstanceApp(): bool
+    {
+        return
+            static::isAppRequest()
+            && Yii::$app->request->headers->get('x-humhub-app-is-multi-instance');
     }
 }
