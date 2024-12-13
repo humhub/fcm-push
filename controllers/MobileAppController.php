@@ -8,7 +8,6 @@ use Yii;
 
 class MobileAppController extends Controller
 {
-
     public function actionInstanceOpener()
     {
         // Send to the mobile app to display the instance opener
