@@ -1,9 +1,9 @@
 <?php
 
 use humhub\modules\fcmPush\models\ConfigureForm;
+use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\Button;
-use humhub\modules\ui\form\widgets\ActiveForm;
 use yii\helpers\Html;
 
 /* @var $model ConfigureForm */
@@ -70,6 +70,6 @@ use yii\helpers\Html;
 
         <?php ActiveForm::end(); ?>
 
-        <?= Html::a('Mobile App Debug', ['/fcm-push/mobile-app'], ['class' => 'pull-right']); ?>
+        <?= Html::a('Mobile App Debug', ['/fcm-push/admin/mobile-app'], ['class' => 'pull-right']) ?>
     </div>
 </div>

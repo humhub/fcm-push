@@ -43,7 +43,7 @@ use yii\helpers\Url;
 
                 <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
                 <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
-                <?= Html::a('Open this page as POST Request', ['index'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>
+                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>
 
             </div>
         </div>
@@ -56,7 +56,7 @@ use yii\helpers\Url;
                         Administrative Notifications!</a>. It may take a few minutes.
                 </p>
 
-                <?= Html::a('Trigger "HumHub Update" notification', ['index', 'triggerNotification' => 1], ['class' => 'btn btn-primary pull-right']) ?>
+                <?= Html::a('Trigger "HumHub Update" notification', ['mobile-app', 'triggerNotification' => 1], ['class' => 'btn btn-primary pull-right']) ?>
 
             </div>
         </div>
@@ -107,7 +107,7 @@ use yii\helpers\Url;
                             <?= $fcm->sender_id ?>
                             &middot;
 
-                            <?= Html::a('Delete', ['index', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
+                            <?= Html::a('Delete', ['mobile-app', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>
