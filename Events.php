@@ -11,6 +11,8 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
+use humhub\modules\ui\menu\MenuLink;
+use humhub\modules\user\widgets\AccountTopMenu;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -20,9 +22,6 @@ use yii\base\Event;
 
 class Events
 {
-    private const SESSION_VAR_LOGOUT = 'mobileAppHandleLogout';
-    private const SESSION_VAR_LOGIN = 'mobileAppHandleLogin';
-
     public static function onBeforeRequest()
     {
         /** @var Module $module */
@@ -88,16 +87,30 @@ JS;
 
     public static function onLayoutAddonInit($event)
     {
-        if (Yii::$app->session->has(self::SESSION_VAR_LOGOUT)) {
-            MobileAppHelper::unregisterNotificationScript(); // Before Logout
-            MobileAppHelper::registerLogoutScript();
-            Yii::$app->session->remove(self::SESSION_VAR_LOGOUT);
+        // If the mobile app Opener page is open (after login and switching instance)
+        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_HIDE_OPENER)) {
+            MobileAppHelper::registerHideOpenerScript();
+            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_HIDE_OPENER);
+        } elseif (MobileAppHelper::openerState()) {
+            MobileAppHelper::registerHideOpenerScript();
         }
 
-        if (Yii::$app->session->has(self::SESSION_VAR_LOGIN)) {
-            MobileAppHelper::registerLoginScript();
+        // After login
+        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION)) {
             MobileAppHelper::registerNotificationScript();
-            Yii::$app->session->remove(self::SESSION_VAR_LOGIN);
+            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION);
+        }
+
+        // Before logout
+        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
+            MobileAppHelper::unregisterNotificationScript();
+            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
+        }
+
+        // After logout
+        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_SHOW_OPENER)) {
+            MobileAppHelper::registerShowOpenerScript();
+            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_SHOW_OPENER);
         }
 
         if (Yii::$app->user->isGuest) {
@@ -115,14 +128,16 @@ JS;
         FirebaseAsset::register(Yii::$app->view);
     }
 
-    public static function onAfterLogout()
-    {
-        Yii::$app->session->set(self::SESSION_VAR_LOGOUT, 1);
-    }
-
     public static function onAfterLogin()
     {
-        Yii::$app->session->set(self::SESSION_VAR_LOGIN, 1);
+        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_HIDE_OPENER, 1);
+        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION, 1);
+    }
+
+    public static function onAfterLogout()
+    {
+        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
+        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
     }
 
     public static function onAuthChoiceBeforeRun(Event $event)
@@ -136,5 +151,27 @@ JS;
         if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
+    }
+
+    public static function onAccountTopMenuInit(Event $event)
+    {
+        if (!MobileAppHelper::isMultiInstanceApp()) {
+            return;
+        }
+
+        /** @var AccountTopMenu $menu */
+        $menu = $event->sender;
+
+        $menu->addEntry(new MenuLink([
+            'label' => Yii::t('FcmPushModule.base', 'Switch network'),
+            'url' => ['/fcm-push/mobile-app/instance-opener'],
+            'icon' => 'arrows-h',
+            'sortOrder' => 699, // Just before "Logout"
+            'isActive' => true,
+            'isVisible' => true,
+            'htmlOptions' => [
+                'data-pjax' => '0', // Force full page refresh to trigger the onLayoutAddonInit event
+            ],
+        ]));
     }
 }

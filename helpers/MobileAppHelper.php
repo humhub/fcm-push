@@ -8,9 +8,16 @@ use yii\helpers\Url;
 
 class MobileAppHelper
 {
-    public static function registerLoginScript()
-    {
+    public const SESSION_VAR_SHOW_OPENER = 'mobileAppShowOpener';
+    /**
+     * @deprecated Remove when minimal HumHub mobile app support is v1.0.124 and later
+     */
+    public const SESSION_VAR_HIDE_OPENER = 'mobileAppHideOpener';
+    public const SESSION_VAR_REGISTER_NOTIFICATION = 'mobileAppRegisterNotification';
+    public const SESSION_VAR_UNREGISTER_NOTIFICATION = 'mobileAppUnregisterNotification';
 
+    public static function registerHideOpenerScript()
+    {
         if (!static::isAppRequest()) {
             return;
         }
@@ -21,7 +28,7 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
-    public static function registerLogoutScript()
+    public static function registerShowOpenerScript()
     {
         if (!static::isAppRequest()) {
             return;
@@ -89,5 +96,29 @@ class MobileAppHelper
         return
             static::isAppRequest()
             && Yii::$app->request->headers->get('x-humhub-app-is-ios');
+    }
+
+    /**
+     * True if the mobile app supports multi instance to display the Opener landing page without logout for switching instance
+     *
+     * @since HumHub mobile app v1.0.124
+     */
+    public static function isMultiInstanceApp(): bool
+    {
+        return
+            static::isAppRequest()
+            && Yii::$app->request->headers->get('x-humhub-app-is-multi-instance');
+    }
+
+    /**
+     * True if the mobile app Opener landing page is visible and should be hidden.
+     *
+     * @since HumHub mobile app v1.0.124
+     */
+    public static function openerState(): bool
+    {
+        return
+            static::isAppRequest()
+            && Yii::$app->request->headers->get('x-humhub-app-opener-state');
     }
 }
