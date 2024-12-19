@@ -167,7 +167,6 @@ JS;
             'url' => ['/fcm-push/mobile-app/instance-opener'],
             'icon' => 'arrows-h',
             'sortOrder' => 699, // Just before "Logout"
-            'isActive' => true,
             'isVisible' => true,
             'htmlOptions' => [
                 'data-pjax' => '0', // Force full page refresh to trigger the onLayoutAddonInit event

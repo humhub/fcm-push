@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.1 (December 19, 2024)
+-------------------------
+- Fix #262: Switch Network doesn't work 
+
 2.1.1 (December 16, 2024)
 -------------------------
 - Fix #58: iOS mobile app detection for iPad devices
