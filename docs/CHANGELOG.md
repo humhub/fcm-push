@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.1 (December 19, 2024)
+2.1.2 (December 19, 2024)
 -------------------------
 - Fix #262: Switch Network doesn't work 
 
