@@ -86,7 +86,7 @@ use yii\helpers\Url;
                 <h4>Registered FireBase Devices (Current User)</h4>
 
                 <?php
-                $tokens = FcmUser::findAll(['user_id' => Yii::$app->user->id]);
+                $tokens = FcmUser::find()->where(['user_id' => Yii::$app->user->id])->orderBy('created_at DESC')->all();
                 ?>
 
                 <?php if (count($tokens) === 0): ?>
@@ -105,8 +105,11 @@ use yii\helpers\Url;
 
                             &middot;
                             <?= $fcm->sender_id ?>
-                            &middot;
 
+                            &middot;
+                            <?= Yii::$app->formatter->asDatetime($fcm->created_at, 'short') ?>
+
+                            &middot;
                             <?= Html::a('Delete', ['mobile-app', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
                         </li>
                     <?php endforeach; ?>

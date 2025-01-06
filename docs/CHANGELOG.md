@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.3 (Unreleased)
+-------------------------
+- Fix #32: Delete DeviceID after Logout
+
 2.1.2 (December 19, 2024)
 -------------------------
 - Fix #262: Switch Network doesn't work 

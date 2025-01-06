@@ -64,6 +64,21 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
+    const deleteTokenToServer = function (token) {
+        const that = this;
+        if (that.isTokenSentToServer(token)) {
+            module.log.info("Delete FCM Push Token to Server");
+            $.ajax({
+                method: "POST",
+                url: that.tokenDeleteUrl(),
+                data: {token: token},
+                success: function (data) {
+                    that.deleteTokenLocalStore();
+                }
+            });
+        }
+    };
+
     const isTokenSentToServer = function (token) {
         return (this.getTokenLocalStore() === token);
     };
@@ -96,8 +111,19 @@ humhub.module('firebase', function (module, require, $) {
         return item.value;
     };
 
+    const unregisterNotification = function () {
+        const token = this.getTokenLocalStore();
+        if (token) {
+            this.deleteTokenToServer(token);
+        }
+    }
+
     const tokenUpdateUrl = function () {
         return module.config.tokenUpdateUrl;
+    };
+
+    const tokenDeleteUrl = function () {
+        return module.config.tokenDeleteUrl;
     };
 
     const senderId = function () {
@@ -109,11 +135,14 @@ humhub.module('firebase', function (module, require, $) {
 
         isTokenSentToServer,
         sendTokenToServer,
+        deleteTokenToServer,
         afterServiceWorkerRegistration,
+        unregisterNotification,
 
         // Config Vars
         senderId,
         tokenUpdateUrl,
+        tokenDeleteUrl,
 
         // LocalStore Helper
         setTokenLocalStore,

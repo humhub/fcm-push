@@ -30,54 +30,58 @@ class TokenController extends Controller
 
     public function actionUpdate()
     {
-        $this->requireLogin();
-
-        $driver = (new DriverService($this->module->getConfigureForm()))->getWebDriver();
-        if (!$driver) {
-            Yii::$app->response->statusCode = 400;
-            return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
-        }
-
-        return $this->asJson([
-            'success' => (
-                (new TokenService())->storeTokenForUser(
-                    Yii::$app->user->getIdentity(),
-                    $driver,
-                    Yii::$app->request->post('token'),
-                )
-            ),
-        ]);
+        return $this->update(false, Yii::$app->request->post('token'));
     }
 
     public function actionUpdateMobileApp()
     {
-        $this->requireLogin();
+        return $this->update(true, Yii::$app->request->post('token'));
+    }
 
-        $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
+    public function actionDelete()
+    {
+        return $this->delete(false, Yii::$app->request->post('token'));
+    }
+
+    public function actionDeleteMobileApp()
+    {
+        return $this->delete(true, Yii::$app->request->post('token'));
+    }
+
+    private function update(bool $mobile, ?string $token)
+    {
+        if (Yii::$app->user->isGuest) {
+            throw new HttpException(401, 'Login required!');
+        }
+
+        $driverService = new DriverService($this->module->getConfigureForm());
+        $tokenService = new TokenService();
+
+        $driver = $mobile ? $driverService->getMobileAppDriver() : $driverService->getWebDriver();
         if (!$driver) {
-            Yii::error('Could not update token for mobile app. No driver available.', 'fcm-push');
+            Yii::error('Could not update token for ' . ($mobile ? 'mobile' : 'web') . ' app. No driver available.', 'fcm-push');
 
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
         }
 
         return $this->asJson([
-            'success' => (
-                (new TokenService())->storeTokenForUser(
-                    Yii::$app->user->getIdentity(),
-                    $driver,
-                    Yii::$app->request->post('token'),
-                )
+            'success' => $tokenService->storeTokenForUser(
+                Yii::$app->user->getIdentity(),
+                $driver,
+                $token,
             ),
         ]);
     }
 
-
-    public function actionDeleteMobileApp()
+    private function delete(bool $mobile, ?string $token)
     {
-        $driver = (new DriverService($this->module->getConfigureForm()))->getMobileAppDriver();
+        $driverService = new DriverService($this->module->getConfigureForm());
+        $tokenService = new TokenService();
+
+        $driver = $mobile ? $driverService->getMobileAppDriver() : $driverService->getWebDriver();
         if (!$driver) {
-            Yii::error('Could not delete token for mobile app. No driver available.', 'fcm-push');
+            Yii::error('Could not delete token for ' . ($mobile ? 'mobile' : 'web') . ' app. No driver available.', 'fcm-push');
 
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
@@ -88,19 +92,7 @@ class TokenController extends Controller
         }
 
         return $this->asJson([
-            'success' => (
-                (new TokenService())->deleteToken(
-                    Yii::$app->request->post('token'),
-                )
-            ),
+            'success' => $tokenService->deleteToken($token),
         ]);
     }
-
-    private function requireLogin(): void
-    {
-        if (Yii::$app->user->isGuest) {
-            throw new HttpException(401, 'Login required!');
-        }
-    }
-
 }
