@@ -23,6 +23,7 @@ return [
         [LayoutAddons::class, LayoutAddons::EVENT_INIT, [Events::class, 'onLayoutAddonInit']],
         [Application::class, Application::EVENT_BEFORE_REQUEST, [Events::class, 'onBeforeRequest']],
         [User::class, User::EVENT_AFTER_LOGIN, [Events::class, 'onAfterLogin']],
+        [User::class, User::EVENT_BEFORE_LOGOUT, [Events::class, 'onBeforeLogout']],
         [User::class, User::EVENT_AFTER_LOGOUT, [Events::class, 'onAfterLogout']],
         [AuthChoice::class, AuthChoice::EVENT_BEFORE_RUN, [Events::class, 'onAuthChoiceBeforeRun']],
         //[NotificationInfoWidget::class, \humhub\widgets\BaseStack::EVENT_RUN, [Events::class, 'onNotificationInfoWidget']],

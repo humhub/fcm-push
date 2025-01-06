@@ -8,6 +8,7 @@ use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\MailerMessage;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
+use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
@@ -134,9 +135,14 @@ JS;
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION, 1);
     }
 
-    public static function onAfterLogout()
+    public static function onBeforeLogout()
     {
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
+        Yii::$app->view->registerJs('humhub.modules.firebase.unregisterNotification();');
+    }
+
+    public static function onAfterLogout()
+    {
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
     }
 
