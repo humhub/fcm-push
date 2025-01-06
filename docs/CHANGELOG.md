@@ -3,7 +3,7 @@ Changelog
 
 2.1.3 (Unreleased)
 -------------------------
-- Fix: Delete DeviceID after Logout
+- Fix #32: Delete DeviceID after Logout
 
 2.1.2 (December 19, 2024)
 -------------------------

@@ -39,6 +39,7 @@ class FcmPushAsset extends AssetBundle
         if ($pushDriver !== null) {
             Yii::$app->view->registerJsConfig('firebase', [
                 'tokenUpdateUrl' => Url::to(['/fcm-push/token/update']),
+                'tokenDeleteUrl' => Url::to(['/fcm-push/token/delete']),
                 'senderId' => $pushDriver->getSenderId(),
                 'projectId' => $module->getConfigureForm()->getJsonParam('project_id'),
                 'apiKey' => $module->getConfigureForm()->firebaseApiKey,

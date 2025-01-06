@@ -102,22 +102,28 @@ JS;
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION);
         }
 
-        // Before logout
+        // After logout
+        if (Yii::$app->session->has(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
+            static::registerAssets();
+            WebAppHelper::unregisterNotificationScript();
+            Yii::$app->session->remove(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
+        }
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
             MobileAppHelper::unregisterNotificationScript();
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
         }
-
-        // After logout
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_SHOW_OPENER)) {
             MobileAppHelper::registerShowOpenerScript();
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_SHOW_OPENER);
         }
 
-        if (Yii::$app->user->isGuest) {
-            return;
+        if (!Yii::$app->user->isGuest) {
+            static::registerAssets();
         }
+    }
 
+    private static function registerAssets()
+    {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
@@ -135,14 +141,10 @@ JS;
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION, 1);
     }
 
-    public static function onBeforeLogout()
-    {
-        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
-        Yii::$app->view->registerJs('humhub.modules.firebase.unregisterNotification();');
-    }
-
     public static function onAfterLogout()
     {
+        Yii::$app->session->set(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
+        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
     }
 
