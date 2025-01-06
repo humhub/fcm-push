@@ -30,25 +30,25 @@ class TokenController extends Controller
 
     public function actionUpdate()
     {
-        return $this->update(false);
+        return $this->update(false, Yii::$app->request->post('token'));
     }
 
     public function actionUpdateMobileApp()
     {
-        return $this->update(true);
+        return $this->update(true, Yii::$app->request->post('token'));
     }
 
     public function actionDelete()
     {
-        return $this->delete(false);
+        return $this->delete(false, Yii::$app->request->post('token'));
     }
 
     public function actionDeleteMobileApp()
     {
-        return $this->delete(true);
+        return $this->delete(true, Yii::$app->request->post('token'));
     }
 
-    private function update(bool $mobile)
+    private function update(bool $mobile, ?string $token)
     {
         if (Yii::$app->user->isGuest) {
             throw new HttpException(401, 'Login required!');
@@ -69,12 +69,12 @@ class TokenController extends Controller
             'success' => $tokenService->storeTokenForUser(
                 Yii::$app->user->getIdentity(),
                 $driver,
-                Yii::$app->request->post('token'),
+                $token,
             ),
         ]);
     }
 
-    private function delete(bool $mobile)
+    private function delete(bool $mobile, ?string $token)
     {
         $driverService = new DriverService($this->module->getConfigureForm());
         $tokenService = new TokenService();
@@ -92,9 +92,7 @@ class TokenController extends Controller
         }
 
         return $this->asJson([
-            'success' => $tokenService->deleteToken(
-                Yii::$app->request->post('token'),
-            ),
+            'success' => $tokenService->deleteToken($token),
         ]);
     }
 }
