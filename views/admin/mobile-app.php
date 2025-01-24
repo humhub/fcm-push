@@ -41,10 +41,10 @@ use yii\helpers\Url;
                     </p>
                 <?php endif; ?>
 
-                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
-                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
-                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>
-
+                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]) ?>
+                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]) ?>
+                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-default']) ?>
+                <?= Html::a('Open native console', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'openNativeConsole'])]) ?>
             </div>
         </div>
         <div class="panel panel-default">

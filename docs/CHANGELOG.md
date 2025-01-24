@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.4 (Unreleased)
+-----------------------
+- Enh: Add "Open native console" button for the mobile app
+
 2.1.3 (January 6, 2024)
 -----------------------
 - Fix #32: Delete DeviceID after Logout
