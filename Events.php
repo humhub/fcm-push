@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush;
 
 use humhub\components\mail\Message;
+use humhub\helpers\DeviceDetectorHelper;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\MailerMessage;
@@ -156,14 +157,14 @@ JS;
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        if (MobileAppHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
+        if (DeviceDetectorHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
             $sender->setClients([]);
         }
     }
 
     public static function onAccountTopMenuInit(Event $event)
     {
-        if (!MobileAppHelper::isMultiInstanceApp()) {
+        if (!DeviceDetectorHelper::isMultiInstanceApp()) {
             return;
         }
 

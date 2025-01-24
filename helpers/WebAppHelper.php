@@ -2,6 +2,7 @@
 
 namespace humhub\modules\fcmPush\helpers;
 
+use humhub\helpers\DeviceDetectorHelper;
 use Yii;
 
 class WebAppHelper
@@ -10,7 +11,7 @@ class WebAppHelper
 
     public static function unregisterNotificationScript()
     {
-        if (MobileAppHelper::isAppRequest()) {
+        if (DeviceDetectorHelper::isAppRequest()) {
             return;
         }
 
