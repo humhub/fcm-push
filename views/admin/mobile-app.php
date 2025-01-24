@@ -2,8 +2,8 @@
 
 /* @var $this \humhub\modules\ui\view\components\View */
 
+use humhub\helpers\DeviceDetectorHelper;
 use humhub\libs\Html;
-use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\FcmUser;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -20,12 +20,12 @@ use yii\helpers\Url;
             </div>
             <div class="panel-body">
 
-                <?php if (MobileAppHelper::isAppRequest()): ?>
+                <?php if (DeviceDetectorHelper::isAppRequest()): ?>
                     <p class="alert alert-success">
                         <strong>App Detection</strong> - Current Request: Is App Request
                     </p>
 
-                    <?php if (MobileAppHelper::isAppWithCustomFcm()): ?>
+                    <?php if (DeviceDetectorHelper::isAppWithCustomFcm()): ?>
                         <p class="alert alert-success">
                             <strong>FCM Detection</strong> - App is using custom Firebase
                         </p>
