@@ -10,10 +10,6 @@ use yii\helpers\Url;
 
 class Module extends \humhub\components\Module
 {
-    /**
-     * @inheritdoc
-     */
-    public $resourcesPath = 'resources';
     public string $humhubProxySenderId = '21392898126';
     private ?ConfigureForm $configForm = null;
     private ?DriverService $driverService = null;

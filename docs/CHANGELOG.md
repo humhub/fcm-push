@@ -1,13 +1,14 @@
 Changelog
 =========
 
-2.1.4 (Unreleased)
+2.1.4 (January 24, 2025)
 -----------------------
 - Enh #66: Add "Open native console" button for the mobile app
 - Chg #67: The minimal HumHub version is now 1.17
 - Chg #67: Use the new `DeviceDetectorHelper` helper instead of `MobileAppHelper`
+- Fix: Update module resources path
 
-2.1.3 (January 6, 2024)
+2.1.3 (January 6, 2025)
 -----------------------
 - Fix #32: Delete DeviceID after Logout
 
