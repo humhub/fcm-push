@@ -67,16 +67,4 @@ class MobileAppHelper
     {
         Yii::$app->view->registerJs('if (window.flutterChannel) { window.flutterChannel.postMessage(\'' . $msg . '\'); }');
     }
-
-    /**
-     * True if the mobile app Opener landing page is visible and should be hidden.
-     *
-     * @since HumHub mobile app v1.0.124
-     */
-    public static function openerState(): bool
-    {
-        return
-            DeviceDetectorHelper::isAppRequest()
-            && Yii::$app->request->headers->get('x-humhub-app-opener-state');
-    }
 }

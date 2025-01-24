@@ -93,7 +93,7 @@ JS;
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_HIDE_OPENER)) {
             MobileAppHelper::registerHideOpenerScript();
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_HIDE_OPENER);
-        } elseif (MobileAppHelper::openerState()) {
+        } elseif (DeviceDetectorHelper::appOpenerState()) {
             MobileAppHelper::registerHideOpenerScript();
         }
 

@@ -3,9 +3,9 @@ Changelog
 
 2.1.4 (Unreleased)
 -----------------------
-- Enh: Add "Open native console" button for the mobile app
-- Chg: The minimal HumHub version is now 1.17
-- Chg: Use the new `DeviceDetectorHelper` helper instead of `MobileAppHelper`
+- Enh #66: Add "Open native console" button for the mobile app
+- Chg #67: The minimal HumHub version is now 1.17
+- Chg #67: Use the new `DeviceDetectorHelper` helper instead of `MobileAppHelper`
 
 2.1.3 (January 6, 2024)
 -----------------------
