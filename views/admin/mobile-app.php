@@ -2,8 +2,8 @@
 
 /* @var $this \humhub\modules\ui\view\components\View */
 
+use humhub\helpers\DeviceDetectorHelper;
 use humhub\libs\Html;
-use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\FcmUser;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -20,24 +20,31 @@ use yii\helpers\Url;
             </div>
             <div class="panel-body">
 
-
-
-
-
-                <?php if (MobileAppHelper::isAppRequest()): ?>
+                <?php if (DeviceDetectorHelper::isAppRequest()): ?>
                     <p class="alert alert-success">
                         <strong>App Detection</strong> - Current Request: Is App Request
                     </p>
+
+                    <?php if (DeviceDetectorHelper::isAppWithCustomFcm()): ?>
+                        <p class="alert alert-success">
+                            <strong>FCM Detection</strong> - App is using custom Firebase
+                        </p>
+                    <?php else: ?>
+                        <p class="alert alert-warning">
+                            <strong>FCM Detection</strong> - App is using Proxy Firebase Service
+                        </p>
+                    <?php endif; ?>
+
                 <?php else: ?>
                     <p class="alert alert-warning">
                         <strong>App Detection</strong> - Current Request: NO App Request Detected
                     </p>
                 <?php endif; ?>
 
-                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]); ?>
-                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]); ?>
-                <?= Html::a('Open this page as POST Request', ['index'], ['data-method' => 'POST', 'class' => 'btn btn-default']); ?>
-
+                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]) ?>
+                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]) ?>
+                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-default']) ?>
+                <?= Html::a('Open native console', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'openNativeConsole'])]) ?>
             </div>
         </div>
         <div class="panel panel-default">
@@ -49,7 +56,7 @@ use yii\helpers\Url;
                         Administrative Notifications!</a>. It may take a few minutes.
                 </p>
 
-                <?= Html::a('Trigger "HumHub Update" notification', ['index', 'triggerNotification' => 1], ['class' => 'btn btn-primary pull-right']) ?>
+                <?= Html::a('Trigger "HumHub Update" notification', ['mobile-app', 'triggerNotification' => 1], ['class' => 'btn btn-primary pull-right']) ?>
 
             </div>
         </div>
@@ -79,7 +86,7 @@ use yii\helpers\Url;
                 <h4>Registered FireBase Devices (Current User)</h4>
 
                 <?php
-                $tokens = FcmUser::findAll(['user_id' => Yii::$app->user->id]);
+                $tokens = FcmUser::find()->where(['user_id' => Yii::$app->user->id])->orderBy('created_at DESC')->all();
                 ?>
 
                 <?php if (count($tokens) === 0): ?>
@@ -98,9 +105,12 @@ use yii\helpers\Url;
 
                             &middot;
                             <?= $fcm->sender_id ?>
-                            &middot;
 
-                            <?= Html::a('Delete', ['index', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
+                            &middot;
+                            <?= Yii::$app->formatter->asDatetime($fcm->created_at, 'short') ?>
+
+                            &middot;
+                            <?= Html::a('Delete', ['mobile-app', 'deleteToken' => $fcm->id, 'confirm' => 'PWA: You may need to delete token from localStorage to trigger resave!']) ?>
                         </li>
                     <?php endforeach; ?>
                 </ul>

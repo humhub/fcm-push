@@ -3,12 +3,10 @@
 namespace humhub\modules\fcmPush\driver;
 
 use humhub\modules\fcmPush\components\SendReport;
+use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
-use humhub\modules\notification\models\Notification;
-use humhub\modules\web\pwa\widgets\SiteIcon;
 use Yii;
 use yii\httpclient\Client;
-use humhub\modules\fcmPush\models\ConfigureForm;
 
 class Proxy extends Client implements DriverInterface
 {
@@ -35,10 +33,9 @@ class Proxy extends Client implements DriverInterface
             'tokens' => $tokens,
             'title' => $title,
             'body' => $body,
-            'imageUrl' => $imageUrl,
-            'iconUrl' => SiteIcon::getUrl(180),
+            'iconUrl' => $imageUrl,
             'url' => $url,
-            'notificationCount' => $notificationCount
+            'notificationCount' => $notificationCount,
         ];
 
         $response = $this->post('/push', $data)->send();

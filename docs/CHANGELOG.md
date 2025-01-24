@@ -1,9 +1,53 @@
 Changelog
 =========
 
-2.1.0 (Unreleased)
+2.1.4 (January 24, 2025)
 -----------------------
+- Enh #66: Add "Open native console" button for the mobile app
+- Chg #67: The minimal HumHub version is now 1.17
+- Chg #67: Use the new `DeviceDetectorHelper` helper instead of `MobileAppHelper`
 - Fix: Update module resources path
+
+2.1.3 (January 6, 2025)
+-----------------------
+- Fix #32: Delete DeviceID after Logout
+
+2.1.2 (December 19, 2024)
+-------------------------
+- Fix #262: Switch Network doesn't work 
+
+2.1.1 (December 16, 2024)
+-------------------------
+- Fix #58: iOS mobile app detection for iPad devices
+- Enh #60: For Multi-Instance apps, add a new item in the account menu to display the Opener app page, allowing to switch to the other HumHub instance
+
+2.1.0 (October 21, 2024)
+------------------------
+- Fix #51: Firebase not working anymore for web push notifications
+- Fix #54: Remove obsolete driver FcmLegacy
+- Enh #52: Use PHP CS Fixer
+
+**This version requires extra settings in the module configuration.**
+
+Please read [the Installation page](https://marketplace.humhub.com/module/fcm-push/installation) and update the Firebase version in the CSP configuration.
+
+2.0.7 (September 2, 2024)
+-------------------------
+- Fix #48: Fix go service for multiline links
+
+2.0.6 (August 25, 2024)
+-----------------------
+- Fix #41: Fix go service for multiline links
+- Enh #47: Updated `kreait/firebase-php` to version 7.13+
+
+2.0.3 (June 24, 2024)
+---------------------
+- Enh: Endpoint to test push status
+- Enh: Add possibility to profile `.well-known` files
+
+2.0.2 (May 28, 2024)
+-----------------------
+- Enh: Branded App Firebase Support
 
 2.0.1 (January 8, 2024)
 -----------------------

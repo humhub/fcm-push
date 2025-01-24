@@ -1,42 +1,37 @@
 humhub.module('firebase', function (module, require, $) {
-    let messaging;
-
     const init = function () {
         if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: this.senderId()});
+            firebase.initializeApp({
+                messagingSenderId: this.senderId(),
+                projectId: module.config.projectId,
+                apiKey: module.config.apiKey,
+                appId: module.config.appId,
+            });
             this.messaging = firebase.messaging();
-
-            this.messaging.onMessage(function (payload) {
-                module.log.info("Received FCM Push Notification", payload);
-            });
-
-            // Callback fired if Instance ID token is updated.
-            this.messaging.onTokenRefresh(function () {
-                this.messaging.getToken().then(function (refreshedToken) {
-                    this.deleteTokenLocalStore();
-                    this.sendTokenToServer(refreshedToken);
-                }).catch(function (err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                });
-            });
         }
+
+        this.messaging.onMessage((payload) => {
+            console.log('Suppressed push notification. App has already focus.', payload);
+        });
     };
 
     const afterServiceWorkerRegistration = function (registration) {
-        //console.log("After Service Worker Registration");
-        //console.log(registration);
-
         const that = this;
 
-        this.messaging.useServiceWorker(registration);
+        this.messaging.swRegistration = registration;
 
         // Request for permission
-        this.messaging.requestPermission().then(function () {
-            //console.log('Notification permission granted.');
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') {
+                module.log.info('Notification permission is not granted.');
+                return;
+            }
 
-            that.messaging.getToken().then(function (currentToken) {
+            that.messaging.getToken({
+                vapidKey: module.config.vapidKey,
+                serviceWorkerRegistration: registration,
+            }).then(function (currentToken) {
                 if (currentToken) {
-                    //console.log('Token: ' + currentToken);
                     that.sendTokenToServer(currentToken);
                 } else {
                     module.log.info('No Instance ID token available. Request permission to generate one.');
@@ -66,8 +61,21 @@ humhub.module('firebase', function (module, require, $) {
                     that.setTokenLocalStore(token);
                 }
             });
-        } else {
-            //console.log('Token already sent to server so won\'t send it again unless it changes');
+        }
+    };
+
+    const deleteTokenToServer = function (token) {
+        const that = this;
+        if (that.isTokenSentToServer(token)) {
+            module.log.info("Delete FCM Push Token to Server");
+            $.ajax({
+                method: "POST",
+                url: that.tokenDeleteUrl(),
+                data: {token: token},
+                success: function (data) {
+                    that.deleteTokenLocalStore();
+                }
+            });
         }
     };
 
@@ -103,8 +111,19 @@ humhub.module('firebase', function (module, require, $) {
         return item.value;
     };
 
+    const unregisterNotification = function () {
+        const token = this.getTokenLocalStore();
+        if (token) {
+            this.deleteTokenToServer(token);
+        }
+    }
+
     const tokenUpdateUrl = function () {
         return module.config.tokenUpdateUrl;
+    };
+
+    const tokenDeleteUrl = function () {
+        return module.config.tokenDeleteUrl;
     };
 
     const senderId = function () {
@@ -112,20 +131,23 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     module.export({
-        init: init,
+        init,
 
-        isTokenSentToServer: isTokenSentToServer,
-        sendTokenToServer: sendTokenToServer,
-        afterServiceWorkerRegistration: afterServiceWorkerRegistration,
+        isTokenSentToServer,
+        sendTokenToServer,
+        deleteTokenToServer,
+        afterServiceWorkerRegistration,
+        unregisterNotification,
 
         // Config Vars
-        senderId: senderId,
-        tokenUpdateUrl: tokenUpdateUrl,
+        senderId,
+        tokenUpdateUrl,
+        tokenDeleteUrl,
 
         // LocalStore Helper
-        setTokenLocalStore: setTokenLocalStore,
-        getTokenLocalStore: getTokenLocalStore,
-        deleteTokenLocalStore: deleteTokenLocalStore,
+        setTokenLocalStore,
+        getTokenLocalStore,
+        deleteTokenLocalStore,
     });
 });
 

@@ -2,9 +2,9 @@
 
 namespace humhub\modules\fcmPush\services;
 
+use humhub\helpers\DeviceDetectorHelper;
 use humhub\modules\fcmPush\driver\DriverInterface;
 use humhub\modules\fcmPush\driver\Fcm;
-use humhub\modules\fcmPush\driver\FcmLegacy;
 use humhub\modules\fcmPush\driver\Proxy;
 use humhub\modules\fcmPush\models\ConfigureForm;
 
@@ -32,11 +32,6 @@ class DriverService
         $fcm = new Fcm($this->config);
         if ($fcm->isConfigured()) {
             $this->configuredDrivers[] = $fcm;
-        } else {
-            $fcmLegacy = new FcmLegacy($this->config);
-            if ($fcmLegacy->isConfigured()) {
-                $this->configuredDrivers[] = $fcmLegacy;
-            }
         }
     }
 
@@ -44,7 +39,7 @@ class DriverService
     /**
      * There may be several Firebase drivers at the same time. e.g.
      *
-     * - Fcm or FcmLegacy: For PWA/Web Notification
+     * - Fcm: For PWA/Web Notification
      * - HumHubProxy: For the official Mobile Apps
      *
      * @return DriverInterface[]
@@ -54,12 +49,11 @@ class DriverService
         return $this->configuredDrivers;
     }
 
-
     public function getWebDriver(): ?DriverInterface
     {
         // If Fcm driver is available use it
         foreach ($this->configuredDrivers as $driver) {
-            if ($driver instanceof Fcm || $driver instanceof FcmLegacy) {
+            if ($driver instanceof Fcm) {
                 return $driver;
             }
         }
@@ -72,6 +66,10 @@ class DriverService
 
     public function getMobileAppDriver(): ?DriverInterface
     {
+        if (DeviceDetectorHelper::isAppWithCustomFcm()) {
+            return $this->getConfiguredDriverByType(Fcm::class);
+        }
+
         return $this->getConfiguredDriverByType(Proxy::class);
     }
 
