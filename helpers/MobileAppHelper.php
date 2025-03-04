@@ -64,7 +64,7 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
-    public static function getFileUploadSettings()
+    public static function getFileUploadSettings(): void
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('file');
