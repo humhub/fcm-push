@@ -64,6 +64,9 @@ class MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
+    /**
+     * @since 2.1.5
+     */
     public static function getFileUploadSettings(): void
     {
         /** @var Module $module */
@@ -72,7 +75,7 @@ class MobileAppHelper
         $json = [
             'type' => 'fileUploadSettings',
             'fileUploadUrl' => Url::to(['/file/file/upload'], true),
-            'contentCreateUrl' => Url::to(['/content/content/create'], true),
+            'contentCreateUrl' => Url::to(['/content/share-intend/target'], true),
             'maxFileSize' => $module->settings->get('maxFileSize'),
             'allowedExtensions' => $module->settings->get('allowedExtensions'),
             'imageMaxResolution' => $module->imageMaxResolution,
