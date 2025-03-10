@@ -4,17 +4,15 @@ namespace humhub\modules\fcmPush\controllers;
 
 use humhub\components\Controller;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
-use Yii;
 use yii\helpers\Url;
 
 class MobileAppController extends Controller
 {
     public function actionInstanceOpener()
     {
-        // Send to the mobile app to display the instance opener
-        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
+        MobileAppHelper::registerShowOpenerScript();
 
         // Stay on the same page, because when we come back from the mobile app to this instance
-        return $this->htmlRedirect(Url::home());
+        return $this->redirect(Url::home());
     }
 }
