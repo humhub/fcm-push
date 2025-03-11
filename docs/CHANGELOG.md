@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.5 (unreleased)
+-----------------------
+- Enh: Add Share intend feature for the mobile app
+
 2.1.4 (January 24, 2025)
 -----------------------
 - Enh #66: Add "Open native console" button for the mobile app
