@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush\helpers;
 
 use humhub\helpers\DeviceDetectorHelper;
+use humhub\modules\file\Module;
 use Yii;
 use yii\helpers\Json;
 use yii\helpers\Url;
@@ -59,6 +60,33 @@ class MobileAppHelper
         }
 
         $json = ['type' => 'unregisterFcmDevice', 'url' => Url::to(['/fcm-push/token/delete-mobile-app'], true)];
+        $message = Json::encode($json);
+        self::sendFlutterMessage($message);
+    }
+
+    /**
+     * @since 2.1.5
+     */
+    public static function getFileUploadSettings(): void
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('file');
+
+        $json = [
+            'type' => 'fileUploadSettings',
+            'fileUploadUrl' => Url::to(['/file/file/upload'], true),
+            'contentCreateUrl' => Url::to(['/content/share-intend/target'], true),
+            'maxFileSize' => $module->settings->get('maxFileSize'),
+            'allowedExtensions' => $module->settings->get('allowedExtensions'),
+            'imageMaxResolution' => $module->imageMaxResolution,
+            'imageJpegQuality' => $module->imageJpegQuality,
+            'imagePngCompressionLevel' => $module->imagePngCompressionLevel,
+            'imageWebpQuality' => $module->imageWebpQuality,
+            'imageMaxProcessingMP' => $module->imageMaxProcessingMP,
+            'denyDoubleFileExtensions' => $module->denyDoubleFileExtensions,
+            'converterOptions' => $module->converterOptions,
+        ];
+
         $message = Json::encode($json);
         self::sendFlutterMessage($message);
     }
