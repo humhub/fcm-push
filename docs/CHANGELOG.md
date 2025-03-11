@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.6 (March 11, 2025)
+-----------------------
+- Fix: Show opener for iOS when switching to another instance
+
 2.1.5 (March 11, 2025)
 ----------------------
 - Enh: Add Share intend feature for the mobile app
