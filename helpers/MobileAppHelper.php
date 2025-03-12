@@ -84,7 +84,6 @@ class MobileAppHelper
             'imageWebpQuality' => $module->imageWebpQuality,
             'imageMaxProcessingMP' => $module->imageMaxProcessingMP,
             'denyDoubleFileExtensions' => $module->denyDoubleFileExtensions,
-            'converterOptions' => $module->converterOptions,
         ];
 
         $message = Json::encode($json);
