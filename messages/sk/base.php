@@ -21,6 +21,7 @@ return [
     'Well-known file {fileName}' => 'Známý súbor {fileName}',
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'Key pair of the Web Push certificates' => '',
+    'Switch network' => '',
     'Web API Key' => '',
     'Web App ID' => '',
 ];

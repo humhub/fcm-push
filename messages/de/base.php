@@ -18,6 +18,7 @@ return [
     'Key pair of the Web Push certificates' => '',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => '',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => '',
+    'Switch network' => '',
     'URL to the file {fileNameLink}' => '',
     'Use this ID to register your API Key.' => '',
     'Web API Key' => '',

@@ -17,6 +17,7 @@ return [
     'Push Service (required for the mobile app) (Beta)' => '',
     'Sender ID' => '',
     'Service Account (JSON file)' => '',
+    'Switch network' => '',
     'To send Firebase push notifications with your own Firebase project, enter your access details here.' => '',
     'URL to the file {fileNameLink}' => '',
     'Use this ID to register your API Key.' => '',

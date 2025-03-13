@@ -16,6 +16,7 @@ return [
   'Push Service (required for the mobile app) (Beta)' => 'Serviço Push (necessário para o aplicativo móvel) (Beta)',
   'Sender ID' => 'ID do remetente',
   'Service Account (JSON file)' => 'Conta de serviço (arquivo JSON)',
+  'Switch network' => 'Trocar rede',
   'To send Firebase push notifications with your own Firebase project, enter your access details here.' => 'Para enviar notificações push do Firebase com seu próprio projeto do Firebase, insira seus detalhes de acesso aqui.',
   'URL to the file {fileNameLink}' => 'URL para o arquivo {fileNameLink}',
   'Use this ID to register your API Key.' => 'Use este ID para registrar sua chave de API.',

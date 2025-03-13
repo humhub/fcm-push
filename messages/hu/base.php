@@ -21,6 +21,7 @@ return [
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'Key pair of the Web Push certificates' => '',
     'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.' => '',
+    'Switch network' => '',
     'Web API Key' => '',
     'Web App ID' => '',
 ];
