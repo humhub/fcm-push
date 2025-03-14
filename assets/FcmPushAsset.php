@@ -2,11 +2,11 @@
 
 namespace humhub\modules\fcmPush\assets;
 
-use humhub\modules\fcmPush\Module;
-use humhub\modules\fcmPush\services\DriverService;
 use Yii;
 use yii\helpers\Url;
 use yii\web\AssetBundle;
+use humhub\modules\fcmPush\Module;
+use humhub\modules\fcmPush\services\DriverService;
 
 class FcmPushAsset extends AssetBundle
 {
@@ -36,7 +36,5 @@ class FcmPushAsset extends AssetBundle
 
             return parent::register($view);
         }
-
-
     }
 }

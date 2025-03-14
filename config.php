@@ -1,16 +1,14 @@
 <?php
 
-
 /** @noinspection MissedFieldInspection */
 
 use humhub\modules\fcmPush\Events;
 use humhub\components\Controller;
-
-//use humhub\modules\notification\widgets\NotificationInfoWidget;
 use humhub\modules\user\widgets\AuthChoice;
 use humhub\widgets\LayoutAddons;
 use yii\base\Application;
 use humhub\modules\user\components\User;
+use humhub\modules\notification\widgets\UserInfoWidget;
 
 return [
     'id' => 'fcm-push',
@@ -24,7 +22,7 @@ return [
         [User::class, User::EVENT_AFTER_LOGOUT, [Events::class, 'onAfterLogout']],
         [User::class, User::EVENT_AFTER_LOGIN, [Events::class, 'onAfterLogin']],
         [AuthChoice::class, AuthChoice::EVENT_BEFORE_RUN, [Events::class, 'onAuthChoiceBeforeRun']],
-        //[NotificationInfoWidget::class, \humhub\widgets\BaseStack::EVENT_RUN, [Events::class, 'onNotificationInfoWidget']]
+        [UserInfoWidget::class, UserInfoWidget::EVENT_INIT, [Events::class, 'onInitUserInfoWidget']],
     ],
     'consoleControllerMap' => [
         'firebase' => 'humhub\modules\fcmPush\commands\SendController',

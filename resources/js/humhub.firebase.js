@@ -1,82 +1,95 @@
 humhub.module('firebase', function (module, require, $) {
     let messaging;
 
-    const init = function () {
-        if (!firebase.apps.length) {
-            firebase.initializeApp({messagingSenderId: this.senderId()});
-            this.messaging = firebase.messaging();
-
-            this.messaging.onMessage(function (payload) {
-                module.log.info("Received FCM Push Notification", payload);
-            });
-
-            // Callback fired if Instance ID token is updated.
-            this.messaging.onTokenRefresh(function () {
-                this.messaging.getToken().then(function (refreshedToken) {
-                    this.deleteTokenLocalStore();
-                    this.sendTokenToServer(refreshedToken);
-                }).catch(function (err) {
-                    console.log('Unable to retrieve refreshed token ', err);
-                });
-            });
+    const defaultConfig = {
+        statusTexts: {
+            granted: '',
+            denied: '',
+            default: '',
+            not_supported: ''
         }
     };
 
-    const afterServiceWorkerRegistration = function (registration) {
-        //console.log("After Service Worker Registration");
-        //console.log(registration);
+    module.config = {...defaultConfig, ...module.config};
 
-        const that = this;
-
-        this.messaging.useServiceWorker(registration);
-
-        // Request for permission
-        this.messaging.requestPermission().then(function () {
-            //console.log('Notification permission granted.');
-
-            that.messaging.getToken().then(function (currentToken) {
-                if (currentToken) {
-                    //console.log('Token: ' + currentToken);
-                    that.sendTokenToServer(currentToken);
-                } else {
-                    module.log.info('No Instance ID token available. Request permission to generate one.');
-                    that.deleteTokenLocalStore();
-                }
-            }).catch(function (err) {
-                module.log.error('An error occurred while retrieving token. ', err);
-                that.deleteTokenLocalStore();
+    const init = function () {
+        if (!firebase.apps.length) {
+            firebase.initializeApp({
+                messagingSenderId: module.senderId(),
+                projectId: module.config.projectId,
+                apiKey: module.config.apiKey,
+                appId: module.config.appId,
             });
-        }).catch(function (err) {
-            module.log.info('Could not get Push Notification permission!', err);
+            module.messaging = firebase.messaging();
+
+            module.messaging.onMessage((payload) => {
+            });
+        }
+
+        initDom();
+    };
+
+    const initDom = function() {
+        module.updatePushStatus();
+
+        $(document).off('click', '#enablePushBtn');
+
+        $(document).on('click', '#enablePushBtn', () => {
+            Notification.requestPermission().then((permission) => {
+                module.updatePushStatus();
+            });
         });
     };
 
-    // Send the Instance ID token your application server, so that it can:
-    // - send messages back to this app
-    // - subscribe/unsubscribe the token from topics
+    const afterServiceWorkerRegistration = function (registration) {
+        const that = module;
+        module.messaging.swRegistration = registration;
+
+        Notification.requestPermission().then(function (permission) {
+            if (permission !== 'granted') {
+                that.updatePushStatus();
+                return;
+            }
+
+            that.messaging.getToken({
+                vapidKey: module.config.vapidKey,
+                serviceWorkerRegistration: registration,
+            }).then(function (currentToken) {
+                if (currentToken) {
+                    that.sendTokenToServer(currentToken);
+                } else {
+                    that.deleteTokenLocalStore();
+                }
+                that.updatePushStatus();
+            }).catch(function (err) {
+                that.deleteTokenLocalStore();
+                that.updatePushStatus();
+            });
+        }).catch(function (err) {
+            that.updatePushStatus();
+        });
+    };
+
     const sendTokenToServer = function (token) {
-        const that = this;
-        if (!that.isTokenSentToServer(token)) {
-            module.log.info("Send FCM Push Token to Server");
+        if (!module.isTokenSentToServer(token)) {
             $.ajax({
                 method: "POST",
-                url: that.tokenUpdateUrl(),
+                url: module.tokenUpdateUrl(),
                 data: {token: token},
                 success: function (data) {
-                    that.setTokenLocalStore(token);
+                    module.setTokenLocalStore(token);
+                    module.updatePushStatus();
                 }
             });
-        } else {
-            //console.log('Token already sent to server so won\'t send it again unless it changes');
         }
     };
 
     const isTokenSentToServer = function (token) {
-        return (this.getTokenLocalStore() === token);
+        return (module.getTokenLocalStore() === token);
     };
 
     const deleteTokenLocalStore = function () {
-        window.localStorage.removeItem('fcmPushToken_' + this.senderId())
+        window.localStorage.removeItem('fcmPushToken_' + module.senderId());
     };
 
     const setTokenLocalStore = function (token) {
@@ -84,20 +97,19 @@ humhub.module('firebase', function (module, require, $) {
             value: token,
             expiry: (Date.now() / 1000) + (24 * 60 * 60),
         };
-        window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item))
+        window.localStorage.setItem('fcmPushToken_' + module.senderId(), JSON.stringify(item));
     };
 
     const getTokenLocalStore = function () {
-        const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId())
+        const itemStr = window.localStorage.getItem('fcmPushToken_' + module.senderId());
 
-        // if the item doesn't exist, return null
         if (!itemStr) {
-            return null
+            return null;
         }
-        const item = JSON.parse(itemStr)
-        const now = (Date.now() / 1000)
+        const item = JSON.parse(itemStr);
+        const now = (Date.now() / 1000);
         if (now > item.expiry) {
-            this.deleteTokenLocalStore();
+            module.deleteTokenLocalStore();
             return null;
         }
         return item.value;
@@ -111,21 +123,57 @@ humhub.module('firebase', function (module, require, $) {
         return module.config.senderId;
     };
 
+    const isGranted = function() {
+        return ("Notification" in window) && Notification.permission === "granted";
+    };
+
+    const isDenied = function() {
+        return ("Notification" in window) && Notification.permission === "denied";
+    };
+
+    const isDefault = function() {
+        return ("Notification" in window) && Notification.permission === "default";
+    };
+
+    const updatePushStatus = function() {
+        const $status = $('#pushNotificationStatus');
+        if (!$status.length) {
+            return;
+        }
+
+        if (!("Notification" in window)) {
+            $status.html(module.config.statusTexts['not-supported']);
+            return;
+        }
+
+        const status = Notification.permission;
+        const statusMessage = module.config.statusTexts[status] || 
+            module.config.statusTexts['default'];
+        $status.html(statusMessage);
+    };
+
     module.export({
-        init: init,
+        init,
+        initDom,
+        isTokenSentToServer,
+        sendTokenToServer,
+        afterServiceWorkerRegistration,
 
-        isTokenSentToServer: isTokenSentToServer,
-        sendTokenToServer: sendTokenToServer,
-        afterServiceWorkerRegistration: afterServiceWorkerRegistration,
+        senderId,
+        tokenUpdateUrl,
 
-        // Config Vars
-        senderId: senderId,
-        tokenUpdateUrl: tokenUpdateUrl,
+        setTokenLocalStore,
+        getTokenLocalStore,
+        deleteTokenLocalStore,
 
-        // LocalStore Helper
-        setTokenLocalStore: setTokenLocalStore,
-        getTokenLocalStore: getTokenLocalStore,
-        deleteTokenLocalStore: deleteTokenLocalStore,
+        updatePushStatus,
+        isGranted,
+        isDenied,
+        isDefault
+    });
+
+    $(document).on('humhub:ready', function() {
+        module.initDom();
     });
 });
 
