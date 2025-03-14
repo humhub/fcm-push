@@ -1,7 +1,6 @@
 humhub.module('firebase', function (module, require, $) {
     let messaging;
 
-    // Default configuration with status messages
     const defaultConfig = {
         statusTexts: {
             granted: '',
@@ -11,45 +10,44 @@ humhub.module('firebase', function (module, require, $) {
         }
     };
 
-    // Merge default config with module.config
     module.config = {...defaultConfig, ...module.config};
 
     const init = function () {
         if (!firebase.apps.length) {
             firebase.initializeApp({
-                messagingSenderId: this.senderId(),
+                messagingSenderId: module.senderId(),
                 projectId: module.config.projectId,
                 apiKey: module.config.apiKey,
                 appId: module.config.appId,
             });
-            this.messaging = firebase.messaging();
+            module.messaging = firebase.messaging();
+
+            module.messaging.onMessage((payload) => {
+            });
         }
 
-        this.messaging.onMessage((payload) => {
-            console.log('Suppressed push notification. App has already focus.', payload);
-        });
+        initDom();
+    };
 
-        // Initialize status display
-        $(document).ready(() => {
-            this.updatePushStatus();
-            $(document).on('click', '#enablePushBtn', () => {
-                Notification.requestPermission().then((permission) => {
-                    this.updatePushStatus();
-                });
+    const initDom = function() {
+        module.updatePushStatus();
+
+        $(document).off('click', '#enablePushBtn');
+
+        $(document).on('click', '#enablePushBtn', () => {
+            Notification.requestPermission().then((permission) => {
+                module.updatePushStatus();
             });
         });
     };
 
     const afterServiceWorkerRegistration = function (registration) {
-        const that = this;
+        const that = module;
+        module.messaging.swRegistration = registration;
 
-        this.messaging.swRegistration = registration;
-
-        // Request for permission
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
-                module.log.info('Notification permission is not granted.');
-                that.updatePushStatus(); // Update status after permission check
+                that.updatePushStatus();
                 return;
             }
 
@@ -60,43 +58,38 @@ humhub.module('firebase', function (module, require, $) {
                 if (currentToken) {
                     that.sendTokenToServer(currentToken);
                 } else {
-                    module.log.info('No Instance ID token available. Request permission to generate one.');
                     that.deleteTokenLocalStore();
                 }
-                that.updatePushStatus(); // Update status after token handling
+                that.updatePushStatus();
             }).catch(function (err) {
-                module.log.error('An error occurred while retrieving token. ', err);
                 that.deleteTokenLocalStore();
-                that.updatePushStatus(); // Update status on error
+                that.updatePushStatus();
             });
         }).catch(function (err) {
-            module.log.info('Could not get Push Notification permission!', err);
-            that.updatePushStatus(); // Update status on permission error
+            that.updatePushStatus();
         });
     };
 
     const sendTokenToServer = function (token) {
-        const that = this;
-        if (!that.isTokenSentToServer(token)) {
-            module.log.info("Send FCM Push Token to Server");
+        if (!module.isTokenSentToServer(token)) {
             $.ajax({
                 method: "POST",
-                url: that.tokenUpdateUrl(),
+                url: module.tokenUpdateUrl(),
                 data: {token: token},
                 success: function (data) {
-                    that.setTokenLocalStore(token);
-                    that.updatePushStatus(); // Update status after successful token storage
+                    module.setTokenLocalStore(token);
+                    module.updatePushStatus();
                 }
             });
         }
     };
 
     const isTokenSentToServer = function (token) {
-        return (this.getTokenLocalStore() === token);
+        return (module.getTokenLocalStore() === token);
     };
 
     const deleteTokenLocalStore = function () {
-        window.localStorage.removeItem('fcmPushToken_' + this.senderId());
+        window.localStorage.removeItem('fcmPushToken_' + module.senderId());
     };
 
     const setTokenLocalStore = function (token) {
@@ -104,20 +97,19 @@ humhub.module('firebase', function (module, require, $) {
             value: token,
             expiry: (Date.now() / 1000) + (24 * 60 * 60),
         };
-        window.localStorage.setItem('fcmPushToken_' + this.senderId(), JSON.stringify(item));
+        window.localStorage.setItem('fcmPushToken_' + module.senderId(), JSON.stringify(item));
     };
 
     const getTokenLocalStore = function () {
-        const itemStr = window.localStorage.getItem('fcmPushToken_' + this.senderId());
+        const itemStr = window.localStorage.getItem('fcmPushToken_' + module.senderId());
 
-        // if the item doesn't exist, return null
         if (!itemStr) {
             return null;
         }
         const item = JSON.parse(itemStr);
         const now = (Date.now() / 1000);
         if (now > item.expiry) {
-            this.deleteTokenLocalStore();
+            module.deleteTokenLocalStore();
             return null;
         }
         return item.value;
@@ -131,7 +123,6 @@ humhub.module('firebase', function (module, require, $) {
         return module.config.senderId;
     };
 
-    // Status check functions
     const isGranted = function() {
         return ("Notification" in window) && Notification.permission === "granted";
     };
@@ -144,39 +135,45 @@ humhub.module('firebase', function (module, require, $) {
         return ("Notification" in window) && Notification.permission === "default";
     };
 
-    // Function to update push notification status with error handling
     const updatePushStatus = function() {
-        if (!("Notification" in window)) {
-            $('#pushNotificationStatus').html(module.config.statusTexts['not-supported']);
+        const $status = $('#pushNotificationStatus');
+        if (!$status.length) {
             return;
         }
-        
+
+        if (!("Notification" in window)) {
+            $status.html(module.config.statusTexts['not-supported']);
+            return;
+        }
+
         const status = Notification.permission;
         const statusMessage = module.config.statusTexts[status] || 
             module.config.statusTexts['default'];
-        $('#pushNotificationStatus').html(statusMessage);
+        $status.html(statusMessage);
     };
 
     module.export({
         init,
+        initDom,
         isTokenSentToServer,
         sendTokenToServer,
         afterServiceWorkerRegistration,
-        
-        // Config Vars
+
         senderId,
         tokenUpdateUrl,
-        
-        // LocalStore Helper
+
         setTokenLocalStore,
         getTokenLocalStore,
         deleteTokenLocalStore,
-        
-        // Status Functions
+
         updatePushStatus,
         isGranted,
         isDenied,
         isDefault
+    });
+
+    $(document).on('humhub:ready', function() {
+        module.initDom();
     });
 });
 
