@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.7 (Unreleased)
+-----------------------
+- Fix: File upload settings sent to the mobile app for share intend
+
 2.1.6 (March 11, 2025)
 -----------------------
 - Fix: Show opener for iOS when switching to another instance
