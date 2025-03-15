@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1.7 (Unreleased)
------------------------
+2.1.7 (March 15, 2025)
+----------------------
 - Fix: File upload settings sent to the mobile app for share intend
 
 2.1.6 (March 11, 2025)
