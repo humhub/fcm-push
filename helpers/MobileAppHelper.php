@@ -75,7 +75,7 @@ class MobileAppHelper
         $json = [
             'type' => 'fileUploadSettings',
             'fileUploadUrl' => Url::to(['/file/file/upload'], true),
-            'contentCreateUrl' => Url::to(['/content/share-intend/target'], true),
+            'contentCreateUrl' => Url::to(['/file/share-intend/index'], true),
             'maxFileSize' => $module->settings->get('maxFileSize'),
             'allowedExtensions' => $module->settings->get('allowedExtensions'),
             'imageMaxResolution' => $module->imageMaxResolution,

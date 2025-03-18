@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.8 (unreleased)
+----------------------
+- Chg: URL for the mobile share intend feature
+
 2.1.7 (March 15, 2025)
 ----------------------
 - Fix: File upload settings sent to the mobile app for share intend
