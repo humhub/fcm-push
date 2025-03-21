@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.1.8 (unreleased)
+2.1.8 (March 21, 2025)
 ----------------------
 - Chg: URL for the mobile share intend feature
 
