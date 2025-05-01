@@ -2,7 +2,6 @@
 
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\ui\form\widgets\ActiveForm;
-use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\Button;
 use yii\helpers\Html;
 
@@ -35,25 +34,6 @@ use yii\helpers\Html;
         <?= $form->field($model, 'firebaseAppId') ?>
         <?= $form->field($model, 'firebaseVapidKey') ?>
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
-        <br/>
-
-
-        <?= $form->beginCollapsibleFields('Advanced Settings'); ?>
-        <?= $form->field($model, 'disableAuthChoicesIos')->checkbox()
-            ->label(Yii::t('FcmPushModule.base', 'Hide third-party login options for app users with iOS.')) ?>
-
-        <?php if (!Yii::$app->urlManager->enablePrettyUrl) : ?>
-        <div class="alert alert-warning">
-            <?= Icon::get('warning') ?>
-            <?= Yii::t('FcmPushModule.base', 'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.', [
-                'url' => 'https://docs.humhub.org/docs/admin/installation/#pretty-urls',
-            ]) ?>
-        </div>
-        <?php endif; ?>
-
-        <?= $form->field($model, 'fileAssetLinks')->textarea(['rows' => 10]) ?>
-        <?= $form->field($model, 'fileAppleAssociation')->textarea(['rows' => 10]) ?>
-        <?= $form->endCollapsibleFields(); ?>
         <br/>
 
         <div class="form-group">

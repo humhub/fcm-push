@@ -3,8 +3,6 @@
 namespace humhub\modules\fcmPush\models;
 
 use humhub\modules\fcmPush\Module;
-use humhub\modules\fcmPush\services\WellKnownService;
-use humhub\widgets\Link;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;
@@ -22,12 +20,6 @@ class ConfigureForm extends Model
     public $json;
 
     public $humhubApiKey;
-
-    public $disableAuthChoicesIos;
-
-    public $fileAssetLinks;
-
-    public $fileAppleAssociation;
 
     /**
      * Validate JSON field params
@@ -86,11 +78,9 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['json', 'humhubApiKey'], 'safe'],
-            [['fileAssetLinks', 'fileAppleAssociation'], 'string'],
             ['json', function ($attribute, $params, $validator) {
                 if (empty($this->$attribute)) {
                     return;
@@ -148,13 +138,6 @@ class ConfigureForm extends Model
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Web App ID'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Key pair of the Web Push certificates'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
-            'disableAuthChoicesIos' => Yii::t('FcmPushModule.base', 'Disable AuthChoices on iOS App'),
-            'fileAssetLinks' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', [
-                'fileName' => '"' . WellKnownService::getFileName('fileAssetLinks') . '"',
-            ]),
-            'fileAppleAssociation' => Yii::t('FcmPushModule.base', 'Well-known file {fileName}', [
-                'fileName' => '"' . WellKnownService::getFileName('fileAppleAssociation') . '"',
-            ]),
         ];
     }
 
@@ -164,18 +147,6 @@ class ConfigureForm extends Model
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging -> Web Push certificates -> Key pair'),
             'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
-            'fileAssetLinks' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [
-                'fileNameLink' => Link::to(
-                    WellKnownService::getFileName('fileAssetLinks'),
-                    WellKnownService::getFileRoute('fileAssetLinks'),
-                )->target('_blank'),
-            ]),
-            'fileAppleAssociation' => Yii::t('FcmPushModule.base', 'URL to the file {fileNameLink}', [
-                'fileNameLink' => Link::to(
-                    WellKnownService::getFileName('fileAppleAssociation'),
-                    WellKnownService::getFileRoute('fileAppleAssociation'),
-                )->target('_blank'),
-            ]),
         ];
     }
 
@@ -196,9 +167,6 @@ class ConfigureForm extends Model
         $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
         $this->json = $settings->get('json');
         $this->humhubApiKey = $settings->get('humhubApiKey');
-        $this->disableAuthChoicesIos = $settings->get('disableAuthChoicesIos');
-        $this->fileAssetLinks = $settings->get('fileAssetLinks');
-        $this->fileAppleAssociation = $settings->get('fileAppleAssociation');
 
         return true;
     }
@@ -214,9 +182,6 @@ class ConfigureForm extends Model
         $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
         $module->settings->set('json', $this->json);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
-        $module->settings->set('disableAuthChoicesIos', $this->disableAuthChoicesIos);
-        $module->settings->set('fileAssetLinks', $this->fileAssetLinks);
-        $module->settings->set('fileAppleAssociation', $this->fileAppleAssociation);
 
         return true;
     }

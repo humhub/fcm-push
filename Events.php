@@ -13,7 +13,6 @@ use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\widgets\AccountTopMenu;
-use humhub\modules\user\widgets\AuthChoice;
 use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use humhub\widgets\BaseStack;
@@ -144,19 +143,6 @@ JS;
         Yii::$app->session->set(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
-    }
-
-    public static function onAuthChoiceBeforeRun(Event $event)
-    {
-        /** @var AuthChoice $sender */
-        $sender = $event->sender;
-
-        /** @var Module $module */
-        $module = Yii::$app->getModule('fcm-push');
-
-        if (DeviceDetectorHelper::isIosApp() && $module->getConfigureForm()->disableAuthChoicesIos) {
-            $sender->setClients([]);
-        }
     }
 
     public static function onAccountTopMenuInit(Event $event)

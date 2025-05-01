@@ -14,11 +14,26 @@ class m250501_063100_move_settings extends Migration
         if (!$module instanceof Module) {
             return;
         }
+        $moduleSettings = $module->settings;
 
-        $moduleSettingValue = $module->settings->get('enableEmailGoService');
-        if ($moduleSettingValue !== null) {
-            Yii::$app->settings->set('mailerLinkService', $moduleSettingValue);
-            $module->settings->delete('enableEmailGoService');
+        // Move settings from this module to core
+        $settingsMap = [
+            // 'old setting name' => ['new setting name', 'core module id']
+            'enableEmailGoService' => ['mailerLinkService', 'base'],
+            'disableAuthChoicesIos' => ['auth.disableChoicesIos', 'user'],
+            'fileAssetLinks' => ['fileAssetLinks', 'file'],
+            'fileAppleAssociation' => ['fileAppleAssociation', 'file'],
+        ];
+
+        foreach ($settingsMap as $moduleSettingName => $setting) {
+            $moduleSettingValue = $moduleSettings->get($moduleSettingName);
+            if ($moduleSettingValue !== null) {
+                $settingOwner = $setting[1] === 'base'
+                    ? Yii::$app
+                    : Yii::$app->getModule($setting[1]);
+                $settingOwner->settings->set($setting[0], $moduleSettingValue);
+                $moduleSettings->delete($moduleSettingName);
+            }
         }
     }
 
