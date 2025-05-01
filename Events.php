@@ -13,7 +13,6 @@ use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\ui\menu\MenuLink;
 use humhub\modules\user\widgets\AccountTopMenu;
-use humhub\modules\web\pwa\controllers\ManifestController;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use humhub\widgets\BaseStack;
 use Yii;
@@ -29,13 +28,6 @@ class Events
         if ($module->getDriverService()->hasConfiguredDriver()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
         }
-    }
-
-    public static function onManifestControllerInit($event)
-    {
-        /** @var ManifestController $controller */
-        $controller = $event->sender;
-        $controller->manifest['gcm_sender_id'] = (string)103953800507;
     }
 
     public static function onServiceWorkerControllerInit($event): void
