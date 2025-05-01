@@ -2,11 +2,9 @@
 
 namespace humhub\modules\fcmPush;
 
-use humhub\components\mail\Message;
 use humhub\helpers\DeviceDetectorHelper;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
-use humhub\modules\fcmPush\components\MailerMessage;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
@@ -31,10 +29,6 @@ class Events
 
         if ($module->getDriverService()->hasConfiguredDriver()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
-        }
-
-        if ($module->getGoService()->isConfigured()) {
-            Yii::$container->set(Message::class, MailerMessage::class);
         }
     }
 

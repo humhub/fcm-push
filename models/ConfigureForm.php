@@ -12,8 +12,6 @@ use yii\helpers\Json;
 
 class ConfigureForm extends Model
 {
-    public $enableEmailGoService;
-
     public $humhubInstallId;
 
     public $senderId;
@@ -88,7 +86,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['enableEmailGoService', 'disableAuthChoicesIos'], 'boolean'],
+            [['disableAuthChoicesIos'], 'boolean'],
             [['senderId'], 'number'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['json', 'humhubApiKey'], 'safe'],
@@ -191,7 +189,6 @@ class ConfigureForm extends Model
         /** @var \humhub\modules\admin\Module $adminModule */
         $adminModule = Yii::$app->getModule('admin');
 
-        $this->enableEmailGoService = $settings->get('enableEmailGoService', false);
         $this->humhubInstallId = $adminModule->settings->get('installationId');
         $this->senderId = $settings->get('senderId');
         $this->firebaseApiKey = $settings->get('firebaseApiKey');
@@ -211,7 +208,6 @@ class ConfigureForm extends Model
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        $module->settings->set('enableEmailGoService', $this->enableEmailGoService);
         $module->settings->set('senderId', $this->senderId);
         $module->settings->set('firebaseApiKey', $this->firebaseApiKey);
         $module->settings->set('firebaseAppId', $this->firebaseAppId);
