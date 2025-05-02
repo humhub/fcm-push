@@ -3,7 +3,6 @@
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\widgets\Button;
-use yii\helpers\Html;
 
 /* @var $model ConfigureForm */
 ?>
@@ -37,11 +36,13 @@ use yii\helpers\Html;
         <br/>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
+            <?= Button::save()->submit() ?>
+            <?= Button::defaultType('Mobile App Debug')
+                ->link(['/fcm-push/admin/mobile-app'])
+                ->icon('bug')
+                ->right() ?>
         </div>
 
         <?php ActiveForm::end(); ?>
-
-        <?= Html::a('Mobile App Debug', ['/fcm-push/admin/mobile-app'], ['class' => 'pull-right']) ?>
     </div>
 </div>
