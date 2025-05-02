@@ -18,20 +18,16 @@ class m250501_063100_move_settings extends Migration
 
         // Move settings from this module to core
         $settingsMap = [
-            // 'old setting name' => ['new setting name', 'core module id']
-            'enableEmailGoService' => ['mailerLinkService', 'base'],
-            'disableAuthChoicesIos' => ['auth.disableChoicesIos', 'user'],
-            'fileAssetLinks' => ['fileAssetLinks', 'base'],
-            'fileAppleAssociation' => ['fileAppleAssociation', 'base'],
+            // 'old setting name from module' => 'new setting name in core'
+            'enableEmailGoService' => 'mailerLinkService',
+            'fileAssetLinks' => 'fileAssetLinks',
+            'fileAppleAssociation' => 'fileAppleAssociation',
         ];
 
-        foreach ($settingsMap as $moduleSettingName => $setting) {
+        foreach ($settingsMap as $moduleSettingName => $coreSettingName) {
             $moduleSettingValue = $moduleSettings->get($moduleSettingName);
             if ($moduleSettingValue !== null) {
-                $settingOwner = $setting[1] === 'base'
-                    ? Yii::$app
-                    : Yii::$app->getModule($setting[1]);
-                $settingOwner->settings->set($setting[0], $moduleSettingValue);
+                Yii::$app->settings->set($coreSettingName, $moduleSettingValue);
                 $moduleSettings->delete($moduleSettingName);
             }
         }
