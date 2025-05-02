@@ -21,8 +21,8 @@ class m250501_063100_move_settings extends Migration
             // 'old setting name' => ['new setting name', 'core module id']
             'enableEmailGoService' => ['mailerLinkService', 'base'],
             'disableAuthChoicesIos' => ['auth.disableChoicesIos', 'user'],
-            'fileAssetLinks' => ['fileAssetLinks', 'file'],
-            'fileAppleAssociation' => ['fileAppleAssociation', 'file'],
+            'fileAssetLinks' => ['fileAssetLinks', 'base'],
+            'fileAppleAssociation' => ['fileAppleAssociation', 'base'],
         ];
 
         foreach ($settingsMap as $moduleSettingName => $setting) {
