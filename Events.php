@@ -2,7 +2,6 @@
 
 namespace humhub\modules\fcmPush;
 
-use humhub\helpers\DeviceDetectorHelper;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
@@ -11,12 +10,9 @@ use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\PushNotificationInfoWidget;
 use humhub\modules\notification\targets\MobileTargetProvider;
-use humhub\modules\ui\menu\MenuLink;
-use humhub\modules\user\widgets\AccountTopMenu;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use humhub\widgets\BaseStack;
 use Yii;
-use yii\base\Event;
 
 class Events
 {
@@ -74,14 +70,6 @@ JS;
 
     public static function onLayoutAddonInit($event)
     {
-        // If the mobile app Opener page is open (after login and switching instance)
-        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_HIDE_OPENER)) {
-            MobileAppHelper::registerHideOpenerScript();
-            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_HIDE_OPENER);
-        } elseif (DeviceDetectorHelper::appOpenerState()) {
-            MobileAppHelper::registerHideOpenerScript();
-        }
-
         // After login
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION)) {
             MobileAppHelper::registerNotificationScript();
@@ -97,10 +85,6 @@ JS;
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
             MobileAppHelper::unregisterNotificationScript();
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
-        }
-        if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_SHOW_OPENER)) {
-            MobileAppHelper::registerShowOpenerScript();
-            Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_SHOW_OPENER);
         }
 
         // Get info for the Share intend feature (uploading files from the mobile app)
@@ -126,7 +110,6 @@ JS;
 
     public static function onAfterLogin()
     {
-        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_HIDE_OPENER, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION, 1);
     }
 
@@ -134,24 +117,5 @@ JS;
     {
         Yii::$app->session->set(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
-        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
-    }
-
-    public static function onAccountTopMenuInit(Event $event)
-    {
-        if (!DeviceDetectorHelper::isMultiInstanceApp()) {
-            return;
-        }
-
-        /** @var AccountTopMenu $menu */
-        $menu = $event->sender;
-
-        $menu->addEntry(new MenuLink([
-            'label' => Yii::t('FcmPushModule.base', 'Switch network'),
-            'url' => ['/fcm-push/mobile-app/instance-opener'],
-            'icon' => 'arrows-h',
-            'sortOrder' => 699, // Just before "Logout"
-            'isVisible' => true,
-        ]));
     }
 }
