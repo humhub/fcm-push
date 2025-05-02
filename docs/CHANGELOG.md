@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.0 (Unreleased)
+----------------------
+- Enh #74: Move non Firebase stuff to core
+
 2.1.8 (March 21, 2025)
 ----------------------
 - Chg: URL for the mobile share intend feature

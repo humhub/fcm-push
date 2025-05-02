@@ -33,17 +33,6 @@ class AdminController extends Controller
      */
     public function actionMobileApp()
     {
-        if (Yii::$app->request->get('triggerNotification') == 1) {
-
-            /** @var User $user */
-            $user = Yii::$app->user->getIdentity();
-
-            $updateNotification = new NewVersionAvailable();
-            $updateNotification->sendBulk(User::find()->where(['user.id' => $user->id]));
-            $this->view->setStatusMessage('success', 'Notification queued!');
-            return $this->redirect('mobile-app');
-        }
-
         if (Yii::$app->request->get('deleteToken') != "") {
             $t = FcmUser::findOne(['id' => Yii::$app->request->get('deleteToken')]);
             if ($t->delete() !== false) {
@@ -55,7 +44,12 @@ class AdminController extends Controller
             return $this->redirect('mobile-app');
         }
 
-        return $this->render('mobile-app');
+        return $this->render('mobile-app', [
+            'tokens' => FcmUser::find()
+                ->where(['user_id' => Yii::$app->user->id])
+                ->orderBy('created_at DESC')
+                ->all(),
+        ]);
     }
 
 }
