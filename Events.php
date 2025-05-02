@@ -87,9 +87,6 @@ JS;
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
         }
 
-        // Get info for the Share intend feature (uploading files from the mobile app)
-        MobileAppHelper::getFileUploadSettings();
-
         if (!Yii::$app->user->isGuest) {
             static::registerAssets();
         }
