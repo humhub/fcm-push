@@ -21,7 +21,6 @@ return [
         [Application::class, Application::EVENT_BEFORE_REQUEST, [Events::class, 'onBeforeRequest']],
         [User::class, User::EVENT_AFTER_LOGIN, [Events::class, 'onAfterLogin']],
         [User::class, User::EVENT_AFTER_LOGOUT, [Events::class, 'onAfterLogout']],
-        //[NotificationInfoWidget::class, \humhub\widgets\BaseStack::EVENT_RUN, [Events::class, 'onNotificationInfoWidget']],
     ],
     'consoleControllerMap' => [
         'firebase' => 'humhub\modules\fcmPush\commands\SendController',
