@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.1.9 (Unreleased)
+----------------------
+- Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
+
 2.1.8 (March 21, 2025)
 ----------------------
 - Chg: URL for the mobile share intend feature
