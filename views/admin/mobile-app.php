@@ -30,7 +30,7 @@ use yii\helpers\Url;
                             <strong>FCM Detection</strong> - App is using custom Firebase
                         </p>
                     <?php else: ?>
-                        <p class="alert alert-warning">
+                        <p class="alert alert-success">
                             <strong>FCM Detection</strong> - App is using Proxy Firebase Service
                         </p>
                     <?php endif; ?>
