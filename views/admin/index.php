@@ -3,6 +3,7 @@
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\ui\form\widgets\ActiveForm;
 use humhub\widgets\Button;
+use humhub\widgets\ModalButton;
 
 /* @var $model ConfigureForm */
 ?>
@@ -37,8 +38,8 @@ use humhub\widgets\Button;
 
         <div class="form-group">
             <?= Button::save()->submit() ?>
-            <?= Button::defaultType('Mobile App Debug')
-                ->link(['/fcm-push/admin/mobile-app'])
+            <?= ModalButton::defaultType('Debug')
+                ->load(['/fcm-push/admin/debug'])
                 ->icon('bug')
                 ->right() ?>
         </div>
