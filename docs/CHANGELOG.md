@@ -4,6 +4,7 @@ Changelog
 2.1.9 (Unreleased)
 ----------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
+- Fix: Don't show opener if logout triggered by mobile app
 
 2.1.8 (March 21, 2025)
 ----------------------
