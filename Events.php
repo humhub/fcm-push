@@ -149,7 +149,9 @@ JS;
     {
         Yii::$app->session->set(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
-        Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
+        if (!DeviceDetectorHelper::isAppRequest()) {
+            Yii::$app->session->set(MobileAppHelper::SESSION_VAR_SHOW_OPENER, 1);
+        }
     }
 
     public static function onAuthChoiceBeforeRun(Event $event)
