@@ -4,7 +4,7 @@ namespace humhub\modules\fcmPush\models;
 
 use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\WellKnownService;
-use humhub\widgets\Link;
+use humhub\widgets\bootstrap\Link;
 use Yii;
 use yii\base\InvalidArgumentException;
 use yii\base\Model;

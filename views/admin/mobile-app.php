@@ -1,23 +1,24 @@
 <?php
 
-/* @var $this \humhub\modules\ui\view\components\View */
-
+use humhub\components\View;
 use humhub\helpers\DeviceDetectorHelper;
-use humhub\libs\Html;
+use humhub\helpers\Html;
 use humhub\modules\fcmPush\models\FcmUser;
+use humhub\widgets\bootstrap\Button;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
-
+/* @var $this View */
 ?>
 
-
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
+                <?= Button::back(['/fcm-push/admin/index'])->sm() ?>
                 <strong>Mobile App</strong> Debug Page
             </div>
+
             <div class="panel-body">
 
                 <?php if (DeviceDetectorHelper::isAppRequest()): ?>
@@ -41,10 +42,10 @@ use yii\helpers\Url;
                     </p>
                 <?php endif; ?>
 
-                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]) ?>
-                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]) ?>
-                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-default']) ?>
-                <?= Html::a('Open native console', '#', ['class' => 'btn btn-default postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'openNativeConsole'])]) ?>
+                <?= Html::a('Show Opener', '#', ['class' => 'btn btn-light postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'showOpener'])]) ?>
+                <?= Html::a('Hide Opener', '#', ['class' => 'btn btn-light postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'hideOpener'])]) ?>
+                <?= Html::a('Open this page as POST Request', ['mobile-app'], ['data-method' => 'POST', 'class' => 'btn btn-light']) ?>
+                <?= Html::a('Open native console', '#', ['class' => 'btn btn-light postFlutterMsgLink', 'data-message' => Json::encode(['type' => 'openNativeConsole'])]) ?>
             </div>
         </div>
         <div class="panel panel-default">
@@ -52,11 +53,15 @@ use yii\helpers\Url;
                 <h4>Test Push Notification</h4>
 
                 <p>Make sure the <code>Mobile</code> checkbox is enabled for <a
-                            href="<?= Url::to(['/notification/user']); ?>">
+                        href="<?= Url::to(['/notification/user']); ?>">
                         Administrative Notifications!</a>. It may take a few minutes.
                 </p>
 
-                <?= Html::a('Trigger "HumHub Update" notification', ['mobile-app', 'triggerNotification' => 1], ['class' => 'btn btn-primary pull-right']) ?>
+                <div class="clearfix">
+                    <?= Button::primary('Trigger "HumHub Update" notification')
+                        ->link(['mobile-app', 'triggerNotification' => 1])
+                        ->right() ?>
+                </div>
 
             </div>
         </div>
@@ -68,26 +73,24 @@ use yii\helpers\Url;
 
                 <p>Set Notification Count to a number between 100 and 200.</p>
 
-                <?php
-                $message = Json::encode(['type' => 'updateNotificationCount', 'count' => rand(100, 200)]);
-                ?>
+                <?php $message = Json::encode(['type' => 'updateNotificationCount', 'count' => rand(100, 200)]); ?>
 
-                <p><code><?= $message; ?></code></p>
+                <p><code><?= $message ?></code></p>
 
-                <?= Html::a(
-                    'Execute via JS Channel',
-                    '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
-                ) ?>
+                <div class="clearfix">
+                    <?= Html::a(
+                        'Execute via JS Channel',
+                        '#',
+                        ['class' => 'btn btn-primary float-end postFlutterMsgLink', 'data-message' => $message],
+                    ) ?>
+                </div>
             </div>
         </div>
         <div class="panel panel-default">
             <div class="panel-body">
                 <h4>Registered FireBase Devices (Current User)</h4>
 
-                <?php
-                $tokens = FcmUser::find()->where(['user_id' => Yii::$app->user->id])->orderBy('created_at DESC')->all();
-                ?>
+                <?php $tokens = FcmUser::find()->where(['user_id' => Yii::$app->user->id])->orderBy('created_at DESC')->all(); ?>
 
                 <?php if (count($tokens) === 0): ?>
                     <p class="alert alert-danger">
@@ -133,12 +136,10 @@ use yii\helpers\Url;
 
                 <h4>Send `registerFcmDevice` message </h4>
 
-                <?php
-                $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)];
-                $message = Json::encode($json);
-                ?>
+                <?php $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)]; ?>
+                <?php $message = Json::encode($json); ?>
 
-                <p><code><?= $message; ?></code></p>
+                <p><code><?= $message ?></code></p>
 
 
                 <p>
@@ -156,11 +157,13 @@ use yii\helpers\Url;
                     <li>400 - No `token` in payload</li>
                 </ul>
 
-                <?= Html::a(
-                    'Execute via JS Channel',
-                    '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
-                ) ?>
+                <div class="clearfix">
+                    <?= Html::a(
+                        'Execute via JS Channel',
+                        '#',
+                        ['class' => 'btn btn-primary float-end postFlutterMsgLink', 'data-message' => $message],
+                    ) ?>
+                </div>
             </div>
         </div>
         <div class="panel panel-default">
@@ -168,12 +171,10 @@ use yii\helpers\Url;
 
                 <h4>Send `unregisterFcmDevice` message </h4>
 
-                <?php
-                $json = ['type' => 'unregisterFcmDevice', 'url' => Url::to(['/fcm-push/token/delete-mobile-app'], true)];
-                $message = Json::encode($json);
-                ?>
+                <?php $json = ['type' => 'unregisterFcmDevice', 'url' => Url::to(['/fcm-push/token/delete-mobile-app'], true)]; ?>
+                <?php $message = Json::encode($json); ?>
 
-                <p><code><?= $message; ?></code></p>
+                <p><code><?= $message ?></code></p>
 
 
                 <p>
@@ -191,11 +192,13 @@ use yii\helpers\Url;
                     <li>400 - No `token` in payload</li>
                 </ul>
 
-                <?= Html::a(
-                    'Execute via JS Channel',
-                    '#',
-                    ['class' => 'btn btn-primary pull-right postFlutterMsgLink', 'data-message' => $message]
-                ) ?>
+                <div class="clearfix">
+                    <?= Html::a(
+                        'Execute via JS Channel',
+                        '#',
+                        ['class' => 'btn btn-primary float-end postFlutterMsgLink', 'data-message' => $message],
+                    ) ?>
+                </div>
             </div>
         </div>
 
@@ -217,5 +220,4 @@ use yii\helpers\Url;
             alert("Could not send message! Message: " + JSON.stringify(message));
         }
     });
-
 </script>
