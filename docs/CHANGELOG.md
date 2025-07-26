@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.0 (Unreleased)
-----------------------
+2.2.0 (July 26, 2025)
+---------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
 - Fix #78: Don't show opener if logout triggered by mobile app
 - Enh #79: Migration to Bootstrap 5 for HumHub 1.18
