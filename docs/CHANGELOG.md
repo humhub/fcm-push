@@ -4,6 +4,7 @@ Changelog
 2.2.0 (Unreleased)
 ----------------------
 - Enh #74: Move non Firebase stuff to core
+- Enh #79: Migration to Bootstrap 5 for HumHub 1.18
 
 2.1.9 (Unreleased)
 ----------------------

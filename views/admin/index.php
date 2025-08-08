@@ -1,9 +1,9 @@
 <?php
 
 use humhub\modules\fcmPush\models\ConfigureForm;
-use humhub\modules\ui\form\widgets\ActiveForm;
-use humhub\widgets\Button;
-use humhub\widgets\ModalButton;
+use humhub\widgets\bootstrap\Button;
+use humhub\widgets\form\ActiveForm;
+use humhub\widgets\modal\ModalButton;
 
 /* @var $model ConfigureForm */
 ?>
@@ -17,9 +17,8 @@ use humhub\widgets\ModalButton;
             <?= Yii::t('FcmPushModule.base', 'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.') ?>
         </p>
         <?= Button::info('Push Service Registration')->link('https://push.humhub.com')->options(['target' => '_blank'])->loader(false) ?>
-        <?= $form->field($model, 'humhubInstallId')->textInput(['disabled' => 'disabled']); ?>
-
-        <?= $form->field($model, 'humhubApiKey')->textarea(['rows' => 2]); ?>
+        <?= $form->field($model, 'humhubInstallId')->textInput(['disabled' => 'disabled']) ?>
+        <?= $form->field($model, 'humhubApiKey')->textarea(['rows' => 2]) ?>
         <br/>
 
         <hr>
