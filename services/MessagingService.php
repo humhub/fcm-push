@@ -2,7 +2,7 @@
 
 namespace humhub\modules\fcmPush\services;
 
-use humhub\modules\fcmPush\driver\DriverInterface;
+use humhub\modules\fcmPush\drivers\DriverInterface;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\components\BaseNotification;
 use humhub\modules\notification\models\Notification as NotificationHumHub;

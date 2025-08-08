@@ -1,26 +1,16 @@
 <?php
 
 use humhub\modules\fcmPush\models\ConfigureForm;
-use humhub\modules\ui\icon\widgets\Icon;
 use humhub\widgets\bootstrap\Button;
 use humhub\widgets\form\ActiveForm;
-use yii\helpers\Html;
+use humhub\widgets\modal\ModalButton;
 
 /* @var $model ConfigureForm */
 ?>
 <div class="panel panel-default">
-    <div
-        class="panel-heading"><?= Yii::t('FcmPushModule.base', '<strong>FireBase Messaging</strong> Configuration'); ?></div>
+    <div class="panel-heading"><?= Yii::t('FcmPushModule.base', '<strong>FireBase Messaging</strong> Configuration'); ?></div>
     <div class="panel-body">
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
-
-        <h3><?= Yii::t('FcmPushModule.base', 'Link Redirection Service') ?></h3>
-        <?= $form->field($model, 'enableEmailGoService')->checkbox()
-            ->label(Yii::t('FcmPushModule.base', 'Enable Link Redirection Service. In order for links to open in the app on mobile devices, rather than in the mobile browser, all links (e.g. notification emails) need to be routed through the HumHub proxy server. (Experimental Features // <a href="{url}">Privacy Policy</a>)', [
-                'url' => 'https://www.humhub.com/en/privacy/',
-            ])) ?>
-
-        <hr>
 
         <h3><?= Yii::t('FcmPushModule.base', 'Push Service (required for the mobile app) (Beta)') ?></h3>
         <p>
@@ -45,28 +35,13 @@ use yii\helpers\Html;
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
         <br/>
 
-
-        <?= $form->beginCollapsibleFields('Advanced Settings'); ?>
-        <?= $form->field($model, 'disableAuthChoicesIos')->checkbox()
-            ->label(Yii::t('FcmPushModule.base', 'Hide third-party login options for app users with iOS.')) ?>
-
-        <?php if (!Yii::$app->urlManager->enablePrettyUrl) : ?>
-            <div class="alert alert-warning">
-                <?= Icon::get('warning') ?>
-                <?= Yii::t('FcmPushModule.base', 'Please enable <a href="{url}" target="_blank">Pretty URLs</a> for proper working of the well-known files.', [
-                    'url' => 'https://docs.humhub.org/docs/admin/installation/#pretty-urls',
-                ]) ?>
-            </div>
-        <?php endif; ?>
-
-        <?= $form->field($model, 'fileAssetLinks')->textarea(['rows' => 10]) ?>
-        <?= $form->field($model, 'fileAppleAssociation')->textarea(['rows' => 10]) ?>
-        <?= $form->endCollapsibleFields(); ?>
-        <br/>
-
-        <?= Button::asLink('Mobile App Debug')->link(['/fcm-push/admin/mobile-app'])->right() ?>
-        
-        <?= Html::submitButton(Yii::t('base', 'Save'), ['class' => 'btn btn-primary', 'data-ui-loader' => '']) ?>
+        <div class="form-group">
+            <?= Button::save()->submit() ?>
+            <?= ModalButton::defaultType('Debug')
+                ->load(['/fcm-push/admin/debug'])
+                ->icon('bug')
+                ->right() ?>
+        </div>
 
         <?php ActiveForm::end(); ?>
     </div>
