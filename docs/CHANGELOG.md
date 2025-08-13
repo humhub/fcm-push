@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.1.9 (Unreleased)
-----------------------
+2.1.9 (August 13, 2025)
+-----------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
 - Fix #78: Don't show opener if logout triggered by mobile app
 - Enh #80: Add height priority for mobile app push notifications
