@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.2.1 (August 8, 2025)
+----------------------
+- Enh #74: Move non Firebase stuff to core
+- Enh #79: Migration to Bootstrap 5 for HumHub 1.18
+
 2.1.9 (Unreleased)
 ----------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"

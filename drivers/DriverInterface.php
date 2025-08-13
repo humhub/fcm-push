@@ -1,6 +1,6 @@
 <?php
 
-namespace humhub\modules\fcmPush\driver;
+namespace humhub\modules\fcmPush\drivers;
 
 use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\models\ConfigureForm;
