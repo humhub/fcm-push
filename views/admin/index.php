@@ -16,7 +16,7 @@ use humhub\widgets\modal\ModalButton;
         <p>
             <?= Yii::t('FcmPushModule.base', 'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.') ?>
         </p>
-        <?= Button::info('Push Service Registration')->link('https://push.humhub.com')->options(['target' => '_blank'])->loader(false) ?>
+        <?= Button::accent('Push Service Registration')->link('https://push.humhub.com')->options(['target' => '_blank'])->loader(false) ?>
         <?= $form->field($model, 'humhubInstallId')->textInput(['disabled' => 'disabled']) ?>
         <?= $form->field($model, 'humhubApiKey')->textarea(['rows' => 2]) ?>
         <br/>
@@ -27,7 +27,7 @@ use humhub\widgets\modal\ModalButton;
         <p>
             <?= Yii::t('FcmPushModule.base', 'To send Firebase push notifications with your own Firebase project, enter your access details here.') ?>
         </p>
-        <?= Button::info('Installation documentation')->link('https://marketplace.humhub.com/module/fcm-push/installation')->options(['target' => '_blank'])->loader(false) ?>
+        <?= Button::accent('Installation documentation')->link('https://marketplace.humhub.com/module/fcm-push/installation')->options(['target' => '_blank'])->loader(false) ?>
         <?= $form->field($model, 'senderId') ?>
         <?= $form->field($model, 'firebaseApiKey') ?>
         <?= $form->field($model, 'firebaseAppId') ?>
