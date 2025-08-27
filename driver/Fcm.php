@@ -65,11 +65,11 @@ class Fcm implements DriverInterface
 
     public function isConfigured(): bool
     {
-        return !empty($this->config->json) &&
-            !empty($this->config->senderId) &&
-            !empty($this->config->getJsonParam('project_id')) &&
-            !empty($this->config->firebaseApiKey) &&
-            !empty($this->config->firebaseAppId) &&
-            !empty($this->config->firebaseVapidKey);
+        return !empty($this->config->json)
+            && !empty($this->config->senderId)
+            && !empty($this->config->getJsonParam('project_id'))
+            && !empty($this->config->firebaseApiKey)
+            && !empty($this->config->firebaseAppId)
+            && !empty($this->config->firebaseVapidKey);
     }
 }
