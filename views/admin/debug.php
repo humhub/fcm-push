@@ -1,15 +1,17 @@
 <?php
 
 use humhub\modules\fcmPush\models\FcmUser;
-use humhub\widgets\Button;
-use humhub\widgets\ModalButton;
-use humhub\widgets\ModalDialog;
+use humhub\widgets\bootstrap\Link;
+use humhub\widgets\modal\Modal;
+use humhub\widgets\modal\ModalButton;
 
 /* @var FcmUser[] $tokens */
 ?>
 
-<?php ModalDialog::begin(['header' => 'Registered FireBase Devices (Current User)']) ?>
-<div class="modal-body">
+<?php Modal::beginDialog([
+    'title' => 'Registered FireBase Devices (Current User)',
+    'footer' => ModalButton::cancel(),
+]) ?>
     <?php if (count($tokens) === 0): ?>
         <p class="alert alert-danger">
             No registered Firebase Tokens for the current user!
@@ -29,15 +31,11 @@ use humhub\widgets\ModalDialog;
                 <?= Yii::$app->formatter->asDatetime($fcm->created_at, 'short') ?>
 
                 &middot;
-                <?= Button::asLink('Delete')
+                <?= Link::to('Delete')
                     ->link(['debug', 'deleteToken' => $fcm->id])
                     ->confirm('PWA: You may need to delete token from localStorage to trigger resave!')?>
             </li>
         <?php endforeach; ?>
     </ul>
     <?php endif; ?>
-</div>
-<div class="modal-footer">
-    <?= ModalButton::cancel() ?>
-</div>
-<?php ModalDialog::end() ?>
+<?php Modal::endDialog(); ?>

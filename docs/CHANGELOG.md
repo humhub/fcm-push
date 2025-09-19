@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.2 (Unreleased)
+----------------------
+- Fix: Debug modal view for BS5
+
 2.2.1 (August 8, 2025)
 ----------------------
 - Enh #74: Move non Firebase stuff to core
