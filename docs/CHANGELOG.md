@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.2.2 (Unreleased)
+----------------------
+- Fix: Debug modal view for BS5
+
+2.2.1 (August 8, 2025)
+----------------------
+- Enh #74: Move non Firebase stuff to core
+- Enh #79: Migration to Bootstrap 5 for HumHub 1.18
+
 2.1.9 (August 13, 2025)
 -----------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
