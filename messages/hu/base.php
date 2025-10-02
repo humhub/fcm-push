@@ -3,12 +3,9 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => '<strong>FireBase Messaging</strong> konfiguráció',
     'API Key' => 'API Kulcs',
-    'Disable AuthChoices on iOS App' => 'Az AuthChoices letiltása az iOS alkalmazásban',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => 'Firebase Cloud Messaging (szükséges a böngésző és a PWA értesítésekhez)',
     'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.' => 'A HumHub mobilalkalmazás felhasználói a push értesítéseket a HumHub push szolgáltatáson keresztül küldhetik el. Ha használni szeretné ezt a szolgáltatást, kérjük, adja meg hozzáférési kulcsát alább.<br>Kérjük, vegye figyelembe, hogy ez a push átjáró csak a hivatalos HumHub mobilalkalmazás felhasználói számára érhető el.',
-    'Hide third-party login options for app users with iOS.' => 'Harmadik fél bejelentkezési opcióinak elrejtése iOS rendszert használó alkalmazásfelhasználók számára.',
     'Install ID' => 'Telepítési azonosító',
-    'Link Redirection Service' => 'Link átirányítási szolgáltatás',
     'Paste the content of the service account JSON files here. You can find more information in the module instructions.' => 'Illessze be ide a szolgáltatásfiók JSON-fájljainak tartalmát. További információkat a modul útmutatójában talál.',
     'Push Service (required for the mobile app) (Beta)' => 'Push szolgáltatás (a mobilalkalmazáshoz szükséges) (béta)',
     'Sender ID' => 'Feladó azonosítója',
