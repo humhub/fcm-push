@@ -2,13 +2,13 @@
 
 namespace humhub\modules\fcmPush\drivers;
 
+use humhub\libs\HttpClient;
 use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
 use Yii;
-use yii\httpclient\Client;
 
-class Proxy extends Client implements DriverInterface
+class Proxy extends HttpClient implements DriverInterface
 {
     public $baseUrl = 'https://push.humhub.com/api/v1';
 
