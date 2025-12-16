@@ -17,6 +17,7 @@ class Proxy extends HttpClient implements DriverInterface
     public function __construct(ConfigureForm $config)
     {
         $this->config = $config;
+        parent::__construct();
     }
 
     public function createRequest()
