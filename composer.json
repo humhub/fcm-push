@@ -34,7 +34,18 @@
     {
       "type": "composer",
       "url": "https://asset-packagist.org"
+    },
+    {
+      "type": "vcs",
+      "url": "https://github.com/humhub/module-coding-standards.git"
     }
   ],
-  "minimum-stability": "dev"
+  "minimum-stability": "dev",
+  "require-dev": {
+    "humhub/module-coding-standards": "dev-main"
+  },
+  "scripts": {
+    "rector": "vendor/bin/rector process --config=vendor/humhub/module-coding-standards/rector.php",
+    "fixer": "vendor/bin/php-cs-fixer fix --config=vendor/humhub/module-coding-standards/php-cs-fixer.php"
+  }
 }
