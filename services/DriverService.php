@@ -10,13 +10,10 @@ use humhub\modules\fcmPush\models\ConfigureForm;
 
 class DriverService
 {
-    private ConfigureForm $config;
-
     private array $configuredDrivers;
 
-    public function __construct(ConfigureForm $config)
+    public function __construct(private ConfigureForm $config)
     {
-        $this->config = $config;
         $this->initDrivers();
     }
 
