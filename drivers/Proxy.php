@@ -12,11 +12,8 @@ class Proxy extends HttpClient implements DriverInterface
 {
     public $baseUrl = 'https://push.humhub.com/api/v1';
 
-    private ConfigureForm $config;
-
-    public function __construct(ConfigureForm $config)
+    public function __construct(private ConfigureForm $config)
     {
-        $this->config = $config;
         parent::__construct();
     }
 

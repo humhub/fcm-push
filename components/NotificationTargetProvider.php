@@ -45,7 +45,7 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
     /**
      * @inheritDoc
      */
-    public function isActive(User $user = null)
+    public function isActive(?User $user = null)
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');

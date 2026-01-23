@@ -81,13 +81,13 @@ class ConfigureForm extends Model
             [['senderId'], 'number'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['json', 'humhubApiKey'], 'safe'],
-            ['json', function ($attribute, $params, $validator) {
+            ['json', function ($attribute, $params, $validator): void {
                 if (empty($this->$attribute)) {
                     return;
                 }
                 try {
                     $data = Json::decode($this->$attribute);
-                } catch (InvalidArgumentException $ex) {
+                } catch (InvalidArgumentException) {
                     $this->addError($attribute, 'Invalid JSON input.');
                     return;
                 }

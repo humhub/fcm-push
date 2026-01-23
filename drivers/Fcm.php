@@ -16,11 +16,9 @@ use Yii;
 class Fcm implements DriverInterface
 {
     private ?Messaging $messaging = null;
-    private ConfigureForm $config;
 
-    public function __construct(ConfigureForm $config)
+    public function __construct(private ConfigureForm $config)
     {
-        $this->config = $config;
     }
 
     public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
