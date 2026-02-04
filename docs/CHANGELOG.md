@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.2 (Unreleased)
-----------------------
+2.2.2 (February 4, 2026)
+------------------------
 - Fix: Debug modal view for BS5
 - Enh #83: Use core proxy settings for Proxy driver
 
