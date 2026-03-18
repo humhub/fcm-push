@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.3 (Unreleased)
+------------------------
+- Enh #89: Remove deprecations
+
 2.2.2 (February 4, 2026)
 ------------------------
 - Fix: Debug modal view for BS5
