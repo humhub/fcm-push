@@ -37,7 +37,7 @@ use humhub\widgets\modal\ModalButton;
 
         <div class="form-group">
             <?= Button::save()->submit() ?>
-            <?= ModalButton::defaultType('Debug')
+            <?= ModalButton::light('Debug')
                 ->load(['/fcm-push/admin/debug'])
                 ->icon('bug')
                 ->right() ?>
