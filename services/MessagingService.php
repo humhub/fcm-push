@@ -35,7 +35,7 @@ class MessagingService
         );
     }
 
-    public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount)
+    public function processMessage(User $user, ?string $title, ?string $body, ?string $url, ?string $imageUrl, ?int $notificationCount)
     {
         foreach ($this->drivers as $driver) {
             $tokens = (new TokenService())->getTokensForUser($user, $driver);
@@ -43,7 +43,7 @@ class MessagingService
                 continue;
             }
 
-            $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            $driver->processCloudMessage($tokens, (string) $title, (string) $body, $url, $imageUrl, $notificationCount);
         }
     }
 
