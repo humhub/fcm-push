@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.3 (Unreleased)
-------------------------
+2.2.3 (May 11, 2026)
+--------------------
 - Enh #89: Remove deprecations
 - Fix: Logo appear twice in push notifications
 
