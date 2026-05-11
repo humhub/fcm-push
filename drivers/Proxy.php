@@ -8,6 +8,9 @@ use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
 use Yii;
 
+/**
+ * For notifications sent to HumHub Community App
+ */
 class Proxy extends HttpClient implements DriverInterface
 {
     public $baseUrl = 'https://push.humhub.com/api/v1';
