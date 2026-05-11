@@ -13,6 +13,10 @@ use Kreait\Firebase\Messaging\CloudMessage;
 use Kreait\Firebase\Messaging\Notification;
 use Yii;
 
+/**
+ * Firebase driver
+ * Used for branded apps
+ */
 class Fcm implements DriverInterface
 {
     private ?Messaging $messaging = null;
@@ -31,7 +35,7 @@ class Fcm implements DriverInterface
         }
 
         $message = CloudMessage::new()
-            ->withNotification(Notification::create($title, $body, $imageUrl))
+            ->withNotification(Notification::create($title, $body)) // Don't send $imageUrl as it would create a duplicate of the logo on branded apps
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
             ->withData(['url' => $url, 'notification_count' => $notificationCount])
             ->withHighestPossiblePriority();
