@@ -7,7 +7,7 @@ use Yii;
 
 class WebAppHelper
 {
-    public const SESSION_VAR_UNREGISTER_NOTIFICATION = 'mobileAppUnregisterNotification';
+    public const SESSION_VAR_UNREGISTER_NOTIFICATION = 'webAppUnregisterNotification';
 
     public static function unregisterNotificationScript()
     {

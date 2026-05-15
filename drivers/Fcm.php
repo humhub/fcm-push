@@ -62,9 +62,14 @@ class Fcm implements DriverInterface
 
         $failedTokens = [];
         if ($report->hasFailures()) {
-            foreach ($report->failures()->getItems() as $failure) {
-                $failedTokens[] = $failure->target()->value();
-            }
+            // Only collect tokens that Firebase has permanently invalidated:
+            //   - unknownTokens(): Firebase returned UNREGISTERED (app was uninstalled / token expired)
+            //   - invalidTokens(): token is structurally malformed
+            //
+            // Transient errors (rate limit, server unavailable, device temporarily offline, …)
+            // appear in failures() but NOT in these two lists — those tokens must NOT be deleted
+            // because the device may be reachable again on the next send.
+            $failedTokens = array_merge($report->unknownTokens(), $report->invalidTokens());
         }
 
         return new SendReport(SendReport::STATE_SUCCESS, $failedTokens);

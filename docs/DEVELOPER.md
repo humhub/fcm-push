@@ -78,16 +78,37 @@ The `sender_id` column lets Proxy tokens and Fcm tokens coexist for the same use
 ### Token lifecycle
 
 #### Created / updated
+
+**Native apps (Flutter):**
 1. User logs in → `Events::onAfterLogin()` sets `SESSION_VAR_REGISTER_NOTIFICATION` in the session.
-2. On the next full page render → `Events::onLayoutAddonInit()` detects the session flag and calls `MobileAppHelper::registerNotificationScript()`.
-   - **For native apps (Flutter):** a JS bridge message `{type: 'registerFcmDevice', url: '…'}` is sent to the app. The app obtains an FCM token from Firebase and POSTs it to `/fcm-push/token/update-mobile-app`.
-   - **For browsers/PWA:** the Firebase JS SDK (loaded via `FcmPushAsset` / `FirebaseAsset`) requests notification permission and POSTs the token to `/fcm-push/token/update`.
-3. `TokenController::actionUpdate[MobileApp]()` calls `TokenService::storeTokenForUser()`:
-   - If the token already exists and belongs to the same user + sender → just `updated_at` is refreshed.
-   - If the token exists but belongs to a **different user or sender** → old record is deleted and a fresh one is created. This handles device hand-offs.
+2. On the next full page render → `Events::onLayoutAddonInit()` detects the flag and calls `MobileAppHelper::registerNotificationScript()`, which sends a JS bridge message `{type: 'registerFcmDevice', url: '…'}` to the Flutter app.
+3. The app obtains an FCM token from Firebase and POSTs it to `/fcm-push/token/update-mobile-app`.
+
+**Browsers / PWA (`humhub.firebase.js`):**
+
+Token registration is always routed through `afterServiceWorkerRegistration()`, which is the single code path for calling `getToken`. It is triggered in two ways:
+
+- **PWA service worker callback** — the `web/pwa` module calls the global `afterServiceWorkerRegistration(registration)` whenever the service worker registers or updates.
+- **Proactive check in `init()`** — on every page load, `init()` checks whether `Notification.permission === 'granted'` AND no token is cached in localStorage. If so, it calls `afterServiceWorkerRegistration()` via `navigator.serviceWorker.ready`. This covers users who granted permission in browser settings after their initial login, without requiring a logout/login cycle.
+
+`afterServiceWorkerRegistration()` itself is protected by two guards to prevent double execution — which would cause two different tokens if both callers fire on the same page load (e.g. when a service worker update changes the registration object):
+- **`_tokenRegistrationPending` flag** — set synchronously at entry, reset in every `.then()`/`.catch()` branch. Whichever caller arrives second while the first is still awaiting its promise returns immediately.
+- **`getTokenLocalStore()` check** — if a valid token is already cached in localStorage (from an earlier call that already succeeded), skip silently.
+
+Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/token/update` and caches it in localStorage with a 24-hour expiry. On subsequent page loads within that window `isTokenSentToServer()` returns `true` and no AJAX call is made.
+
+**Server-side (`TokenService::storeTokenForUser()`):**
+- Token already exists for the same user + sender → `updated_at` is refreshed.
+- Token exists but belongs to a **different user or sender** → old record deleted, new one created (handles device hand-offs).
 
 #### Deleted
-- **On logout:** `Events::onAfterLogout()` sets session flags for both web and mobile. On the next page render (still within the logout redirect), `WebAppHelper::unregisterNotificationScript()` injects JS that calls `humhub.modules.firebase.unregisterNotification()`, and `MobileAppHelper::unregisterNotificationScript()` sends an `{type: 'unregisterFcmDevice'}` Flutter message. Both ultimately POST to `TokenController::actionDelete[MobileApp]()` → `TokenService::deleteToken()`.
+- **On logout:** `Events::onAfterLogout()` sets two distinct session flags — `WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION` (`'webAppUnregisterNotification'`) and `MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION` (`'mobileAppUnregisterNotification'`). On the next page render `onLayoutAddonInit` consumes each flag independently: the web block injects JS calling `humhub.modules.firebase.unregisterNotification()`, and the mobile block sends an `{type: 'unregisterFcmDevice'}` Flutter bridge message. Both ultimately POST to `TokenController::actionDelete[MobileApp]()` → `TokenService::deleteToken()`.
+
+  > ⚠️ The two constants **must** have different string values. If they share a value the first block removes the session key and the mobile unregister script never fires, leaving stale tokens in the database.
+
+  > ℹ️ `unregisterNotification()` reads the token from **localStorage** and deletes that one token. Only the token cached in the current browser is removed on logout; tokens registered from other browsers or devices remain active in the database.
+
+- **Auto-cleanup of permanently rejected tokens:** After every multicast send, `MessagingService::processMessage()` inspects `SendReport::$failedTokens`. Only tokens that Firebase has permanently invalidated (`unknownTokens` = app uninstalled / `invalidTokens` = malformed) are deleted via `TokenService::deleteToken()`. Tokens that failed due to transient errors (rate limit, server hiccup) or because a device was simply offline are **never deleted** — Firebase queues messages for offline devices and does not report them as failures.
 - **Manually by an admin:** The debug page (`/fcm-push/admin/debug`) lists all tokens for the currently logged-in admin and provides a delete link.
 
 ---
@@ -103,6 +124,12 @@ The `sender_id` column lets Proxy tokens and Fcm tokens coexist for the same use
 
 ### `Fcm` driver
 Uses the `kreait/firebase-php` SDK (loaded via a dedicated `vendor/autoload.php` inside the module). Authenticates with the service account JSON. Sends a multicast message with `withWebPushConfig` (link) and `withData` (url + notification_count). The `imageUrl` is intentionally omitted from the notification payload to avoid displaying a duplicate of the logo on branded apps.
+
+After each multicast, the driver inspects the `MulticastSendReport` for **permanently** invalid tokens only:
+- `unknownTokens()` — Firebase returned `UNREGISTERED` (app was uninstalled, token expired). Safe to delete.
+- `invalidTokens()` — token is structurally malformed. Safe to delete.
+
+Transient failures (rate limit, server unavailable) appear in `failures()` but not in the two lists above and are **not** deleted. A device being off never generates a Firebase failure at all — Firebase queues the message and delivers it when the device reconnects — so offline devices are never at risk of having their token removed.
 
 ### `Proxy` driver
 Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using the `humhubApiKey` as a Bearer token. The HumHub service relays the message to FCM on behalf of the operator.
