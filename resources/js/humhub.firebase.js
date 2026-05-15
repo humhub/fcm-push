@@ -1,5 +1,11 @@
 humhub.module('firebase', function (module, require, $) {
+    // Prevents concurrent token registration when both init() and the PWA service
+    // worker callback trigger afterServiceWorkerRegistration() on the same page load.
+    let _tokenRegistrationPending = false;
+
     const init = function () {
+        const that = this;
+
         if (!firebase.apps.length) {
             firebase.initializeApp({
                 messagingSenderId: this.senderId(),
@@ -13,10 +19,31 @@ humhub.module('firebase', function (module, require, $) {
         this.messaging.onMessage((payload) => {
             console.log('Suppressed push notification. App has already focus.', payload);
         });
+
+        // If the user already granted notification permission but has no token cached
+        // (e.g. they enabled it in browser settings after logging in, or the 24-hour
+        // localStorage window expired), trigger registration now via the active service
+        // worker instead of waiting for the PWA SW registration callback.
+        // afterServiceWorkerRegistration() is used as the single code path so that the
+        // _tokenRegistrationPending flag prevents a race with the PWA SW callback, which
+        // avoids generating two tokens when both callers fire on the same page load.
+        if (Notification.permission === 'granted' && !this.getTokenLocalStore() && navigator.serviceWorker) {
+            navigator.serviceWorker.ready.then(function (registration) {
+                that.afterServiceWorkerRegistration(registration);
+            });
+        }
     };
 
     const afterServiceWorkerRegistration = function (registration) {
         const that = this;
+
+        // Guard: skip if another registration call is already in flight, or if a valid
+        // token is already cached in localStorage (avoids producing a second token when
+        // both init() and the PWA SW callback invoke this function on the same page load).
+        if (_tokenRegistrationPending || this.getTokenLocalStore()) {
+            return;
+        }
+        _tokenRegistrationPending = true;
 
         this.messaging.swRegistration = registration;
 
@@ -24,6 +51,7 @@ humhub.module('firebase', function (module, require, $) {
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
                 module.log.info('Notification permission is not granted.');
+                _tokenRegistrationPending = false;
                 return;
             }
 
@@ -31,6 +59,7 @@ humhub.module('firebase', function (module, require, $) {
                 vapidKey: module.config.vapidKey,
                 serviceWorkerRegistration: registration,
             }).then(function (currentToken) {
+                _tokenRegistrationPending = false;
                 if (currentToken) {
                     that.sendTokenToServer(currentToken);
                 } else {
@@ -38,10 +67,12 @@ humhub.module('firebase', function (module, require, $) {
                     that.deleteTokenLocalStore();
                 }
             }).catch(function (err) {
+                _tokenRegistrationPending = false;
                 module.log.error('An error occurred while retrieving token. ', err);
                 that.deleteTokenLocalStore();
             });
         }).catch(function (err) {
+            _tokenRegistrationPending = false;
             module.log.info('Could not get Push Notification permission!', err);
         });
     };

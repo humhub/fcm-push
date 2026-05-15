@@ -37,13 +37,22 @@ class MessagingService
 
     public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount)
     {
+        $tokenService = new TokenService();
+
         foreach ($this->drivers as $driver) {
-            $tokens = (new TokenService())->getTokensForUser($user, $driver);
+            $tokens = $tokenService->getTokensForUser($user, $driver);
             if (empty($tokens)) {
                 continue;
             }
 
-            $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+
+            // Remove tokens that Firebase rejected (e.g. from an uninstalled / reinstalled app).
+            // This prevents stale tokens from accumulating and blocking future deliveries.
+            foreach ($report->failedTokens as $failedToken) {
+                Yii::warning("Removing failed/unregistered FCM token: $failedToken", 'fcm-push');
+                $tokenService->deleteToken($failedToken);
+            }
         }
     }
 

@@ -1,6 +1,14 @@
 Changelog
 =========
 
+2.2.4 (Unreleased)
+--------------------
+- Fix: Session variable name clashes prevents mobile tokens from being deleted on logout
+- Fix: Auto-clean Invalid FCM tokens from reinstalled apps on first failed send
+- Fix: Token cleanup of only permanently invalid tokens, sparing offline devices
+- Fix: Token not registered when notification permission is granted after login
+- Enh: Add developer documentation covering architecture, token lifecycle, and dispatch flow.
+
 2.2.3 (May 11, 2026)
 --------------------
 - Enh #89: Remove deprecations
