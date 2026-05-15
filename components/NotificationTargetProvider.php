@@ -10,6 +10,18 @@ use humhub\modules\notification\components\BaseNotification;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\user\models\User;
 
+/**
+ * Bridges HumHub's core notification system with the FCM push module.
+ *
+ * This class implements MobileTargetProvider and is swapped in via the DI container
+ * in Events::onBeforeRequest() when at least one push driver is configured. HumHub's
+ * notification module resolves MobileTargetProvider from the container, so this
+ * replacement is transparent to the rest of the core.
+ *
+ * handle() is called once per user per notification. It temporarily switches the
+ * application locale to the recipient's locale so that the notification text is
+ * localised before being sent as the push body.
+ */
 class NotificationTargetProvider extends Component implements MobileTargetProvider
 {
     /**

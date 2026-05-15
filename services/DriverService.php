@@ -63,6 +63,9 @@ class DriverService
 
     public function getMobileAppDriver(): ?DriverInterface
     {
+        // Branded apps that embed the operator's own Firebase project send FCM tokens
+        // scoped to that project's Sender ID → use the Fcm driver directly.
+        // The stock HumHub community app always uses the HumHub relay (Proxy).
         if (DeviceDetectorHelper::isAppWithCustomFcm()) {
             return $this->getConfiguredDriverByType(Fcm::class);
         }

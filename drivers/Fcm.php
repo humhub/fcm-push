@@ -14,8 +14,18 @@ use Kreait\Firebase\Messaging\Notification;
 use Yii;
 
 /**
- * Firebase driver
- * Used for branded apps
+ * Direct Firebase Cloud Messaging driver.
+ *
+ * Used for:
+ * - Browser / PWA notifications (web push via the Firebase JS SDK)
+ * - Branded mobile apps that ship with the operator's own Firebase project
+ *
+ * Authentication is handled via a Google Service Account JSON file (stored in
+ * ConfigureForm::$json). The kreait/firebase-php SDK is lazily autoloaded from
+ * the module's own vendor directory to avoid conflicts with core Composer deps.
+ *
+ * isConfigured() requires the full set of Firebase credentials: service account JSON,
+ * Sender ID, Web API Key, Web App ID, and VAPID key. All five must be non-empty.
  */
 class Fcm implements DriverInterface
 {
@@ -35,7 +45,7 @@ class Fcm implements DriverInterface
         }
 
         $message = CloudMessage::new()
-            ->withNotification(Notification::create($title, $body)) // Don't send $imageUrl as it would create a duplicate of the logo on branded apps
+            ->withNotification(Notification::create($title, $body)) // $imageUrl is intentionally omitted — including it would show a duplicate logo on branded apps
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
             ->withData(['url' => $url, 'notification_count' => $notificationCount])
             ->withHighestPossiblePriority();

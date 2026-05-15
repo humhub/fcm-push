@@ -9,7 +9,19 @@ use humhub\modules\fcmPush\Module;
 use Yii;
 
 /**
- * For notifications sent to HumHub Community App
+ * HumHub Push Proxy driver.
+ *
+ * Delivers notifications to the official HumHub community mobile app (iOS/Android)
+ * by forwarding the message payload to the HumHub-managed relay service at
+ * https://push.humhub.com. The relay service holds the Firebase credentials for
+ * the community app and dispatches FCM messages on the operator's behalf.
+ *
+ * The operator only needs to register at push.humhub.com and obtain an API key —
+ * no Firebase project setup is required for this driver.
+ *
+ * getSenderId() returns $module->humhubProxySenderId (hardcoded to the HumHub
+ * community app's Firebase Sender ID) so that Proxy tokens are stored separately
+ * from any custom Fcm tokens in the fcmpush_user table.
  */
 class Proxy extends HttpClient implements DriverInterface
 {

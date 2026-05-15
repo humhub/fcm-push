@@ -19,6 +19,10 @@ class Events
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
+        // Replace the core MobileTargetProvider binding with our own implementation so that
+        // HumHub's notification module dispatches mobile notifications through FCM.
+        // This is done here (not in config.php) because we only want to override when at least
+        // one driver is actually configured — otherwise the original provider is left intact.
         if ($module->getDriverService()->hasConfiguredDriver()) {
             Yii::$container->set(MobileTargetProvider::class, NotificationTargetProvider::class);
         }
@@ -60,13 +64,15 @@ JS;
 
     public static function onLayoutAddonInit($event)
     {
-        // After login
+        // After login: the session flag set by onAfterLogin is consumed here so the
+        // registration script runs exactly once on the first post-login page render.
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION)) {
             MobileAppHelper::registerNotificationScript();
             Yii::$app->session->remove(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION);
         }
 
-        // After logout
+        // After logout: unregister tokens so this device stops receiving push notifications.
+        // The session flags are set by onAfterLogout and consumed once here.
         if (Yii::$app->session->has(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
             static::registerAssets();
             WebAppHelper::unregisterNotificationScript();

@@ -26,7 +26,9 @@ class TokenService
     {
         $fcmUser = FcmUser::findOne(['token' => $token]);
 
-        // Check if Token is already stored, but to another sender or user, then delete
+        // A token that already exists but is associated with a different user or a different
+        // Firebase sender (e.g. the device was handed to another person, or the module was
+        // reconfigured) must be re-owned. Delete the stale record so a fresh one can be created.
         if ($fcmUser !== null && ($fcmUser->user_id !== $user->id || $fcmUser->sender_id !== $driver->getSenderId())) {
             $fcmUser->delete();
             $fcmUser = null;
@@ -39,6 +41,7 @@ class TokenService
             $fcmUser->sender_id = $driver->getSenderId();
         }
 
+        // If the token already belongs to this user+sender, save() just updates updated_at (via beforeSave).
         return $fcmUser->save();
     }
 
