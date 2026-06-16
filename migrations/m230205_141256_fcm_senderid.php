@@ -18,7 +18,7 @@ class m230205_141256_fcm_senderid extends Migration
 
         $senderId = $this->db->createCommand(
             'SELECT value FROM setting WHERE module_id = :moduleId AND name = :name',
-            [':moduleId' => 'fcm-push', ':name' => 'senderId']
+            [':moduleId' => 'fcm-push', ':name' => 'senderId'],
         )->queryScalar();
 
         // Allow null
