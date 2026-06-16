@@ -12,10 +12,14 @@ class m230205_141256_fcm_senderid extends Migration
      */
     public function safeUp()
     {
-        /** @var \humhub\modules\fcmPush\Module $module */
-        $module = Yii::$app->getModule('fcm-push');
+        if (in_array('sender_id', $this->db->getTableSchema('fcmpush_user', true)->columnNames)) {
+            return;
+        }
 
-        $senderId = $module->getConfigureForm()->senderId;
+        $senderId = $this->db->createCommand(
+            'SELECT value FROM setting WHERE module_id = :moduleId AND name = :name',
+            [':moduleId' => 'fcm-push', ':name' => 'senderId']
+        )->queryScalar();
 
         // Allow null
         $this->addColumn('fcmpush_user', 'sender_id', $this->string()->null()->after('user_id'));
@@ -27,7 +31,6 @@ class m230205_141256_fcm_senderid extends Migration
         }
 
         $this->alterColumn('fcmpush_user', 'sender_id', $this->string()->notNull());
-
     }
 
     /**
