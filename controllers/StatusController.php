@@ -14,7 +14,7 @@ class StatusController extends Controller
 {
     public function actionIndex()
     {
-        if (!$this->module->isActivated) {
+        if (!$this->module->isEnabled) {
             return $this->returnStatus(404, 'FCM Module is not installed');
         }
 
