@@ -4,6 +4,7 @@ Changelog
 2.2.5 (Unreleased)
 -------------------
 - Fix: Make m230205_141256_fcm_senderid migration resilient when module is not bootstrapped
+- Fix: Fix using of removed module property `isActivated`
 
 2.2.4 (May 15, 2026)
 --------------------
