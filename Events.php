@@ -8,9 +8,11 @@ use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
+use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
+use yii\base\WidgetEvent;
 
 class Events
 {
@@ -110,5 +112,10 @@ JS;
     {
         Yii::$app->session->set(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION, 1);
+    }
+
+    public static function onNotificationSettingsFormAfterRun(WidgetEvent $event)
+    {
+        $event->result = RegisterDeviceTokenButton::widget() . $event->result;
     }
 }

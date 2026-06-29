@@ -86,12 +86,12 @@ The `sender_id` column lets Proxy tokens and Fcm tokens coexist for the same use
 
 **Browsers / PWA (`humhub.firebase.js`):**
 
-Token registration is always routed through `afterServiceWorkerRegistration()`, which is the single code path for calling `getToken`. It is triggered in two ways:
+Token registration is always routed through `requestNotificationPermission()`, which is the single code path for calling `getToken`. It is triggered in two ways:
 
-- **PWA service worker callback** — the `web/pwa` module calls the global `afterServiceWorkerRegistration(registration)` whenever the service worker registers or updates.
-- **Proactive check in `init()`** — on every page load, `init()` checks whether `Notification.permission === 'granted'` AND no token is cached in localStorage. If so, it calls `afterServiceWorkerRegistration()` via `navigator.serviceWorker.ready`. This covers users who granted permission in browser settings after their initial login, without requiring a logout/login cycle.
+- **PWA service worker callback** — the `web/pwa` module calls the global `requestNotificationPermission(registration)` whenever the service worker registers or updates.
+- **Proactive check in `init()`** — on every page load, `init()` checks whether `Notification.permission === 'granted'` AND no token is cached in localStorage. If so, it calls `requestNotificationPermission()` via `navigator.serviceWorker.ready`. This covers users who granted permission in browser settings after their initial login, without requiring a logout/login cycle.
 
-`afterServiceWorkerRegistration()` itself is protected by two guards to prevent double execution — which would cause two different tokens if both callers fire on the same page load (e.g. when a service worker update changes the registration object):
+`requestNotificationPermission()` itself is protected by two guards to prevent double execution — which would cause two different tokens if both callers fire on the same page load (e.g. when a service worker update changes the registration object):
 - **`_tokenRegistrationPending` flag** — set synchronously at entry, reset in every `.then()`/`.catch()` branch. Whichever caller arrives second while the first is still awaiting its promise returns immediately.
 - **`getTokenLocalStore()` check** — if a valid token is already cached in localStorage (from an earlier call that already succeeded), skip silently.
 
