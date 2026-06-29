@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.6 (Unreleased)
+---------------------
+- Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
+
 2.2.5 (June 22, 2026)
 ---------------------
 - Fix: Make m230205_141256_fcm_senderid migration resilient when module is not bootstrapped
