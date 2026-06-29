@@ -3,7 +3,7 @@ Changelog
 
 2.2.6 (Unreleased)
 ---------------------
-- Fix: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
+- Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
 
 2.2.5 (June 22, 2026)
 ---------------------
