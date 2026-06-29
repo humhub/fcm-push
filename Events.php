@@ -10,6 +10,7 @@ use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\services\DriverService;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
 use humhub\modules\notification\targets\MobileTargetProvider;
+use humhub\modules\notification\widgets\NotificationSettingsForm;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
 use yii\base\WidgetEvent;
@@ -116,6 +117,11 @@ JS;
 
     public static function onNotificationSettingsFormAfterRun(WidgetEvent $event)
     {
-        $event->result = RegisterDeviceTokenButton::widget() . $event->result;
+        /** @var NotificationSettingsForm $form */
+        $form = $event->sender;
+
+        if ($form->model->user) { // Only show the button for User settings (not admin settings)
+            $event->result = RegisterDeviceTokenButton::widget() . $event->result;
+        }
     }
 }

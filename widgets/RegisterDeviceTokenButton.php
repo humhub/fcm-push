@@ -14,7 +14,10 @@ class RegisterDeviceTokenButton extends Widget
 {
     public function run()
     {
-        if (Yii::$app->user->isGuest || DeviceDetectorHelper::isIos() || DeviceDetectorHelper::isIosApp()) {
+        if (
+            Yii::$app->user->isGuest
+            || (!DeviceDetectorHelper::isIos() && !DeviceDetectorHelper::isIosApp())
+        ) {
             // Only show the button for logged-in users on iOS devices, web or app (see https://github.com/humhub/humhub-internal/issues/1243)
             return '';
         }
