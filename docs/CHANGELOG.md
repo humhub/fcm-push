@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.2.6 (Unreleased)
-------------------
+2.2.6 (July 7, 2026)
+--------------------
 - Fix: Compatibility with HumHub 1.19, which removed the `SiteIcon` widget in favor of the `AssetImage` registry (core #8011)
 
 2.2.5 (June 22, 2026)
