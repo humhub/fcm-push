@@ -27,7 +27,7 @@ humhub.module('firebase', function (module, require, $) {
         // requestNotificationPermission() is used as the single code path so that the
         // _tokenRegistrationPending flag prevents a race with the PWA SW callback, which
         // avoids generating two tokens when both callers fire on the same page load.
-        if (Notification.permission === 'granted' && !this.getTokenLocalStore() && navigator.serviceWorker) {
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted' && !this.getTokenLocalStore() && navigator.serviceWorker) {
             navigator.serviceWorker.ready.then(function (registration) {
                 that.requestNotificationPermission(registration);
             });
@@ -78,6 +78,11 @@ humhub.module('firebase', function (module, require, $) {
         _tokenRegistrationPending = true;
 
         // Request for permission
+        if (typeof Notification === 'undefined') {
+            _tokenRegistrationPending = false;
+            module.log.info('Notification API is not available in this context.');
+            return;
+        }
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
                 module.log.info('Notification permission is not granted.');
@@ -116,6 +121,11 @@ humhub.module('firebase', function (module, require, $) {
 
         // Request for permission - called synchronously from the click handler, so
         // iOS/WebKit recognizes this as a user-gesture-driven call.
+        if (typeof Notification === 'undefined') {
+            _tokenRegistrationPending = false;
+            module.log.error('Could not enable notifications: Notification API is not available in this context.', true);
+            return;
+        }
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
                 module.log.error('Could not enable notifications: notification permission is not granted.', true);
