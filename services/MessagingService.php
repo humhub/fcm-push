@@ -30,9 +30,26 @@ class MessagingService
             Yii::$app->name,
             $baseNotification->text(),
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
-            SiteIcon::getUrl(180),
+            $this->getSiteIconUrl(180),
             NotificationHumHub::findUnseen($user)->count(),
         );
+    }
+
+    /**
+     * Returns the site icon URL for the given square size.
+     *
+     * HumHub 1.19 removed the {@see SiteIcon} widget and replaced it with the
+     * AssetImage registry exposed as `Yii::$app->img`. This module still supports
+     * HumHub 1.18 (see `module.json` `humhub.minVersion`), so fall back to the
+     * legacy widget when the registry is not available.
+     */
+    private function getSiteIconUrl(int $size): ?string
+    {
+        if (Yii::$app->has('img')) {
+            return Yii::$app->img->icon->getUrl(['square' => $size]);
+        }
+
+        return SiteIcon::getUrl($size);
     }
 
     public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount)

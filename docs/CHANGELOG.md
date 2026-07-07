@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.6 (Unreleased)
+------------------
+- Fix: Compatibility with HumHub 1.19, which removed the `SiteIcon` widget in favor of the `AssetImage` registry (core #8011)
+
 2.2.5 (June 22, 2026)
 ---------------------
 - Fix: Make m230205_141256_fcm_senderid migration resilient when module is not bootstrapped
