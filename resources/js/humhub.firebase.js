@@ -112,12 +112,16 @@ humhub.module('firebase', function (module, require, $) {
         const that = this;
         const $trigger = evt.$trigger;
 
-        // Same guard as requestNotificationPermission(): avoid a redundant call
-        // if a valid token is already cached.
-        if (_tokenRegistrationPending || this.getTokenLocalStore()) {
+        // Unlike requestNotificationPermission(), only guard against concurrent
+        // calls here - NOT against a cached token. This handler runs on an
+        // explicit user action, and the localStorage cache may be stale (e.g.
+        // the token was deleted server-side): re-registering is idempotent, so
+        // honor the user's intent and re-send the token to the server.
+        if (_tokenRegistrationPending) {
             return;
         }
         _tokenRegistrationPending = true;
+        this.deleteTokenLocalStore();
 
         // Request for permission - called synchronously from the click handler, so
         // iOS/WebKit recognizes this as a user-gesture-driven call.

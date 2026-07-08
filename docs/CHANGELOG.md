@@ -4,6 +4,8 @@ Changelog
 2.2.6 (Unreleased)
 ---------------------
 - Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
+- Fix #96: Unresolved `@web` alias in service worker `importScripts()` URLs breaks service worker installation
+- Fix #96: Enable notifications button did nothing when a stale token was cached in localStorage
 
 2.2.5 (June 22, 2026)
 ---------------------

@@ -46,12 +46,13 @@ class Events
         $bundle = FirebaseAsset::register(Yii::$app->view);
 
         $pushDriver = (new DriverService($module->getConfigureForm()))->getWebDriver();
+        $baseUrl = Yii::getAlias($bundle->baseUrl);
 
         // Service Worker Addons
         $controller->additionalJs .= <<<JS
             // Give the service worker access to Firebase Messaging.
-            importScripts('{$bundle->baseUrl}/firebase-app-compat.js');
-            importScripts('{$bundle->baseUrl}/firebase-messaging-compat.js');
+            importScripts('{$baseUrl}/firebase-app-compat.js');
+            importScripts('{$baseUrl}/firebase-messaging-compat.js');
 
             firebase.initializeApp({
                 messagingSenderId: "{$pushDriver->getSenderId()}",
