@@ -1,11 +1,15 @@
 Changelog
 =========
 
-2.2.6 (Unreleased)
+2.2.7 (Unreleased)
 ---------------------
 - Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
 - Fix #96: Unresolved `@web` alias in service worker `importScripts()` URLs breaks service worker installation
 - Fix #96: Enable notifications button did nothing when a stale token was cached in localStorage
+
+2.2.6 (July 7, 2026)
+--------------------
+- Fix: Compatibility with HumHub 1.19, which removed the `SiteIcon` widget in favor of the `AssetImage` registry (core #8011)
 
 2.2.5 (June 22, 2026)
 ---------------------
