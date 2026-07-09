@@ -6,7 +6,7 @@ Changelog
 - Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
 - Fix #96: Unresolved `@web` alias in service worker `importScripts()` URLs breaks service worker installation
 - Fix #96: Enable notifications button did nothing when a stale token was cached in localStorage
-- Fix: Log all FCM send failures — non-token errors (e.g. permission denied, FCM API disabled) were silently discarded and the send reported as successful
+- Fix #98: Log all FCM send failures — non-token errors (e.g. permission denied, FCM API disabled) were silently discarded and the send reported as successful
 
 2.2.6 (July 7, 2026)
 --------------------
