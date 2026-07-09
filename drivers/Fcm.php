@@ -62,6 +62,18 @@ class Fcm implements DriverInterface
 
         $failedTokens = [];
         if ($report->hasFailures()) {
+            // Log every failure: sendMulticast() collects per-message errors instead of
+            // throwing, so without this, non-token errors (permission denied, FCM API
+            // disabled, quota exceeded, …) are dropped and the send looks successful.
+            foreach ($report->failures()->getItems() as $failure) {
+                $error = $failure->error();
+                Yii::warning(
+                    'FCM send failure for token "' . $failure->target()->value() . '": '
+                    . ($error !== null ? $error->getMessage() : 'unknown error'),
+                    'fcm-push',
+                );
+            }
+
             // Only collect tokens that Firebase has permanently invalidated:
             //   - unknownTokens(): Firebase returned UNREGISTERED (app was uninstalled / token expired)
             //   - invalidTokens(): token is structurally malformed

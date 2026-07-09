@@ -1,6 +1,13 @@
 Changelog
 =========
 
+2.2.7 (Unreleased)
+---------------------
+- Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
+- Fix #96: Unresolved `@web` alias in service worker `importScripts()` URLs breaks service worker installation
+- Fix #96: Enable notifications button did nothing when a stale token was cached in localStorage
+- Fix #98: Log all FCM send failures — non-token errors (e.g. permission denied, FCM API disabled) were silently discarded and the send reported as successful
+
 2.2.6 (July 7, 2026)
 --------------------
 - Fix: Compatibility with HumHub 1.19, which removed the `SiteIcon` widget in favor of the `AssetImage` registry (core #8011)

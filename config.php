@@ -5,6 +5,7 @@
 
 use humhub\components\Controller;
 use humhub\modules\fcmPush\Events;
+use humhub\modules\notification\widgets\NotificationSettingsForm;
 use humhub\modules\user\components\User;
 use humhub\widgets\LayoutAddons;
 use yii\base\Application;
@@ -21,6 +22,7 @@ return [
         [Application::class, Application::EVENT_BEFORE_REQUEST, [Events::class, 'onBeforeRequest']],
         [User::class, User::EVENT_AFTER_LOGIN, [Events::class, 'onAfterLogin']],
         [User::class, User::EVENT_AFTER_LOGOUT, [Events::class, 'onAfterLogout']],
+        [NotificationSettingsForm::class, NotificationSettingsForm::EVENT_AFTER_RUN, [Events::class, 'onNotificationSettingsFormAfterRun']],
     ],
     'consoleControllerMap' => [
         'firebase' => 'humhub\modules\fcmPush\commands\SendController',
