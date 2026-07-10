@@ -16,4 +16,6 @@ return [
     'Use this ID to register your API Key.' => 'この IDを使用して APIキーを登録します。',
     'Web API Key' => 'Web API キー',
     'Web App ID' => 'ウェブアプリID',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
 ];

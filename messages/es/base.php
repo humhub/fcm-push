@@ -12,6 +12,8 @@ return [
     'Service Account (JSON file)' => 'Cuenta de Servicio (fichero JSON)',
     'To send Firebase push notifications with your own Firebase project, enter your access details here.' => 'Para enviar notificaciones push de Firebase con tu propio proyecto de Firebase, introduzca aquí sus credenciales de acceso.',
     'Use this ID to register your API Key.' => 'Utiliza este ID para registrar tu clave API.',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'Key pair of the Web Push certificates' => '',
     'Web API Key' => '',

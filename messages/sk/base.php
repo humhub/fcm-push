@@ -12,6 +12,8 @@ return [
     'Service Account (JSON file)' => 'Servisný účet (súbor JSON)',
     'To send Firebase push notifications with your own Firebase project, enter your access details here.' => 'Ak chcete odosielať upozornenia Firebase push s vlastným projektom Firebase, zadajte svoje prístupové údaje.',
     'Use this ID to register your API Key.' => 'Použite toto ID na registráciu vášho API kľúča.',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'Key pair of the Web Push certificates' => '',
     'Web API Key' => '',

@@ -3,6 +3,8 @@
 return [
     '<strong>FireBase Messaging</strong> Configuration' => '',
     'API Key' => '',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
     'Firebase Cloud Messaging (required for browser & PWA notifications)' => '',
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.' => '',

@@ -12,6 +12,8 @@ return [
     'Service Account (JSON file)' => 'Szolgáltatásfiók (JSON-fájl)',
     'To send Firebase push notifications with your own Firebase project, enter your access details here.' => 'Ha Firebase push értesítéseket szeretne küldeni saját Firebase-projektjével, adja meg itt a hozzáférési adatait.',
     'Use this ID to register your API Key.' => 'Ezzel az azonosítóval regisztrálhatja API-kulcsát.',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
     'Firebase Cloud Messaging -> Web Push certificates -> Key pair' => '',
     'Key pair of the Web Push certificates' => '',
     'Web API Key' => '',

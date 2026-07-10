@@ -16,4 +16,6 @@ return [
     'Use this ID to register your API Key.' => 'Użyj tego ID do rejestracji swojego klucza API.',
     'Web API Key' => 'Klucz Web API',
     'Web App ID' => 'Klucz Web App',
+    'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"' => '',
+    'Enable Mobile notifications' => '',
 ];
