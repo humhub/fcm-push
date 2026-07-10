@@ -7,7 +7,7 @@ use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
-use humhub\modules\fcmPush\services\DriverService;
+use humhub\modules\fcmPush\services\ServiceWorkerService;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\notification\widgets\NotificationSettingsForm;
@@ -43,27 +43,8 @@ class Events
             return;
         }
 
-        $bundle = FirebaseAsset::register(Yii::$app->view);
-
-        $pushDriver = (new DriverService($module->getConfigureForm()))->getWebDriver();
-        $baseUrl = Yii::getAlias($bundle->baseUrl);
-
         // Service Worker Addons
-        $controller->additionalJs .= <<<JS
-            // Give the service worker access to Firebase Messaging.
-            importScripts('{$baseUrl}/firebase-app-compat.js');
-            importScripts('{$baseUrl}/firebase-messaging-compat.js');
-
-            firebase.initializeApp({
-                messagingSenderId: "{$pushDriver->getSenderId()}",
-                projectId: "{$module->getConfigureForm()->getJsonParam('project_id')}",
-                appId: "{$module->getConfigureForm()->firebaseAppId}",
-                apiKey: "{$module->getConfigureForm()->firebaseApiKey}",
-            });
-
-            // Initialize Firebase Cloud Messaging and get a reference to the service
-            firebase.messaging();
-JS;
+        $controller->additionalJs .= (new ServiceWorkerService($module))->getJs();
     }
 
     public static function onLayoutAddonInit($event)

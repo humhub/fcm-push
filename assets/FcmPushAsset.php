@@ -24,7 +24,9 @@ class FcmPushAsset extends AssetBundle
      * @inheritdoc
      */
     public $js = [
+        'humhub.firebase.store.js',
         'humhub.firebase.js',
+        'humhub.firebase.notification.js',
     ];
 
     /**
