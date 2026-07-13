@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.8 (Unreleased)
+------------------
+- Fix #100: Open the notification URL when a notification is clicked while the app is already open — Firebase only focuses the window without navigating (iOS PWAs with the app already running are not covered: WebKit never dispatches the click event there)
+
 2.2.7 (July 9, 2026)
 --------------------
 - Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
