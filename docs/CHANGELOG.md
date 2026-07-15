@@ -4,7 +4,7 @@ Changelog
 2.2.8 (Unreleased)
 ------------------
 - Fix #100: Open the notification URL when a notification is clicked while the app is already open — Firebase only focuses the window without navigating (iOS PWAs with the app already running are not covered: WebKit never dispatches the click event there)
-- Fix: Enable notifications button hidden on a new device when the user already has a token registered on another device 
+- Fix #101: Enable notifications button hidden on a new device when the user already has a token registered on another device 
 
 2.2.7 (July 9, 2026)
 --------------------
