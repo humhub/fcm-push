@@ -10,6 +10,7 @@ use humhub\modules\fcmPush\services\TokenService;
 use humhub\widgets\bootstrap\Alert;
 use humhub\widgets\bootstrap\Button;
 use Yii;
+use yii\helpers\Json;
 
 class RegisterDeviceTokenButton extends Widget
 {
@@ -33,12 +34,6 @@ class RegisterDeviceTokenButton extends Widget
             return '';
         }
 
-        $tokenService = new TokenService();
-        if ($tokenService->getTokensForUser(Yii::$app->user->identity, $driver)) {
-            // Token is already registered for this user
-            return '';
-        }
-
         $buttonId = 'fcm-push-enable-notifications';
         $alertId = 'fcm-push-add-to-home-screen';
 
@@ -55,12 +50,25 @@ class RegisterDeviceTokenButton extends Widget
             ->closeButton(false)
             ->cssClass('d-none');
 
+        $serverTokens = Json::htmlEncode(
+            (new TokenService())->getTokensForUser(Yii::$app->user->identity, $driver),
+        );
+
         // On iOS, the Notification API is only exposed when the site runs as an installed
         // PWA (added to the Home Screen). If it is available, offer the enable button;
         // otherwise show the hint alert telling the user to install the app first.
+        // Whether a token is already registered must be checked per device, not per
+        // user: the user's server-side tokens may all belong to other devices, so
+        // only this device's localStorage token can tell if *this* device is
+        // registered — and it must still exist server-side (it may have been
+        // deleted there, e.g. after FCM rejected it), hence the comparison against
+        // the user's registered tokens instead of trusting the local cache alone.
         $this->view->registerJs(<<<JS
             if ('Notification' in window) {
-                \$('#{$buttonId}').removeClass('d-none');
+                const localToken = humhub.modules.firebase.getTokenLocalStore();
+                if (!localToken || !{$serverTokens}.includes(localToken)) {
+                    \$('#{$buttonId}').removeClass('d-none');
+                }
             } else {
                 \$('#{$alertId}').removeClass('d-none');
             }
