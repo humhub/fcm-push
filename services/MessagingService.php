@@ -5,6 +5,7 @@ namespace humhub\modules\fcmPush\services;
 use humhub\components\Event;
 use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\drivers\DriverInterface;
+use humhub\modules\fcmPush\drivers\SilentMessageDriverInterface;
 use humhub\modules\fcmPush\events\NotificationCountEvent;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\components\BaseNotification;
@@ -65,8 +66,19 @@ class MessagingService
 
     /**
      * Sends a silent (data-only) push notification carrying the current unread notification
-     * count to the user's registered devices, so the mobile app (Proxy driver) and PWA app
-     * (Fcm driver) can update their badge count without displaying a visible notification.
+     * count to the user's registered mobile app devices, so the app can update its badge
+     * count without displaying a visible notification.
+     *
+     * Only drivers implementing {@see SilentMessageDriverInterface} are targeted. For now that
+     * is the Proxy driver (HumHub community mobile apps) only. The Fcm driver is intentionally
+     * excluded because it serves both branded native apps and PWA web tokens without a way to
+     * tell them apart (no platform flag on the token):
+     *  - PWA: the service worker has no background badge handler, and iOS Safari revokes push
+     *    subscriptions when silent pushes repeatedly arrive without showing a notification, which
+     *    would break the iOS PWA push delivery (see #98).
+     *  - Native iOS via direct FCM would additionally require an APNs config (`content-available`,
+     *    `aps.badge`) to be delivered in the background.
+     * The Proxy relay handles these platform specifics (APNs badge) on its side.
      *
      * @since 2.2.9
      */
@@ -76,6 +88,10 @@ class MessagingService
         $notificationCount = $this->getNotificationCount($user);
 
         foreach ($this->drivers as $driver) {
+            if (!$driver instanceof SilentMessageDriverInterface) {
+                continue;
+            }
+
             $tokens = $tokenService->getTokensForUser($user, $driver);
             if (empty($tokens)) {
                 continue;

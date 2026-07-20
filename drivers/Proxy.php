@@ -23,7 +23,7 @@ use Yii;
  * community app's Firebase Sender ID) so that Proxy tokens are stored separately
  * from any custom Fcm tokens in the fcmpush_user table.
  */
-class Proxy extends HttpClient implements DriverInterface
+class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverInterface
 {
     public $baseUrl = 'https://push.humhub.com/api/v1';
 
