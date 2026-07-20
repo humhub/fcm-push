@@ -7,8 +7,10 @@ use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
+use humhub\modules\fcmPush\jobs\SendSilentUnreadNotificationCountJob;
 use humhub\modules\fcmPush\services\ServiceWorkerService;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
+use humhub\modules\notification\events\UnreadCountChangedEvent;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\notification\widgets\NotificationSettingsForm;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
@@ -105,5 +107,26 @@ class Events
         if ($form->model->user) { // Only show the button for User settings (not admin settings)
             $event->result = RegisterDeviceTokenButton::widget() . $event->result;
         }
+    }
+
+    /**
+     * Pushes a delayed, exclusive-per-user job that sends the updated unread notification
+     * count as a silent push to the user's devices, whenever the count changed.
+     *
+     * The delay collapses multiple count changes within a short time frame into a single
+     * push carrying the final count
+     */
+    public static function onUnreadCountChanged(UnreadCountChangedEvent $event): void
+    {
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        if (!$module->getDriverService()->hasConfiguredDriver()) {
+            return;
+        }
+
+        Yii::$app->queue->delay($module->silentUnreadNotificationCountPushDelay)->push(new SendSilentUnreadNotificationCountJob([
+            'userId' => $event->user->id,
+        ]));
     }
 }

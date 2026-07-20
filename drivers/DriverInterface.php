@@ -12,6 +12,14 @@ interface DriverInterface
 
     public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport;
 
+    /**
+     * Sends a silent (data-only) message that only carries the unread notification count,
+     * without a visible notification. Used to keep the app badge count in sync.
+     *
+     * @since 2.2.9
+     */
+    public function processSilentCloudMessage(array $tokens, ?int $notificationCount): SendReport;
+
     public function getSenderId(): string;
 
     public function isConfigured(): bool;

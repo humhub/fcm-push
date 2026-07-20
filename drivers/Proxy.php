@@ -42,15 +42,29 @@ class Proxy extends HttpClient implements DriverInterface
 
     public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
-        $data = [
+        return $this->sendCloudMessage([
             'tokens' => $tokens,
             'title' => $title,
             'body' => $body,
             'iconUrl' => $imageUrl,
             'url' => $url,
             'notificationCount' => $notificationCount,
-        ];
+        ]);
+    }
 
+    public function processSilentCloudMessage(array $tokens, ?int $notificationCount): SendReport
+    {
+        // A silent message carries no title/body, so the relay dispatches a data-only
+        // message that only updates the app badge count without showing a notification.
+        return $this->sendCloudMessage([
+            'tokens' => $tokens,
+            'notificationCount' => $notificationCount,
+            'silent' => true,
+        ]);
+    }
+
+    private function sendCloudMessage(array $data): SendReport
+    {
         $response = $this->post('/push', $data)->send();
 
         if (!$response->isOk || empty($response->data['success'])) {
