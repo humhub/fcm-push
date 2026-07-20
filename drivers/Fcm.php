@@ -37,6 +37,7 @@ class Fcm implements DriverInterface
 
     public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
+        Module::registerAutoloader();
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body)) // $imageUrl is intentionally omitted — including it would show a duplicate logo on branded apps
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
@@ -48,6 +49,7 @@ class Fcm implements DriverInterface
 
     public function processSilentCloudMessage(array $tokens, ?int $notificationCount): SendReport
     {
+        Module::registerAutoloader();
         // Data-only message (no notification payload) so the app updates the badge count
         // in the background without displaying a visible notification.
         $message = CloudMessage::new()
@@ -59,8 +61,6 @@ class Fcm implements DriverInterface
     private function sendMulticast(CloudMessage $message, array $tokens): SendReport
     {
         if ($this->messaging === null) {
-            Module::registerAutoloader();
-
             $factory = (new Factory())->withServiceAccount($this->config->getJsonAsArray());
             $this->messaging = $factory->createMessaging();
         }
