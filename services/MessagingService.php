@@ -3,13 +3,14 @@
 namespace humhub\modules\fcmPush\services;
 
 use humhub\components\Event;
+use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\drivers\DriverInterface;
+use humhub\modules\fcmPush\drivers\SilentMessageDriverInterface;
 use humhub\modules\fcmPush\events\NotificationCountEvent;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\components\BaseNotification;
 use humhub\modules\notification\models\Notification as NotificationHumHub;
 use humhub\modules\user\models\User;
-use humhub\modules\web\pwa\widgets\SiteIcon;
 use Yii;
 use yii\helpers\Url;
 
@@ -39,25 +40,8 @@ class MessagingService
             Yii::$app->name,
             $baseNotification->text(),
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
-            $this->getSiteIconUrl(180),
+            Yii::$app->img->icon->getUrl(['square' => 180]),
         );
-    }
-
-    /**
-     * Returns the site icon URL for the given square size.
-     *
-     * HumHub 1.19 removed the {@see SiteIcon} widget and replaced it with the
-     * AssetImage registry exposed as `Yii::$app->img`. This module still supports
-     * HumHub 1.18 (see `module.json` `humhub.minVersion`), so fall back to the
-     * legacy widget when the registry is not available.
-     */
-    private function getSiteIconUrl(int $size): ?string
-    {
-        if (Yii::$app->has('img')) {
-            return Yii::$app->img->icon->getUrl(['square' => $size]);
-        }
-
-        return SiteIcon::getUrl($size);
     }
 
     /**
@@ -76,13 +60,57 @@ class MessagingService
             }
 
             $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            $this->removeFailedTokens($tokenService, $report);
+        }
+    }
 
-            // Remove tokens that Firebase rejected (e.g. from an uninstalled / reinstalled app).
-            // This prevents stale tokens from accumulating and blocking future deliveries.
-            foreach ($report->failedTokens as $failedToken) {
-                Yii::warning("Removing failed/unregistered FCM token: $failedToken", 'fcm-push');
-                $tokenService->deleteToken($failedToken);
+    /**
+     * Sends a silent (data-only) push notification carrying the current unread notification
+     * count to the user's registered mobile app devices, so the app can update its badge
+     * count without displaying a visible notification.
+     *
+     * Only drivers implementing {@see SilentMessageDriverInterface} are targeted. For now that
+     * is the Proxy driver (HumHub community mobile apps) only. The Fcm driver is intentionally
+     * excluded because it serves both branded native apps and PWA web tokens without a way to
+     * tell them apart (no platform flag on the token):
+     *  - PWA: the service worker has no background badge handler, and iOS Safari revokes push
+     *    subscriptions when silent pushes repeatedly arrive without showing a notification, which
+     *    would break the iOS PWA push delivery (see #98).
+     *  - Native iOS via direct FCM would additionally require an APNs config (`content-available`,
+     *    `aps.badge`) to be delivered in the background.
+     * The Proxy relay handles these platform specifics (APNs badge) on its side.
+     *
+     * @since 2.2.9
+     */
+    public function sendSilentUnreadNotificationCount(User $user): void
+    {
+        $tokenService = new TokenService();
+        $notificationCount = $this->getNotificationCount($user);
+
+        foreach ($this->drivers as $driver) {
+            if (!$driver instanceof SilentMessageDriverInterface) {
+                continue;
             }
+
+            $tokens = $tokenService->getTokensForUser($user, $driver);
+            if (empty($tokens)) {
+                continue;
+            }
+
+            $report = $driver->processSilentCloudMessage($tokens, $notificationCount);
+            $this->removeFailedTokens($tokenService, $report);
+        }
+    }
+
+    /**
+     * Removes tokens that Firebase rejected (e.g. from an uninstalled / reinstalled app).
+     * This prevents stale tokens from accumulating and blocking future deliveries.
+     */
+    private function removeFailedTokens(TokenService $tokenService, SendReport $report): void
+    {
+        foreach ($report->failedTokens as $failedToken) {
+            Yii::warning("Removing failed/unregistered FCM token: $failedToken", 'fcm-push');
+            $tokenService->deleteToken($failedToken);
         }
     }
 
