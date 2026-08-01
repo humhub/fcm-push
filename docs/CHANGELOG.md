@@ -1,7 +1,7 @@
 Changelog
 =========
 
-2.2.9 (Unreleased)
+2.2.10 (Unreleased)
 ------------------
 - Enh #102: Calculate the notification badge count internally and allow other modules to add their own counts via the new `MessagingService::EVENT_NOTIFICATION_COUNT` event; the `$notificationCount` parameter of `MessagingService::processMessage()` is deprecated and its value ignored
 
