@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.3.0 (Unreleased)
-------------------
+2.3.0 (August 2, 2026)
+----------------------
 - Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
 
 2.2.9 (July 21, 2026)
