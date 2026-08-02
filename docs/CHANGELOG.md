@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.0 (Unreleased)
+------------------
+- Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
+
 2.2.9 (July 21, 2026)
 ---------------------
 - Enh #102: Calculate the notification badge count internally and allow other modules to add their own counts via the new `MessagingService::EVENT_NOTIFICATION_COUNT` event; the `$notificationCount` parameter of `MessagingService::processMessage()` is deprecated and its value ignored
