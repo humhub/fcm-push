@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.2.12 (Unreleased)
+-------------------
+- Enh: Automated code refactoring for HumHub 1.18 using Rector
+
 2.2.11 (August 2, 2026)
 -----------------------
 - Enh #102: Calculate the notification badge count internally and allow other modules to add their own counts via the new `MessagingService::EVENT_NOTIFICATION_COUNT` event; the `$notificationCount` parameter of `MessagingService::processMessage()` is deprecated and its value ignored
