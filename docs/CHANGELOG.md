@@ -6,6 +6,10 @@ Changelog
 - Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
 - Enh #103: Send a silent push notification with the updated unread notification count whenever it changes (e.g. after reading/seeing a notification or conversation message), so the app badge count stays in sync (community mobile apps only for now; requires core 1.19+)
 
+2.2.12 (Unreleased)
+-------------------
+- Enh: Automated code refactoring for HumHub 1.18 using Rector
+
 2.2.11 (August 2, 2026)
 -----------------------
 - Enh #102: Calculate the notification badge count internally and allow other modules to add their own counts via the new `MessagingService::EVENT_NOTIFICATION_COUNT` event; the `$notificationCount` parameter of `MessagingService::processMessage()` is deprecated and its value ignored
@@ -139,7 +143,7 @@ Please read [the Installation page](https://marketplace.humhub.com/module/fcm-pu
 2.0.0-beta.8 (October 4, 2023)
 -------------------------------
 - Enh #29: Wrap URLs in email messages to "go" app
- 
+
 2.0.0-beta.7 (August 21, 2023)
 ------------------------------
 - Enh: Added Token Unregister on App Logout 

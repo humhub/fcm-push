@@ -40,9 +40,7 @@ class Module extends \humhub\components\Module
 
     public function getDriverService(): DriverService
     {
-        if ($this->driverService === null) {
-            $this->driverService = new DriverService($this->getConfigureForm());
-        }
+        $this->driverService ??= new DriverService($this->getConfigureForm());
         return $this->driverService;
     }
 
