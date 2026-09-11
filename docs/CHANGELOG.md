@@ -1,6 +1,11 @@
 Changelog
 =========
 
+2.4.0 (Unreleased)
+------------------
+- Chng: Continue the HumHub 1.20 line as 2.4.x; the 2.3.x line remains on HumHub 1.19
+- Enh: Migrated to the new core service worker extension point — HumHub 1.20 moved the PWA endpoints out of the `web` module, so `ServiceWorkerController::EVENT_INIT` and its `$additionalJs` property no longer exist; the module now appends its script via `ServiceWorkerService::EVENT_BUILD_SCRIPT` (requires core 1.20+)
+
 2.3.0 (August 2, 2026)
 ----------------------
 - Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
