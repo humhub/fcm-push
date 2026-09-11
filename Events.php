@@ -2,6 +2,7 @@
 
 namespace humhub\modules\fcmPush;
 
+use humhub\events\ServiceWorkerScriptEvent;
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
@@ -13,7 +14,6 @@ use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
 use humhub\modules\notification\events\UnreadCountChangedEvent;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\notification\widgets\NotificationSettingsForm;
-use humhub\modules\web\pwa\controllers\ServiceWorkerController;
 use Yii;
 use yii\base\WidgetEvent;
 
@@ -33,11 +33,8 @@ class Events
         }
     }
 
-    public static function onServiceWorkerControllerInit($event): void
+    public static function onBuildServiceWorkerScript(ServiceWorkerScriptEvent $event): void
     {
-        /** @var ServiceWorkerController $controller */
-        $controller = $event->sender;
-
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
@@ -46,7 +43,7 @@ class Events
         }
 
         // Service Worker Addons
-        $controller->additionalJs .= (new ServiceWorkerService($module))->getJs();
+        $event->append((new ServiceWorkerService($module))->getJs());
     }
 
     public static function onLayoutAddonInit($event)
