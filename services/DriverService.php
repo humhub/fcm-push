@@ -3,20 +3,17 @@
 namespace humhub\modules\fcmPush\services;
 
 use humhub\helpers\DeviceDetectorHelper;
-use humhub\modules\fcmPush\driver\DriverInterface;
-use humhub\modules\fcmPush\driver\Fcm;
-use humhub\modules\fcmPush\driver\Proxy;
+use humhub\modules\fcmPush\drivers\DriverInterface;
+use humhub\modules\fcmPush\drivers\Fcm;
+use humhub\modules\fcmPush\drivers\Proxy;
 use humhub\modules\fcmPush\models\ConfigureForm;
 
 class DriverService
 {
-    private ConfigureForm $config;
-
     private array $configuredDrivers;
 
-    public function __construct(ConfigureForm $config)
+    public function __construct(private ConfigureForm $config)
     {
-        $this->config = $config;
         $this->initDrivers();
     }
 
@@ -66,6 +63,9 @@ class DriverService
 
     public function getMobileAppDriver(): ?DriverInterface
     {
+        // Branded apps that embed the operator's own Firebase project send FCM tokens
+        // scoped to that project's Sender ID → use the Fcm driver directly.
+        // The stock HumHub community app always uses the HumHub relay (Proxy).
         if (DeviceDetectorHelper::isAppWithCustomFcm()) {
             return $this->getConfiguredDriverByType(Fcm::class);
         }

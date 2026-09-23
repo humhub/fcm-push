@@ -1,9 +1,63 @@
 Changelog
 =========
 
-2.1.9 (Unreleased)
+2.2.12 (Unreleased)
+-------------------
+- Enh: Automated code refactoring for HumHub 1.18 using Rector
+
+2.2.11 (August 2, 2026)
+-----------------------
+- Enh #102: Calculate the notification badge count internally and allow other modules to add their own counts via the new `MessagingService::EVENT_NOTIFICATION_COUNT` event; the `$notificationCount` parameter of `MessagingService::processMessage()` is deprecated and its value ignored
+
+2.2.8 (July 15, 2026)
+---------------------
+- Fix #100: Open the notification URL when a notification is clicked while the app is already open — Firebase only focuses the window without navigating (iOS PWAs with the app already running are not covered: WebKit never dispatches the click event there)
+- Fix #101: Enable notifications button hidden on a new device when the user already has a token registered on another device
+
+2.2.7 (July 9, 2026)
+--------------------
+- Fix #96: Notification.requestPermission() not bound to user gesture — iOS PWA push never shown
+- Fix #96: Unresolved `@web` alias in service worker `importScripts()` URLs breaks service worker installation
+- Fix #96: Enable notifications button did nothing when a stale token was cached in localStorage
+- Fix #98: Log all FCM send failures — non-token errors (e.g. permission denied, FCM API disabled) were silently discarded and the send reported as successful
+
+2.2.6 (July 7, 2026)
+--------------------
+- Fix: Compatibility with HumHub 1.19, which removed the `SiteIcon` widget in favor of the `AssetImage` registry (core #8011)
+
+2.2.5 (June 22, 2026)
+---------------------
+- Fix: Make m230205_141256_fcm_senderid migration resilient when module is not bootstrapped
+- Fix: Use of removed module property `isActivated`
+
+2.2.4 (May 15, 2026)
+--------------------
+- Fix: Session variable name clashes prevents mobile tokens from being deleted on logout
+- Fix: Auto-clean invalid FCM tokens from reinstalled apps on first failed send
+- Fix: Token cleanup of only permanently invalid tokens, sparing offline devices
+- Fix: Token not registered when notification permission is granted after login
+- Enh: Add developer documentation covering architecture, token lifecycle, and dispatch flow.
+
+2.2.3 (May 11, 2026)
+--------------------
+- Enh #89: Remove deprecations
+- Fix: Logo appear twice in push notifications
+
+2.2.2 (February 4, 2026)
+------------------------
+- Fix: Debug modal view for BS5
+- Enh #83: Use core proxy settings for Proxy driver
+
+2.2.1 (August 8, 2025)
 ----------------------
+- Enh #74: Move non Firebase stuff to core
+- Enh #79: Migration to Bootstrap 5 for HumHub 1.18
+
+2.1.9 (August 13, 2025)
+-----------------------
 - Fix #75: Warning for "FCM Detection - App is using Proxy Firebase Service"
+- Fix #78: Don't show opener if logout triggered by mobile app
+- Enh #80: Add height priority for mobile app push notifications
 
 2.1.8 (March 21, 2025)
 ----------------------

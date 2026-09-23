@@ -22,7 +22,6 @@ class SendController extends \yii\console\Controller
             $message,
             null,
             null,
-            null,
         );
     }
 }

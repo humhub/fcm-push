@@ -4,7 +4,6 @@ namespace humhub\modules\fcmPush;
 
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\services\DriverService;
-use humhub\modules\fcmPush\services\GoService;
 use Yii;
 use yii\helpers\Url;
 
@@ -13,7 +12,6 @@ class Module extends \humhub\components\Module
     public string $humhubProxySenderId = '21392898126';
     private ?ConfigureForm $configForm = null;
     private ?DriverService $driverService = null;
-    private ?GoService $goService = null;
 
     /**
      * @inheritdoc
@@ -34,18 +32,8 @@ class Module extends \humhub\components\Module
 
     public function getDriverService(): DriverService
     {
-        if ($this->driverService === null) {
-            $this->driverService = new DriverService($this->getConfigureForm());
-        }
+        $this->driverService ??= new DriverService($this->getConfigureForm());
         return $this->driverService;
-    }
-
-    public function getGoService(): GoService
-    {
-        if ($this->goService === null) {
-            $this->goService = new GoService('https://go.humhub.com');
-        }
-        return $this->goService;
     }
 
     public static function registerAutoloader()
