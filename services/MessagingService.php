@@ -34,10 +34,21 @@ class MessagingService
 
     public function processNotification(BaseNotification $baseNotification, User $user): void
     {
+        // Not every BaseNotification subclass implements html()/text() (many rely on
+        // per-target view rendering instead), in which case text() returns null by
+        // design (see SocialActivity::text()). Fall back to the mail subject, which
+        // is guaranteed to be a plain string. If that is empty too (e.g. the
+        // notification's source record was deleted), there is nothing meaningful to
+        // push, so skip sending rather than deliver a blank notification.
+        $body = $baseNotification->text() ?: $baseNotification->getMailSubject();
+        if (empty($body)) {
+            return;
+        }
+
         $this->processMessage(
             $user,
             Yii::$app->name,
-            $baseNotification->text(),
+            $body,
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
             $this->getSiteIconUrl(180),
         );
@@ -64,7 +75,7 @@ class MessagingService
      * @param int|null $notificationCount deprecated since 2.2.9, will be removed in a future version.
      *        The value is ignored — the count is now calculated by {@see getNotificationCount()}.
      */
-    public function processMessage(User $user, ?string $title, ?string $body, ?string $url, ?string $imageUrl, ?int $notificationCount = null)
+    public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount = null)
     {
         $tokenService = new TokenService();
         $notificationCount = $this->getNotificationCount($user);
@@ -75,7 +86,7 @@ class MessagingService
                 continue;
             }
 
-            $report = $driver->processCloudMessage($tokens, (string) $title, (string) $body, $url, $imageUrl, $notificationCount);
+            $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
 
             // Remove tokens that Firebase rejected (e.g. from an uninstalled / reinstalled app).
             // This prevents stale tokens from accumulating and blocking future deliveries.
