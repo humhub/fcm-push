@@ -146,6 +146,7 @@ humhub.module('firebase', function (module, require, $) {
                 registerToken.call(that, registration).then(function () {
                     module.log.success('success.saved', true);
                     $trigger.addClass('d-none'); // hide the button
+                    $trigger.closest('#fcm-push-enable-notifications-banner').addClass('d-none'); // hide the banner, if the button was inside it
                 }).catch(function (err) {
                     module.log.error('Could not enable notifications: ' + err.message, true);
                 });

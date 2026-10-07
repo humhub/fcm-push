@@ -98,6 +98,8 @@ The **only** code path that calls `Notification.requestPermission()` is `enableN
 - **`getTokenLocalStore()` check** — if a valid token is already cached in localStorage (from an earlier call that already succeeded), skip silently.
 - **`Notification.permission` check** — if permission is not `granted`, skip silently (never prompt, see above).
 
+**Enable-notifications banner (`EnableNotificationsBanner`):** `Events::onAfterLogin()` sets `WebAppHelper::SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER`. `onLayoutAddonInit` consumes the flag on the first full page render where no user gate is open (`WebAppHelper::hasOpenGate()`, so the legal confirmation / 2FA / password-change pages never show it) and adds the banner widget to the layout addons. The flag is removed when the banner is rendered, so it appears at most once per login session, regardless of whether the user enabled notifications, closed it or ignored it. Visibility is decided client-side: the banner is only shown when `'Notification' in window` and `Notification.permission !== 'granted'`; the text differs between `default` (invite) and `denied` (explain how to allow the site in the browser settings, since the page cannot prompt anymore). The button is bound to `enableNotificationsButtonHandler()`, which also hides the banner on success. Not rendered for native app requests (`DeviceDetectorHelper::isAppRequest()`) or when no web driver is configured.
+
 Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/token/update` and caches it in localStorage with a 24-hour expiry. On subsequent page loads within that window `isTokenSentToServer()` returns `true` and no AJAX call is made.
 
 **Server-side (`TokenService::storeTokenForUser()`):**
