@@ -37,9 +37,9 @@ class Fcm implements DriverInterface
 
     public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
     {
-        if ($this->messaging === null) {
-            Module::registerAutoloader();
+        Module::registerAutoloader();
 
+        if ($this->messaging === null) {
             $factory = (new Factory())->withServiceAccount($this->config->getJsonAsArray());
             $this->messaging = $factory->createMessaging();
         }

@@ -1,6 +1,15 @@
 Changelog
 =========
 
+2.3.1 (Unreleased)
+------------------
+- Fix: Never call `Notification.requestPermission()` on page load — only fetch the token silently when permission is already granted; the automatic prompt on every page load (without a user gesture) was flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard, and is ignored by Firefox and Safari anyway. The "Enable notifications" button remains the only place that prompts
+
+2.3.0 (August 2, 2026)
+----------------------
+- Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
+- Enh #103: Send a silent push notification with the updated unread notification count whenever it changes (e.g. after reading/seeing a notification or conversation message), so the app badge count stays in sync (community mobile apps only for now; requires core 1.19+)
+
 2.2.12 (Unreleased)
 -------------------
 - Enh: Automated code refactoring for HumHub 1.18 using Rector
@@ -139,7 +148,7 @@ Please read [the Installation page](https://marketplace.humhub.com/module/fcm-pu
 2.0.0-beta.8 (October 4, 2023)
 -------------------------------
 - Enh #29: Wrap URLs in email messages to "go" app
- 
+
 2.0.0-beta.7 (August 21, 2023)
 ------------------------------
 - Enh: Added Token Unregister on App Logout 
