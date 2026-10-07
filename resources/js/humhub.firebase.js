@@ -136,7 +136,7 @@ humhub.module('firebase', function (module, require, $) {
                 // Blocked by the user earlier, or "automatically blocked" by the browser after
                 // repeated dismissals: the browser resolves immediately without showing a prompt,
                 // and only the user can lift the block in the browser's site settings.
-                module.log.error('Could not enable notifications: notifications are blocked for this site in your browser. Allow them in the site settings of your browser (icon next to the address bar), then try again.', true);
+                module.log.error('Could not enable notifications: notifications are still blocked for this site in your browser.', true);
                 _tokenRegistrationPending = false;
                 return;
             }
@@ -163,6 +163,75 @@ humhub.module('firebase', function (module, require, $) {
         }).catch(function (err) {
             _tokenRegistrationPending = false;
             module.log.error('Could not enable notifications: ' + err.message, true);
+        });
+    };
+
+    // Browser family for the "notifications are blocked" instructions of the banner.
+    const detectBrowser = function () {
+        const ua = navigator.userAgent;
+        if (/iPhone|iPad|iPod/i.test(ua)) {
+            return 'ios';
+        }
+        if (/Firefox\//i.test(ua)) {
+            return 'firefox';
+        }
+        if (/Safari\//i.test(ua) && !/Chrome\/|Chromium\/|CriOS\/|Edg\//i.test(ua)) {
+            return 'safari';
+        }
+        return 'chromium';
+    };
+
+    // Shows the enable-notifications banner (see EnableNotificationsBanner widget) when
+    // permission is not granted, picks the variant for the current permission state and
+    // browser, and - where the Permissions API supports it (Chromium, Firefox) - registers
+    // the token automatically as soon as the user allows the site in the browser settings,
+    // so a blocked user only has to follow the instructions and nothing else.
+    const initEnableNotificationsBanner = function (selector) {
+        const that = this;
+
+        if (typeof Notification === 'undefined' || Notification.permission === 'granted') {
+            return;
+        }
+        const $banner = $(selector);
+        if (!$banner.length) {
+            return;
+        }
+
+        const render = function () {
+            const state = Notification.permission === 'denied' ? 'denied' : 'default';
+            $banner.find('[data-fcm-push-permission]').addClass('d-none');
+            $banner.find('[data-fcm-push-permission="' + state + '"]').removeClass('d-none');
+            $banner.find('[data-fcm-push-browser]').addClass('d-none');
+            $banner.find('[data-fcm-push-browser="' + detectBrowser() + '"]').removeClass('d-none');
+        };
+        render();
+        $banner.removeClass('d-none');
+
+        if (!navigator.permissions || !navigator.permissions.query) {
+            return;
+        }
+        navigator.permissions.query({name: 'notifications'}).then(function (status) {
+            status.onchange = function () {
+                if (Notification.permission !== 'granted') {
+                    render(); // e.g. "Reset permission": switch from the blocked to the invite variant
+                    return;
+                }
+                if (_tokenRegistrationPending || !navigator.serviceWorker) {
+                    return;
+                }
+                _tokenRegistrationPending = true;
+                navigator.serviceWorker.ready.then(function (registration) {
+                    registerToken.call(that, registration).then(function () {
+                        module.log.success('success.saved', true);
+                        $banner.addClass('d-none');
+                    }).catch(function (err) {
+                        module.log.error('Could not enable notifications: ' + err.message, true);
+                    });
+                });
+            };
+        }).catch(function () {
+            // Permissions API does not support 'notifications' here (e.g. Safari): the
+            // "I have allowed notifications" button of the banner is the fallback.
         });
     };
 
@@ -266,6 +335,7 @@ humhub.module('firebase', function (module, require, $) {
         deleteTokenToServer,
         requestNotificationPermission,
         enableNotificationsButtonHandler,
+        initEnableNotificationsBanner,
         unregisterNotification,
 
         // Config Vars
