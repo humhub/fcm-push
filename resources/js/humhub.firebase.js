@@ -132,8 +132,17 @@ humhub.module('firebase', function (module, require, $) {
             return;
         }
         Notification.requestPermission().then(function (permission) {
+            if (permission === 'denied') {
+                // Blocked by the user earlier, or "automatically blocked" by the browser after
+                // repeated dismissals: the browser resolves immediately without showing a prompt,
+                // and only the user can lift the block in the browser's site settings.
+                module.log.error('Could not enable notifications: notifications are blocked for this site in your browser. Allow them in the site settings of your browser (icon next to the address bar), then try again.', true);
+                _tokenRegistrationPending = false;
+                return;
+            }
             if (permission !== 'granted') {
-                module.log.error('Could not enable notifications: notification permission is not granted.', true);
+                // 'default': the prompt was dismissed without a choice
+                module.log.error('Could not enable notifications: the permission request was dismissed.', true);
                 _tokenRegistrationPending = false;
                 return;
             }
