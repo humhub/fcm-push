@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.1 (Unreleased)
+------------------
+- Fix: Never call `Notification.requestPermission()` on page load — only fetch the token silently when permission is already granted; the automatic prompt on every page load (without a user gesture) was flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard, and is ignored by Firefox and Safari anyway. The "Enable notifications" button remains the only place that prompts
+
 2.3.0 (August 2, 2026)
 ----------------------
 - Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
