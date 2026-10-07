@@ -22,9 +22,9 @@ use yii\helpers\Html;
  *   quiet permission UI.
  * - `denied` (blocked by the user, or "automatically blocked" by the browser after repeated
  *   dismissals): the page cannot prompt anymore and only the user can lift the block in the
- *   browser. The banner shows the steps for the detected browser, registers the token
- *   automatically as soon as the permission changes to granted (Permissions API), and
- *   offers a button to check again for browsers without that event.
+ *   browser. The banner only explains the steps for the detected browser and can be closed.
+ *   Browsers ask to reload the page after the change; on that reload the regular page-load
+ *   path registers the token silently, so no further action in the banner is needed.
  *
  * @since 2.3.1
  */
@@ -47,10 +47,10 @@ class EnableNotificationsBanner extends Widget
 
         // One instruction per browser family; JS shows the matching one (see detectBrowser()).
         $steps = [
-            'chromium' => Yii::t('FcmPushModule.base', 'Click the icon on the left of the address bar, then allow or reset "Notifications".'),
-            'firefox' => Yii::t('FcmPushModule.base', 'Click the permissions icon on the left of the address bar and remove the blocked "Notifications" entry, then click the button below.'),
-            'safari' => Yii::t('FcmPushModule.base', 'Open Safari > Settings > Websites > Notifications and set this website to "Allow", then click the button below.'),
-            'ios' => Yii::t('FcmPushModule.base', 'Open the iOS Settings app > Notifications, select this app and allow notifications, then click the button below.'),
+            'chromium' => Yii::t('FcmPushModule.base', 'Click the icon on the left of the address bar, allow "Notifications" and reload the page.'),
+            'firefox' => Yii::t('FcmPushModule.base', 'Click the permissions icon on the left of the address bar and remove the blocked "Notifications" entry.'),
+            'safari' => Yii::t('FcmPushModule.base', 'Open Safari > Settings > Websites > Notifications, set this website to "Allow" and reload the page.'),
+            'ios' => Yii::t('FcmPushModule.base', 'Open the iOS Settings app > Notifications, select this app, allow notifications and reload the page.'),
         ];
         $stepsHtml = '';
         foreach ($steps as $browser => $text) {
@@ -61,11 +61,10 @@ class EnableNotificationsBanner extends Widget
             'div',
             Html::tag('strong', Yii::t('FcmPushModule.base', 'Push notifications are blocked for this site in your browser.'))
             . $stepsHtml
-            . Html::tag('div', Button::light(Yii::t('FcmPushModule.base', 'I have allowed notifications'))
-                ->icon('bell')
-                ->action('firebase.enableNotificationsButtonHandler')
-                ->loader(false)
-                ->sm(), ['class' => 'mt-2']),
+            . Html::tag('div', Html::button(Yii::t('base', 'Close'), [
+                'class' => 'btn btn-light btn-sm',
+                'data-bs-dismiss' => 'alert',
+            ]), ['class' => 'mt-2']),
             ['class' => 'd-none', 'data-fcm-push-permission' => 'denied'],
         );
 

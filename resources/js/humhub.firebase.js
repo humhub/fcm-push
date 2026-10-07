@@ -182,10 +182,11 @@ humhub.module('firebase', function (module, require, $) {
     };
 
     // Shows the enable-notifications banner (see EnableNotificationsBanner widget) when
-    // permission is not granted, picks the variant for the current permission state and
-    // browser, and - where the Permissions API supports it (Chromium, Firefox) - registers
-    // the token automatically as soon as the user allows the site in the browser settings,
-    // so a blocked user only has to follow the instructions and nothing else.
+    // permission is not granted and picks the variant for the current permission state and
+    // browser. Where the Permissions API supports it (Chromium, Firefox) it also follows a
+    // permission change made in the browser's site settings while the page is open: a block
+    // removed in Firefox (back to 'default') switches to the invite variant with the button,
+    // and a site allowed without reloading registers the token right away.
     const initEnableNotificationsBanner = function (selector) {
         const that = this;
 
@@ -231,7 +232,7 @@ humhub.module('firebase', function (module, require, $) {
             };
         }).catch(function () {
             // Permissions API does not support 'notifications' here (e.g. Safari): the
-            // "I have allowed notifications" button of the banner is the fallback.
+            // instructions tell the user to reload, and the page-load path registers then.
         });
     };
 
