@@ -8,6 +8,7 @@ use Yii;
 class WebAppHelper
 {
     public const SESSION_VAR_UNREGISTER_NOTIFICATION = 'webAppUnregisterNotification';
+    public const SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER = 'webAppShowEnableNotificationsBanner';
 
     public static function unregisterNotificationScript()
     {

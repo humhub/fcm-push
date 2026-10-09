@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.3.1 (Unreleased)
+------------------
+- Fix: Never call `Notification.requestPermission()` on page load — only fetch the token silently when permission is already granted; the automatic prompt on every page load (without a user gesture) was flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard, and is ignored by Firefox and Safari anyway. The "Enable notifications" button remains the only place that prompts
+- Enh: Show an "Enable notifications" banner once per login, on the first page after all user gates (e.g. legal confirmation) are closed, while the browser notification permission has not been decided yet; the button requests permission from a click so it works on all browsers, and "No thanks" hides the banner in this browser for 30 days (requires HumHub 1.19.0-beta.4 for `GateManager::hasOpenGate()`, core #8565)
+- Enh: Show the "Enable notifications" button in the notification settings on all browsers, not only on iOS, and explain there how to allow notifications again for the user's browser when they are blocked for the site
+
 2.3.0 (August 2, 2026)
 ----------------------
 - Chng: Continue the HumHub 1.19 line as 2.3.x; the 2.2.x line remains on HumHub 1.18
