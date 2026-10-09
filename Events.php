@@ -86,7 +86,8 @@ class Events
      * consumed here, so the banner never comes back during this login, whether the user
      * enabled notifications, closed it or just navigated away.
      * Whether the banner is actually visible is decided in the browser: only when the
-     * Notification API exists and permission is not granted (see EnableNotificationsBanner).
+     * Notification API exists, permission has not been decided yet and the user has not
+     * dismissed the banner with "No thanks" recently (see EnableNotificationsBanner).
      */
     private static function addEnableNotificationsBanner(LayoutAddons $layoutAddons): void
     {
@@ -109,7 +110,7 @@ class Events
 
         // Keep the flag while a gate is open: the gate page itself must not show the banner,
         // the first regular page after the gate flow does.
-        if (WebAppHelper::hasOpenGate()) {
+        if (Yii::$app->gateManager->hasOpenGate()) {
             return;
         }
 
