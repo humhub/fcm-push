@@ -86,7 +86,12 @@ class MessagingService
                 continue;
             }
 
-            $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            try {
+                $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            } catch (\Throwable $e) {
+                Yii::error('Could not send push message with driver ' . $driver::class . ': ' . $e->getMessage(), 'fcm-push');
+                continue;
+            }
 
             // Remove tokens that Firebase rejected (e.g. from an uninstalled / reinstalled app).
             // This prevents stale tokens from accumulating and blocking future deliveries.

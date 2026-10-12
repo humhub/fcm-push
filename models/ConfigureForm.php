@@ -36,6 +36,8 @@ class ConfigureForm extends Model
             if (isset($arrayCheck[$key])) {
                 if (empty($arrayCheck[$key])) {
                     $errors["empty"] .= $errors["empty"] == "" ? "\"$key\"" : ", \"$key\"";
+                } elseif (!is_string($arrayCheck[$key])) {
+                    $errors["invalid"] .= $errors["invalid"] == "" ? "\"$key\"" : ", \"$key\"";
                 } else {
                     $condition = false;
                     switch ($value['type']) {
@@ -78,7 +80,7 @@ class ConfigureForm extends Model
     public function rules()
     {
         return [
-            [['senderId'], 'number'],
+            [['senderId'], 'match', 'pattern' => '/^\d+$/'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['json', 'humhubApiKey'], 'safe'],
             ['json', function ($attribute, $params, $validator): void {
@@ -193,7 +195,9 @@ class ConfigureForm extends Model
 
     public function getJsonParam(string $param): ?string
     {
-        return $this->getJsonAsArray()[$param] ?? null;
+        $value = $this->getJsonAsArray()[$param] ?? null;
+
+        return is_string($value) ? $value : null;
     }
 
     public static function getInstance()

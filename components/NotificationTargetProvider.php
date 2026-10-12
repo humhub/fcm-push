@@ -45,10 +45,12 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
-        (new MessagingService($module->getConfigureForm()))
-            ->processNotification($notification, $user);
-
-        Yii::$app->i18n->autosetLocale();
+        try {
+            (new MessagingService($module->getConfigureForm()))
+                ->processNotification($notification, $user);
+        } finally {
+            Yii::$app->i18n->autosetLocale();
+        }
 
         return true;
     }

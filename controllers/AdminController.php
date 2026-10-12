@@ -6,6 +6,7 @@ use humhub\modules\admin\components\Controller;
 use humhub\modules\fcmPush\models\FcmUser;
 use humhub\modules\fcmPush\Module;
 use Yii;
+use yii\web\NotFoundHttpException;
 
 /**
  * @property Module $module
@@ -27,13 +28,20 @@ class AdminController extends Controller
     public function actionDebug()
     {
         if ($tokenId = Yii::$app->request->get('deleteToken')) {
-            $token = FcmUser::findOne(['id' => $tokenId]);
-            if ($token->delete()) {
-                $this->view->success('Token deleted!');
-            } else {
-                $this->view->warn('Token NOT deleted!');
+            $this->forcePostRequest();
+
+            $token = FcmUser::findOne(['id' => $tokenId, 'user_id' => Yii::$app->user->id]);
+            if ($token === null) {
+                throw new NotFoundHttpException();
             }
-            return $this->redirect('index');
+
+            if ($token->delete()) {
+                $this->view->success(Yii::t('FcmPushModule.base', 'Token deleted!'));
+            } else {
+                $this->view->warn(Yii::t('FcmPushModule.base', 'Token NOT deleted!'));
+            }
+
+            return $this->redirect(['index']);
         }
 
         return $this->renderAjax('debug', [
