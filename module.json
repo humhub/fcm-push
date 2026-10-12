@@ -11,7 +11,7 @@
     "humhub": {
         "minVersion": "1.19"
     },
-    "version": "2.3.0",
+    "version": "2.3.1",
     "screenshots": [
         "resources/screenshot1.PNG",
         "resources/screenshot2.PNG"

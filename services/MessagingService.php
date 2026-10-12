@@ -97,7 +97,13 @@ class MessagingService
                 continue;
             }
 
-            $report = $driver->processSilentCloudMessage($tokens, $notificationCount);
+            try {
+                $report = $driver->processSilentCloudMessage($tokens, $notificationCount);
+            } catch (\Throwable $e) {
+                Yii::error('Could not send silent push message with driver ' . $driver::class . ': ' . $e->getMessage(), 'fcm-push');
+                continue;
+            }
+
             $this->removeFailedTokens($tokenService, $report);
         }
     }
