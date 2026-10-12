@@ -9,11 +9,14 @@ use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\jobs\SendSilentUnreadNotificationCountJob;
 use humhub\modules\fcmPush\services\ServiceWorkerService;
+use humhub\modules\fcmPush\widgets\EnableNotificationsBanner;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
 use humhub\modules\notification\events\UnreadCountChangedEvent;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\notification\widgets\NotificationSettingsForm;
 use humhub\modules\web\pwa\controllers\ServiceWorkerController;
+use humhub\helpers\DeviceDetectorHelper;
+use humhub\widgets\LayoutAddons;
 use Yii;
 use yii\base\WidgetEvent;
 
@@ -72,7 +75,47 @@ class Events
 
         if (!Yii::$app->user->isGuest) {
             static::registerAssets();
+            static::addEnableNotificationsBanner($event->sender);
         }
+    }
+
+    /**
+     * After login: show the enable-notifications banner once per login session, on the
+     * first full page the user reaches after all user gates (legal confirmation, 2FA check,
+     * forced password change, ...) are closed. The session flag set by onAfterLogin is
+     * consumed here, so the banner never comes back during this login, whether the user
+     * enabled notifications, closed it or just navigated away.
+     * Whether the banner is actually visible is decided in the browser: only when the
+     * Notification API exists, permission has not been decided yet and the user has not
+     * dismissed the banner with "No thanks" recently (see EnableNotificationsBanner).
+     */
+    private static function addEnableNotificationsBanner(LayoutAddons $layoutAddons): void
+    {
+        if (!Yii::$app->session->has(WebAppHelper::SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER)) {
+            return;
+        }
+
+        // Native apps register tokens through the Flutter bridge (MobileAppHelper), not the
+        // browser Notification API. PJAX responses do not render layout addons anyway.
+        if (DeviceDetectorHelper::isAppRequest() || Yii::$app->request->isPjax) {
+            return;
+        }
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+        if (!$module->getDriverService()->hasConfiguredWebDriver()) {
+            Yii::$app->session->remove(WebAppHelper::SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER);
+            return;
+        }
+
+        // Keep the flag while a gate is open: the gate page itself must not show the banner,
+        // the first regular page after the gate flow does.
+        if (Yii::$app->gateManager->hasOpenGate()) {
+            return;
+        }
+
+        Yii::$app->session->remove(WebAppHelper::SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER);
+        $layoutAddons->addWidget(EnableNotificationsBanner::class);
     }
 
     private static function registerAssets()
@@ -91,6 +134,7 @@ class Events
     public static function onAfterLogin()
     {
         Yii::$app->session->set(MobileAppHelper::SESSION_VAR_REGISTER_NOTIFICATION, 1);
+        Yii::$app->session->set(WebAppHelper::SESSION_VAR_SHOW_ENABLE_NOTIFICATIONS_BANNER, 1);
     }
 
     public static function onAfterLogout()

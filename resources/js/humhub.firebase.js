@@ -101,6 +101,15 @@ humhub.module('firebase', function (module, require, $) {
         });
     };
 
+    // Containers the "Enable notifications" button can live in (see the widgets
+    // EnableNotificationsBanner and RegisterDeviceTokenButton).
+    const BANNER_SELECTOR = '#fcm-push-enable-notifications-banner';
+    const SETTINGS_SELECTOR = '[data-fcm-push-settings]';
+
+    // "No thanks" in the banner hides it for this many days (per browser, in localStorage).
+    const BANNER_DISMISS_KEY = 'fcmPushEnableNotificationsBannerDismissedUntil';
+    const BANNER_DISMISS_DAYS = 30;
+
     // The only path that prompts for permission. WebKit/iOS silently ignores
     // Notification.requestPermission() unless it's called synchronously from within a
     // user-gesture handler (tap/click), and requestNotificationPermission() above
@@ -133,8 +142,15 @@ humhub.module('firebase', function (module, require, $) {
         }
         Notification.requestPermission().then(function (permission) {
             if (permission !== 'granted') {
-                module.log.error('Could not enable notifications: notification permission is not granted.', true);
+                // 'denied' (the user clicked "Block", or the browser blocks the site) or
+                // 'default' (the prompt was closed without a choice): this is the user's
+                // decision, not an error, so no error toast. The banner goes away, and the
+                // settings page switches to the matching state (unblock steps or button).
                 _tokenRegistrationPending = false;
+                $trigger.closest(BANNER_SELECTOR).addClass('d-none');
+                $trigger.closest(SETTINGS_SELECTOR).each(function () {
+                    renderNotificationSettings.call(that, $(this));
+                });
                 return;
             }
             if (!navigator.serviceWorker) {
@@ -145,7 +161,7 @@ humhub.module('firebase', function (module, require, $) {
             navigator.serviceWorker.ready.then(function (registration) {
                 registerToken.call(that, registration).then(function () {
                     module.log.success('success.saved', true);
-                    $trigger.addClass('d-none'); // hide the button
+                    $trigger.closest(BANNER_SELECTOR + ', ' + SETTINGS_SELECTOR).addClass('d-none');
                 }).catch(function (err) {
                     module.log.error('Could not enable notifications: ' + err.message, true);
                 });
@@ -153,6 +169,86 @@ humhub.module('firebase', function (module, require, $) {
         }).catch(function (err) {
             _tokenRegistrationPending = false;
             module.log.error('Could not enable notifications: ' + err.message, true);
+        });
+    };
+
+    // Shows the enable-notifications banner (see EnableNotificationsBanner widget) only while
+    // the permission is undecided ('default') and the user has not clicked "No thanks"
+    // recently. Nothing is shown when notifications are blocked: the user chose that, and
+    // the notification settings page explains how to lift the block.
+    const initEnableNotificationsBanner = function (selector) {
+        if (typeof Notification === 'undefined' || Notification.permission !== 'default') {
+            return;
+        }
+        try {
+            if (parseInt(window.localStorage.getItem(BANNER_DISMISS_KEY), 10) > Date.now()) {
+                return;
+            }
+        } catch (e) {
+            // localStorage unavailable (e.g. blocked site data): show the banner.
+        }
+        $(selector).removeClass('d-none');
+    };
+
+    // "No thanks" button of the banner.
+    const dismissEnableNotificationsBanner = function (evt) {
+        try {
+            window.localStorage.setItem(BANNER_DISMISS_KEY, String(Date.now() + BANNER_DISMISS_DAYS * 24 * 60 * 60 * 1000));
+        } catch (e) {
+            // localStorage unavailable: the banner still closes for this login.
+        }
+        evt.$trigger.closest(BANNER_SELECTOR).addClass('d-none');
+    };
+
+    // Browser family for the "notifications are blocked" steps of the settings page.
+    const detectBrowser = function () {
+        const ua = navigator.userAgent;
+        if (/iPhone|iPad|iPod/i.test(ua)) {
+            return 'ios';
+        }
+        if (/Firefox\//i.test(ua)) {
+            return 'firefox';
+        }
+        if (/Safari\//i.test(ua) && !/Chrome\/|Chromium\/|CriOS\/|Edg\//i.test(ua)) {
+            return 'safari';
+        }
+        return 'chromium';
+    };
+
+    // Notification settings page (see RegisterDeviceTokenButton widget): shows the part that
+    // matches the current state of this browser:
+    // - 'enable': permission undecided, or granted without a token registered for this device
+    //   (only this device's localStorage token tells, and it must still exist server-side)
+    // - 'denied': blocked, with the steps to allow it again for the detected browser
+    // - 'install': iOS outside of an installed PWA, where the Notification API is missing
+    // Nothing is shown when this device is registered already.
+    const renderNotificationSettings = function ($container) {
+        let state = null;
+        if (typeof Notification === 'undefined') {
+            state = 'install';
+        } else if (Notification.permission === 'denied') {
+            state = 'denied';
+        } else {
+            const localToken = this.getTokenLocalStore();
+            const serverTokens = $container.data('fcmPushServerTokens') || [];
+            if (Notification.permission === 'default' || !localToken || !serverTokens.includes(localToken)) {
+                state = 'enable';
+            }
+        }
+        const browser = $container.is('[data-fcm-push-ios]') ? 'ios' : detectBrowser();
+
+        $container.find('[data-fcm-push-state]').addClass('d-none');
+        if (state) {
+            $container.find('[data-fcm-push-state="' + state + '"]').removeClass('d-none');
+        }
+        $container.find('[data-fcm-push-browser]').addClass('d-none');
+        $container.find('[data-fcm-push-browser="' + browser + '"]').removeClass('d-none');
+    };
+
+    const initNotificationSettings = function (selector) {
+        const that = this;
+        $(selector).each(function () {
+            renderNotificationSettings.call(that, $(this));
         });
     };
 
@@ -256,6 +352,9 @@ humhub.module('firebase', function (module, require, $) {
         deleteTokenToServer,
         requestNotificationPermission,
         enableNotificationsButtonHandler,
+        initEnableNotificationsBanner,
+        dismissEnableNotificationsBanner,
+        initNotificationSettings,
         unregisterNotification,
 
         // Config Vars
