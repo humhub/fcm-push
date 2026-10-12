@@ -30,28 +30,44 @@ class TokenController extends Controller
 
     public function actionUpdate()
     {
-        return $this->update(false, Yii::$app->request->post('token'));
+        return $this->update(false);
     }
 
     public function actionUpdateMobileApp()
     {
-        return $this->update(true, Yii::$app->request->post('token'));
+        return $this->update(true);
     }
 
     public function actionDelete()
     {
-        return $this->delete(false, Yii::$app->request->post('token'));
+        return $this->delete(false);
     }
 
     public function actionDeleteMobileApp()
     {
-        return $this->delete(true, Yii::$app->request->post('token'));
+        return $this->delete(true);
     }
 
-    private function update(bool $mobile, ?string $token)
+    /**
+     * @return string|null the posted token, or null if it is missing, empty or not a plain string
+     */
+    private function getTokenParam(): ?string
+    {
+        $token = Yii::$app->request->post('token');
+
+        return (is_string($token) && $token !== '') ? $token : null;
+    }
+
+    private function update(bool $mobile)
     {
         if (Yii::$app->user->isGuest) {
             throw new HttpException(401, 'Login required!');
+        }
+
+        $token = $this->getTokenParam();
+        if ($token === null) {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson(['success' => false, 'message' => 'No token given!']);
         }
 
         $driverService = new DriverService($this->module->getConfigureForm());
@@ -74,8 +90,14 @@ class TokenController extends Controller
         ]);
     }
 
-    private function delete(bool $mobile, ?string $token)
+    private function delete(bool $mobile)
     {
+        $token = $this->getTokenParam();
+        if ($token === null) {
+            Yii::$app->response->statusCode = 400;
+            return $this->asJson(['success' => false, 'message' => 'No token given!']);
+        }
+
         $driverService = new DriverService($this->module->getConfigureForm());
         $tokenService = new TokenService();
 
@@ -85,10 +107,6 @@ class TokenController extends Controller
 
             Yii::$app->response->statusCode = 400;
             return $this->asJson(['success' => false, 'message' => 'No push driver available!']);
-        }
-
-        if (empty(Yii::$app->request->post('token'))) {
-            return $this->asJson(['success' => false, 'message' => 'No token given!']);
         }
 
         return $this->asJson([
