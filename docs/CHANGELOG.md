@@ -16,6 +16,8 @@ Changelog
 2.2.12 (Unreleased)
 -------------------
 - Enh: Automated code refactoring for HumHub 1.18 using Rector
+- Fix #77: Push send crashed for notifications without a text() representation — fall back to the mail subject, or skip if empty
+- Fix #109: Invalid push tokens and service account JSON values caused 500 errors; Quotes in settings broke the service worker; One failing driver blocked others
 
 2.2.11 (August 2, 2026)
 -----------------------

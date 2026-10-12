@@ -35,10 +35,21 @@ class MessagingService
 
     public function processNotification(BaseNotification $baseNotification, User $user): void
     {
+        // Not every BaseNotification subclass implements html()/text() (many rely on
+        // per-target view rendering instead), in which case text() returns null by
+        // design (see SocialActivity::text()). Fall back to the mail subject, which
+        // is guaranteed to be a plain string. If that is empty too (e.g. the
+        // notification's source record was deleted), there is nothing meaningful to
+        // push, so skip sending rather than deliver a blank notification.
+        $body = $baseNotification->text() ?: $baseNotification->getMailSubject();
+        if (empty($body)) {
+            return;
+        }
+
         $this->processMessage(
             $user,
             Yii::$app->name,
-            $baseNotification->text(),
+            $body,
             Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
             Yii::$app->img->icon->getUrl(['square' => 180]),
         );
@@ -59,7 +70,13 @@ class MessagingService
                 continue;
             }
 
-            $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            try {
+                $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+            } catch (\Throwable $e) {
+                Yii::error('Could not send push message with driver ' . $driver::class . ': ' . $e->getMessage(), 'fcm-push');
+                continue;
+            }
+
             $this->removeFailedTokens($tokenService, $report);
         }
     }

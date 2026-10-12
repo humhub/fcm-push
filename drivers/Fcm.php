@@ -69,7 +69,7 @@ class Fcm implements DriverInterface
                 $error = $failure->error();
                 Yii::warning(
                     'FCM send failure for token "' . $failure->target()->value() . '": '
-                    . ($error !== null ? $error->getMessage() : 'unknown error'),
+                    . ($error?->getMessage() ?? 'unknown error'),
                     'fcm-push',
                 );
             }

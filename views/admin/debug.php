@@ -32,7 +32,7 @@ use humhub\widgets\modal\ModalButton;
 
                 &middot;
                 <?= Link::to('Delete')
-                    ->link(['debug', 'deleteToken' => $fcm->id])
+                    ->post(['debug', 'deleteToken' => $fcm->id])
                     ->confirm('PWA: You may need to delete token from localStorage to trigger resave!')?>
             </li>
         <?php endforeach; ?>
