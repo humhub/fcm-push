@@ -66,44 +66,45 @@ humhub.module('firebase', function (module, require, $) {
         });
     };
 
+    // Page-load path (init() and the PWA SW registration callback): silently fetch or
+    // refresh the FCM token when the user has ALREADY granted notification permission.
+    // This function must never call Notification.requestPermission(): it runs on every
+    // page load without a user gesture, so prompting here would ask users who have not
+    // granted (or have blocked) notifications again and again on every page load. That
+    // pattern is flagged as "excessive notification requests" by browser security
+    // extensions (e.g. Malwarebytes Browser Guard) and is also ignored by Firefox and
+    // Safari/iOS, which require a user gesture. The only place that may prompt is
+    // enableNotificationsButtonHandler() below, which runs from a click.
     const requestNotificationPermission = function (registration) {
-        const that = this;
-
         // Guard: skip if another registration call is already in flight, or if a valid
         // token is already cached in localStorage (avoids producing a second token when
         // both init() and the PWA SW callback invoke this function on the same page load).
         if (_tokenRegistrationPending || this.getTokenLocalStore()) {
             return;
         }
-        _tokenRegistrationPending = true;
 
-        // Request for permission
         if (typeof Notification === 'undefined') {
-            _tokenRegistrationPending = false;
             module.log.info('Notification API is not available in this context.');
             return;
         }
-        Notification.requestPermission().then(function (permission) {
-            if (permission !== 'granted') {
-                module.log.info('Notification permission is not granted.');
-                _tokenRegistrationPending = false;
-                return;
-            }
-            registerToken.call(that, registration).catch(function () {
-                // Errors are already logged inside registerToken(); nothing else
-                // to do here since this path has no user-facing UI to report to.
-            });
-        }).catch(function (err) {
-            _tokenRegistrationPending = false;
-            module.log.info('Could not get Push Notification permission!', err);
+
+        // Guard: never prompt on page load - only proceed when permission already exists.
+        if (Notification.permission !== 'granted') {
+            module.log.info('Notification permission is not granted.');
+            return;
+        }
+
+        _tokenRegistrationPending = true;
+        registerToken.call(this, registration).catch(function () {
+            // Errors are already logged inside registerToken(); nothing else
+            // to do here since this path has no user-facing UI to report to.
         });
     };
 
-    // iOS-only path: WebKit/iOS silently ignores Notification.requestPermission()
-    // unless it's called synchronously from within a user-gesture handler (tap/click).
-    // requestNotificationPermission() above is always invoked from a Promise callback
-    // (serviceWorker.ready / SW registration callback), which works fine on desktop
-    // browsers but never shows the permission dialog on iOS.
+    // The only path that prompts for permission. WebKit/iOS silently ignores
+    // Notification.requestPermission() unless it's called synchronously from within a
+    // user-gesture handler (tap/click), and requestNotificationPermission() above
+    // intentionally never prompts (see its comment).
     // This handler is meant to be bound directly to a button's click event, so
     // Notification.requestPermission() is the very first call made - i.e. still
     // inside the tap's user-activation context - before any async work happens.
@@ -269,7 +270,8 @@ humhub.module('firebase', function (module, require, $) {
     });
 });
 
-// Used by LayoutHeader::registerServiceWorker()
+// Used by LayoutHeader::registerServiceWorker() on every page load.
+// Only fetches the token silently if permission was already granted - never prompts.
 function afterServiceWorkerRegistration(registration) {
     humhub.modules.firebase.requestNotificationPermission(registration);
 }

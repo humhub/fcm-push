@@ -86,14 +86,17 @@ The `sender_id` column lets Proxy tokens and Fcm tokens coexist for the same use
 
 **Browsers / PWA (`humhub.firebase.js`):**
 
-Token registration is always routed through `requestNotificationPermission()`, which is the single code path for calling `getToken`. It is triggered in two ways:
+Automatic token registration on page load is routed through `requestNotificationPermission()`. Despite its name, this function **never prompts** the user: it only fetches/refreshes the token silently when `Notification.permission === 'granted'` and returns early otherwise. Prompting on page load (without a user gesture) is ignored by Firefox and Safari/iOS, pushed into Chrome's "quiet" permission UI, and flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard — users who had blocked notifications were re-prompted on every page load. It is triggered in two ways:
 
-- **PWA service worker callback** — the `web/pwa` module calls the global `requestNotificationPermission(registration)` whenever the service worker registers or updates.
+- **PWA service worker callback** — core's `LayoutHeader::registerServiceWorker()` calls the global `afterServiceWorkerRegistration(registration)` whenever the service worker registers or updates, which delegates to `requestNotificationPermission(registration)`.
 - **Proactive check in `init()`** — on every page load, `init()` checks whether `Notification.permission === 'granted'` AND no token is cached in localStorage. If so, it calls `requestNotificationPermission()` via `navigator.serviceWorker.ready`. This covers users who granted permission in browser settings after their initial login, without requiring a logout/login cycle.
 
-`requestNotificationPermission()` itself is protected by two guards to prevent double execution — which would cause two different tokens if both callers fire on the same page load (e.g. when a service worker update changes the registration object):
-- **`_tokenRegistrationPending` flag** — set synchronously at entry, reset in every `.then()`/`.catch()` branch. Whichever caller arrives second while the first is still awaiting its promise returns immediately.
+The **only** code path that calls `Notification.requestPermission()` is `enableNotificationsButtonHandler()`, bound to the "Enable notifications" button in the user's notification settings. It runs synchronously from the click so the call carries the user-activation context required by iOS/WebKit.
+
+`requestNotificationPermission()` itself is protected by guards to prevent double execution — which would cause two different tokens if both callers fire on the same page load (e.g. when a service worker update changes the registration object):
+- **`_tokenRegistrationPending` flag** — set synchronously before `getToken` is called, reset in every `.then()`/`.catch()` branch of `registerToken()`. Whichever caller arrives second while the first is still awaiting its promise returns immediately.
 - **`getTokenLocalStore()` check** — if a valid token is already cached in localStorage (from an earlier call that already succeeded), skip silently.
+- **`Notification.permission` check** — if permission is not `granted`, skip silently (never prompt, see above).
 
 Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/token/update` and caches it in localStorage with a 24-hour expiry. On subsequent page loads within that window `isTokenSentToServer()` returns `true` and no AJAX call is made.
 

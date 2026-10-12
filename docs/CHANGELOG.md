@@ -4,6 +4,7 @@ Changelog
 2.3.1 (Unreleased)
 ------------------
 - Fix #110: A failing push driver blocked silent unread count pushes to other drivers
+- Fix #106: Never call `Notification.requestPermission()` on page load — only fetch the token silently when permission is already granted; the automatic prompt on every page load (without a user gesture) was flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard, and is ignored by Firefox and Safari anyway. The "Enable notifications" button remains the only place that prompts
 
 2.3.0 (August 2, 2026)
 ----------------------
