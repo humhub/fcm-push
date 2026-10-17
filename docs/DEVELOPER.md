@@ -23,7 +23,7 @@ HumHub Notification System
 NotificationTargetProvider      (implements MobileTargetProvider, replaces it via DI)
         │
         ▼
-MessagingService::processNotification()
+MessagingService::processBatch()
         │
         ├──► Fcm driver ──────► Firebase API (kreait/firebase-php SDK)
         │       └─ uses service account JSON + Sender ID
@@ -88,7 +88,7 @@ The `sender_id` column lets Proxy tokens and Fcm tokens coexist for the same use
 
 Automatic token registration on page load is routed through `requestNotificationPermission()`. Despite its name, this function **never prompts** the user: it only fetches/refreshes the token silently when `Notification.permission === 'granted'` and returns early otherwise. Prompting on page load (without a user gesture) is ignored by Firefox and Safari/iOS, pushed into Chrome's "quiet" permission UI, and flagged as excessive notification requests by browser security extensions such as Malwarebytes Browser Guard — users who had blocked notifications were re-prompted on every page load. It is triggered in two ways:
 
-- **PWA service worker callback** — core's `LayoutHeader::registerServiceWorker()` calls the global `afterServiceWorkerRegistration(registration)` whenever the service worker registers or updates, which delegates to `requestNotificationPermission(registration)`.
+- **PWA service worker callback** — core's `PwaService::registerHeadTags()` calls the global `afterServiceWorkerRegistration(registration)` whenever the service worker registers or updates, which delegates to `requestNotificationPermission(registration)`.
 - **Proactive check in `init()`** — on every page load, `init()` checks whether `Notification.permission === 'granted'` AND no token is cached in localStorage. If so, it calls `requestNotificationPermission()` via `navigator.serviceWorker.ready`. This covers users who granted permission in browser settings after their initial login, without requiring a logout/login cycle.
 
 The **only** code path that calls `Notification.requestPermission()` is `enableNotificationsButtonHandler()`, bound to the "Enable notifications" button of the notification settings page and of the banner described below. It runs synchronously from the click so the call carries the user-activation context required by iOS/WebKit.
@@ -122,15 +122,15 @@ Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/to
 
 ## Notification dispatch flow
 
-1. A HumHub notification is triggered anywhere in the application.
-2. The core `notification` module iterates `MobileTargetProvider` implementations.
-3. Because `onBeforeRequest` replaced `MobileTargetProvider::class` with `NotificationTargetProvider::class` in the DI container, `NotificationTargetProvider::handle()` is called.
-4. `handle()` sets the locale to the target user's, then delegates to `MessagingService::processNotification()`.
-5. `MessagingService` builds the message (title = site name, body = notification text, url = notification entry URL, icon = site icon at 180 px, badge count = unseen notifications count) and calls `processMessage()`.
+1. A HumHub notification is sent anywhere in the application (`SomeNotification::send()`).
+2. The core `notification` module hands each recipient's notification to every channel enabled for the recipient; the `mobile` channel (`MobileTarget`) forwards a `DeliveryBatch` to the `MobileTargetProvider` from the DI container.
+3. Because `onBeforeRequest` replaced `MobileTargetProvider::class` with `NotificationTargetProvider::class` in the DI container, `NotificationTargetProvider::deliver()` is called.
+4. `deliver()` sets the locale to the recipient's, then delegates to `MessagingService::processBatch()`. A batch carries one notification today; once the core batches the deliveries it can carry several, then the body is "{count} new notifications" and the url the notification overview.
+5. `MessagingService` builds the message (title = site name, body = `DeliveryBatch::getPushBody()`, url = `DeliveryBatch::getUrl()` (the notification entry URL), icon = site icon at 180 px, collapse key = `DeliveryBatch::getCollapseKey()`, priority = `DeliveryBatch::isHighPriority()`, badge count = unseen entries of the notification list (`NotificationListService::unseenCount()`) plus the counts added via `MessagingService::EVENT_NOTIFICATION_COUNT`) and calls `processMessage()`.
 6. For each configured driver, `TokenService::getTokensForUser()` fetches all tokens scoped to that driver's `sender_id`. If tokens exist, `driver->processCloudMessage()` is called.
 
 ### `Fcm` driver
-Uses the `kreait/firebase-php` SDK (loaded via a dedicated `vendor/autoload.php` inside the module). Authenticates with the service account JSON. Sends a multicast message with `withWebPushConfig` (link) and `withData` (url + notification_count). The `imageUrl` is intentionally omitted from the notification payload to avoid displaying a duplicate of the logo on branded apps.
+Uses the `kreait/firebase-php` SDK (loaded via a dedicated `vendor/autoload.php` inside the module). Authenticates with the service account JSON. Sends a multicast message with `withWebPushConfig` (link), `withData` (url + notification_count) and the collapse key and priority per platform: Android `collapse_key` / `priority` (`high` or `normal`), APNs `apns-collapse-id` / `apns-priority` (`10` or `5`), Web Push `Topic` (the collapse key reduced to the URL-safe base64 alphabet, max. 32 characters) / `Urgency` (`high` or `normal`). Without a priority (e.g. a direct `processMessage()` call) the message is sent with the high priority. The `imageUrl` is intentionally omitted from the notification payload to avoid displaying a duplicate of the logo on branded apps.
 
 After each multicast, the driver inspects the `MulticastSendReport` for **permanently** invalid tokens only:
 - `unknownTokens()` — Firebase returned `UNREGISTERED` (app was uninstalled, token expired). Safe to delete.
@@ -139,13 +139,13 @@ After each multicast, the driver inspects the `MulticastSendReport` for **perman
 Transient failures (rate limit, server unavailable) appear in `failures()` but not in the two lists above and are **not** deleted. A device being off never generates a Firebase failure at all — Firebase queues the message and delivers it when the device reconnects — so offline devices are never at risk of having their token removed.
 
 ### `Proxy` driver
-Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using the `humhubApiKey` as a Bearer token. The HumHub service relays the message to FCM on behalf of the operator.
+Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using the `humhubApiKey` as a Bearer token. The HumHub service relays the message to FCM on behalf of the operator. The collapse key and the priority are sent as the optional request fields `collapseKey` and `priority` (`high` or `normal`), only when given; a relay version that does not support them yet ignores them.
 
 ---
 
 ## Service Worker integration (PWA)
 
-`Events::onServiceWorkerControllerInit()` hooks into the `web/pwa` module's service worker generation. If the `Fcm` driver is configured, it appends `importScripts` calls for the Firebase compat SDK and the `firebase.initializeApp()` + `firebase.messaging()` bootstrap to the service worker JS. This is required for background message reception in PWA mode.
+`Events::onBuildServiceWorkerScript()` handles the core's `ServiceWorkerService::EVENT_BUILD_SCRIPT`, which builds the PWA service worker (`/sw.js`). If the `Fcm` driver is configured, it appends `importScripts` calls for the Firebase compat SDK and the `firebase.initializeApp()` + `firebase.messaging()` bootstrap to the service worker JS. This is required for background message reception in PWA mode.
 
 ---
 
@@ -154,7 +154,7 @@ Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using 
 | Event | Handler | Purpose |
 |---|---|---|
 | `Application::EVENT_BEFORE_REQUEST` | `onBeforeRequest` | Registers `NotificationTargetProvider` in the DI container when a driver is configured |
-| `ServiceWorkerController::EVENT_INIT` | `onServiceWorkerControllerInit` | Injects Firebase SDK bootstrap into the PWA service worker |
+| `ServiceWorkerService::EVENT_BUILD_SCRIPT` | `onBuildServiceWorkerScript` | Injects Firebase SDK bootstrap into the PWA service worker |
 | `LayoutAddons::EVENT_INIT` | `onLayoutAddonInit` | Triggers token registration (after login) or unregistration (after logout) scripts |
 | `User::EVENT_AFTER_LOGIN` | `onAfterLogin` | Sets the session flag to trigger token registration on next render |
 | `User::EVENT_AFTER_LOGOUT` | `onAfterLogout` | Sets session flags to trigger token unregistration on next render |

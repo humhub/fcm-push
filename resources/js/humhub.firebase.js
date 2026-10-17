@@ -369,7 +369,7 @@ humhub.module('firebase', function (module, require, $) {
     });
 });
 
-// Used by LayoutHeader::registerServiceWorker() on every page load.
+// Used by PwaService::registerHeadTags() on every page load.
 // Only fetches the token silently if permission was already granted - never prompts.
 function afterServiceWorkerRegistration(registration) {
     humhub.modules.firebase.requestNotificationPermission(registration);

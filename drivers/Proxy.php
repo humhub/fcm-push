@@ -40,16 +40,40 @@ class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverIn
         return $request;
     }
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount, ?string $collapseKey = null, ?bool $highPriority = null): SendReport
     {
-        return $this->sendCloudMessage([
+        return $this->sendCloudMessage(static::cloudMessageData($tokens, $title, $body, $url, $imageUrl, $notificationCount, $collapseKey, $highPriority));
+    }
+
+    /**
+     * The request data of a visible message.
+     *
+     * The collapse key and the priority are sent as the optional fields `collapseKey` and
+     * `priority` (`high` or `normal`) and only when given, so the request of a message without
+     * them is unchanged. They are meant for the FCM options of the relayed message
+     * (`android.collapse_key`/`priority`, `apns-collapse-id`/`apns-priority`); a relay version
+     * without support for them ignores them.
+     *
+     * @since 2.4.0
+     */
+    protected static function cloudMessageData(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount, ?string $collapseKey = null, ?bool $highPriority = null): array
+    {
+        $data = [
             'tokens' => $tokens,
             'title' => $title,
             'body' => $body,
             'iconUrl' => $imageUrl,
             'url' => $url,
             'notificationCount' => $notificationCount,
-        ]);
+        ];
+        if ($collapseKey !== null && $collapseKey !== '') {
+            $data['collapseKey'] = $collapseKey;
+        }
+        if ($highPriority !== null) {
+            $data['priority'] = $highPriority ? 'high' : 'normal';
+        }
+
+        return $data;
     }
 
     public function processSilentCloudMessage(array $tokens, ?int $notificationCount): SendReport

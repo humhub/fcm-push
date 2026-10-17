@@ -35,7 +35,7 @@ class Fcm implements DriverInterface
     {
     }
 
-    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount): SendReport
+    public function processCloudMessage(array $tokens, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount, ?string $collapseKey = null, ?bool $highPriority = null): SendReport
     {
         Module::registerAutoloader();
 
@@ -46,9 +46,10 @@ class Fcm implements DriverInterface
 
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body)) // $imageUrl is intentionally omitted — including it would show a duplicate logo on branded apps
-            ->withWebPushConfig(['fcm_options' => ['link' => $url]])
-            ->withData(['url' => $url, 'notification_count' => $notificationCount])
-            ->withHighestPossiblePriority();
+            ->withAndroidConfig(static::androidConfig($collapseKey, $highPriority))
+            ->withApnsConfig(static::apnsConfig($collapseKey, $highPriority))
+            ->withWebPushConfig(static::webPushConfig($url, $collapseKey, $highPriority))
+            ->withData(['url' => $url, 'notification_count' => $notificationCount]);
 
         try {
             $report = $this->messaging->sendMulticast($message, $tokens);
@@ -85,6 +86,55 @@ class Fcm implements DriverInterface
         }
 
         return new SendReport(SendReport::STATE_SUCCESS, $failedTokens);
+    }
+
+    /**
+     * `collapse_key` (replaces a message still stored for an offline device) and the message
+     * priority: `high` unless `$highPriority` is false.
+     *
+     * @since 2.4.0
+     */
+    protected static function androidConfig(?string $collapseKey, ?bool $highPriority): array
+    {
+        $config = ['priority' => $highPriority === false ? 'normal' : 'high'];
+        if ($collapseKey !== null && $collapseKey !== '') {
+            $config['collapse_key'] = $collapseKey;
+        }
+
+        return $config;
+    }
+
+    /**
+     * `apns-collapse-id` (a newer notification replaces the displayed one, max. 64 bytes) and
+     * `apns-priority`: 10 (immediately) unless `$highPriority` is false, then 5 (power considerations).
+     *
+     * @since 2.4.0
+     */
+    protected static function apnsConfig(?string $collapseKey, ?bool $highPriority): array
+    {
+        $headers = ['apns-priority' => $highPriority === false ? '5' : '10'];
+        if ($collapseKey !== null && $collapseKey !== '') {
+            $headers['apns-collapse-id'] = substr($collapseKey, 0, 64);
+        }
+
+        return ['headers' => $headers];
+    }
+
+    /**
+     * The click link, the `Urgency` (`high` unless `$highPriority` is false, then `normal`) and the
+     * `Topic` (replaces a message still pending in the push service; max. 32 characters of the
+     * URL-safe base64 alphabet, so the collapse key is sanitized).
+     *
+     * @since 2.4.0
+     */
+    protected static function webPushConfig(?string $url, ?string $collapseKey, ?bool $highPriority): array
+    {
+        $headers = ['Urgency' => $highPriority === false ? 'normal' : 'high'];
+        if ($collapseKey !== null && $collapseKey !== '') {
+            $headers['Topic'] = substr(preg_replace('/[^A-Za-z0-9_-]/', '-', $collapseKey), 0, 32);
+        }
+
+        return ['fcm_options' => ['link' => $url], 'headers' => $headers];
     }
 
     public function getSenderId(): string

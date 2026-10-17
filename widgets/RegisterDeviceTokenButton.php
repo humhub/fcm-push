@@ -62,7 +62,7 @@ class RegisterDeviceTokenButton extends Widget
             Html::tag('strong', Yii::t('FcmPushModule.base', 'Push notifications are blocked for this site in your browser.'))
             . $stepsHtml,
         )
-            ->icon('bell-slash')
+            ->icon('bell-off')
             ->closeButton(false), ['class' => 'd-none', 'data-fcm-push-state' => 'denied']);
 
         // On iOS, the Notification API is only exposed when the site runs as an installed
@@ -70,7 +70,7 @@ class RegisterDeviceTokenButton extends Widget
         $install = '';
         if (DeviceDetectorHelper::isIos()) {
             $install = Html::tag('div', Alert::warning(Yii::t('FcmPushModule.base', 'Add this site to your Home Screen to turn on notifications: tap the "Share" icon -> "Add to Home Screen"'))
-                ->icon('mobile')
+                ->icon('device-mobile')
                 ->id('fcm-push-add-to-home-screen')
                 ->closeButton(false), ['class' => 'd-none', 'data-fcm-push-state' => 'install']);
         }

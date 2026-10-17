@@ -8,11 +8,10 @@ use humhub\modules\fcmPush\drivers\DriverInterface;
 use humhub\modules\fcmPush\drivers\SilentMessageDriverInterface;
 use humhub\modules\fcmPush\events\NotificationCountEvent;
 use humhub\modules\fcmPush\models\ConfigureForm;
-use humhub\modules\notification\components\BaseNotification;
-use humhub\modules\notification\models\Notification as NotificationHumHub;
+use humhub\modules\notification\services\NotificationListService;
+use humhub\modules\notification\targets\DeliveryBatch;
 use humhub\modules\user\models\User;
 use Yii;
-use yii\helpers\Url;
 
 class MessagingService
 {
@@ -33,33 +32,40 @@ class MessagingService
         $this->drivers = (new DriverService($config))->getConfiguredDrivers();
     }
 
-    public function processNotification(BaseNotification $baseNotification, User $user): void
+    /**
+     * Sends the push message of a notification delivery batch (one or several notifications of
+     * one recipient) to the recipient's devices.
+     *
+     * @since 2.4.0
+     */
+    public function processBatch(DeliveryBatch $batch): void
     {
-        // Not every BaseNotification subclass implements html()/text() (many rely on
-        // per-target view rendering instead), in which case text() returns null by
-        // design (see SocialActivity::text()). Fall back to the mail subject, which
-        // is guaranteed to be a plain string. If that is empty too (e.g. the
-        // notification's source record was deleted), there is nothing meaningful to
-        // push, so skip sending rather than deliver a blank notification.
-        $body = $baseNotification->text() ?: $baseNotification->getMailSubject();
-        if (empty($body)) {
+        // Nothing meaningful to push, e.g. when the source record of the notification was deleted
+        $body = $batch->getPushBody();
+        if ($body === '') {
             return;
         }
 
         $this->processMessage(
-            $user,
+            $batch->recipient,
             Yii::$app->name,
             $body,
-            Url::to(['/notification/entry', 'id' => $baseNotification->record->id], true),
+            $batch->getUrl(),
             Yii::$app->img->icon->getUrl(['square' => 180]),
+            null,
+            $batch->getCollapseKey(),
+            $batch->isHighPriority(),
         );
     }
 
     /**
      * @param int|null $notificationCount deprecated since 2.2.9, will be removed in a future version.
      *        The value is ignored — the count is now calculated by {@see getNotificationCount()}.
+     * @param string|null $collapseKey a newer message with the same key replaces an older one (since 2.4.0)
+     * @param bool|null $highPriority whether to deliver immediately; null for the driver's default,
+     *        which is the high priority (since 2.4.0)
      */
-    public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount = null)
+    public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount = null, ?string $collapseKey = null, ?bool $highPriority = null)
     {
         $tokenService = new TokenService();
         $notificationCount = $this->getNotificationCount($user);
@@ -71,7 +77,7 @@ class MessagingService
             }
 
             try {
-                $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount);
+                $report = $driver->processCloudMessage($tokens, $title, $body, $url, $imageUrl, $notificationCount, $collapseKey, $highPriority);
             } catch (\Throwable $e) {
                 Yii::error('Could not send push message with driver ' . $driver::class . ': ' . $e->getMessage(), 'fcm-push');
                 continue;
@@ -140,14 +146,16 @@ class MessagingService
     /**
      * Calculates the push notification badge count for the given user.
      *
-     * Triggers {@see self::EVENT_NOTIFICATION_COUNT} so other modules can add their own counts.
+     * The base is the user's number of unseen entries of the notification list (a group counts
+     * once, {@see NotificationListService::unseenCount()}); {@see self::EVENT_NOTIFICATION_COUNT}
+     * lets other modules add their own counts.
      *
      * @since 2.2.9
      */
     public function getNotificationCount(User $user): int
     {
         $event = new NotificationCountEvent(['user' => $user]);
-        $event->count = (int)NotificationHumHub::findUnseen($user)->count();
+        $event->count = NotificationListService::unseenCount($user);
 
         Event::trigger($this, self::EVENT_NOTIFICATION_COUNT, $event);
 

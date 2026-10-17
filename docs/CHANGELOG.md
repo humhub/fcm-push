@@ -1,6 +1,16 @@
 Changelog
 =========
 
+2.4.0 (Unreleased)
+------------------
+- Enh: Use the HumHub 1.20 notification delivery (MobileTargetProvider::deliver(), DeliveryBatch)
+- Enh: Send the collapse key and the priority of a notification push (Fcm driver: `android.collapse_key`/`priority`, `apns-collapse-id`/`apns-priority`, Web Push `Topic`/`Urgency`; Proxy driver: optional `collapseKey`/`priority` request fields); `DriverInterface::processCloudMessage()` takes them as new optional parameters
+- Enh: Calculate the badge count from the unseen entries of the HumHub 1.20 notification list (`NotificationListService::unseenCount()`)
+- Enh: Show the "Enable Mobile notifications" button on the new notification settings page
+- Chng: Add the Firebase bootstrap to the service worker through the core's `ServiceWorkerService::EVENT_BUILD_SCRIPT`, the `web` module's `ServiceWorkerController` is gone in HumHub 1.20
+- Chng: Tabler icon names instead of Font Awesome ones (humhub/humhub#8504)
+- Chng: Requires HumHub 1.20
+
 2.3.1 (October 12, 2026)
 ------------------------
 - Fix #110: A failing push driver blocked silent unread count pushes to other drivers

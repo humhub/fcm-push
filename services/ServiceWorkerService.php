@@ -9,7 +9,7 @@ use yii\helpers\Json;
 
 /**
  * Builds the JavaScript appended to the PWA service worker
- * (see Events::onServiceWorkerControllerInit()).
+ * (see Events::onBuildServiceWorkerScript()).
  */
 class ServiceWorkerService
 {

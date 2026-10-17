@@ -6,7 +6,7 @@ use humhub\modules\fcmPush\Module;
 use humhub\modules\fcmPush\services\MessagingService;
 use Yii;
 use yii\base\Component;
-use humhub\modules\notification\components\BaseNotification;
+use humhub\modules\notification\targets\DeliveryBatch;
 use humhub\modules\notification\targets\MobileTargetProvider;
 use humhub\modules\user\models\User;
 
@@ -18,9 +18,9 @@ use humhub\modules\user\models\User;
  * notification module resolves MobileTargetProvider from the container, so this
  * replacement is transparent to the rest of the core.
  *
- * handle() is called once per user per notification. It temporarily switches the
- * application locale to the recipient's locale so that the notification text is
- * localised before being sent as the push body.
+ * deliver() is called once per recipient and delivery batch (one notification today, several
+ * once the core batches the deliveries). It temporarily switches the application locale to the
+ * recipient's locale so that the notification text is localised before being sent as the push body.
  */
 class NotificationTargetProvider extends Component implements MobileTargetProvider
 {
@@ -38,28 +38,27 @@ class NotificationTargetProvider extends Component implements MobileTargetProvid
     /**
      * @inheritDoc
      */
-    public function handle(BaseNotification $notification, User $user)
+    public function deliver(DeliveryBatch $batch): void
     {
-        Yii::$app->i18n->setUserLocale($user);
-
-        /** @var Module $module */
-        $module = Yii::$app->getModule('fcm-push');
+        Yii::$app->i18n->setUserLocale($batch->recipient);
 
         try {
-            (new MessagingService($module->getConfigureForm()))
-                ->processNotification($notification, $user);
+            /** @var Module $module */
+            $module = Yii::$app->getModule('fcm-push');
+
+            /** @var MessagingService $messagingService */
+            $messagingService = Yii::createObject(MessagingService::class, [$module->getConfigureForm()]);
+            $messagingService->processBatch($batch);
         } finally {
             Yii::$app->i18n->autosetLocale();
         }
-
-        return true;
     }
 
 
     /**
      * @inheritDoc
      */
-    public function isActive(?User $user = null)
+    public function isActive(?User $user = null): bool
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
