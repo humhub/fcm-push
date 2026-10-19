@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.2 (Unreleased)
+------------------
+- Enh: Setting "Send a neutral text only": push messages carry only the site name and a fixed text instead of the notification text (names and content), including texts handed over by other modules via `MessagingService::processMessage()`
+
 2.3.1 (October 12, 2026)
 ------------------------
 - Fix #110: A failing push driver blocked silent unread count pushes to other drivers

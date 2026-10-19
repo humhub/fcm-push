@@ -28,8 +28,11 @@ class MessagingService
      */
     private array $drivers;
 
+    private ConfigureForm $config;
+
     public function __construct(ConfigureForm $config)
     {
+        $this->config = $config;
         $this->drivers = (new DriverService($config))->getConfiguredDrivers();
     }
 
@@ -56,11 +59,20 @@ class MessagingService
     }
 
     /**
+     * With {@see ConfigureForm::$neutralPushText} the title and the body are replaced by the site name
+     * and a fixed text, whoever hands them over: the notification text as well as texts of other
+     * modules (e.g. the messenger), which may contain names and conversation titles.
+     *
      * @param int|null $notificationCount deprecated since 2.2.9, will be removed in a future version.
      *        The value is ignored — the count is now calculated by {@see getNotificationCount()}.
      */
     public function processMessage(User $user, string $title, string $body, ?string $url, ?string $imageUrl, ?int $notificationCount = null)
     {
+        if ($this->config->neutralPushText) {
+            $title = Yii::$app->name;
+            $body = ConfigureForm::getNeutralPushText();
+        }
+
         $tokenService = new TokenService();
         $notificationCount = $this->getNotificationCount($user);
 
