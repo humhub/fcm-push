@@ -35,6 +35,12 @@ use humhub\widgets\modal\ModalButton;
         <?= $form->field($model, 'json')->textarea(['rows' => 10]); ?>
         <br/>
 
+        <hr>
+
+        <h3><?= Yii::t('FcmPushModule.base', 'Privacy') ?></h3>
+        <?= $form->field($model, 'neutralPushText')->checkbox() ?>
+        <br/>
+
         <div class="form-group">
             <?= Button::save()->submit() ?>
             <?= ModalButton::light('Debug')

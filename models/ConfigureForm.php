@@ -22,6 +22,13 @@ class ConfigureForm extends Model
     public $humhubApiKey;
 
     /**
+     * @var bool|int|string whether push messages carry only the site name and a fixed text instead
+     * of the notification text, which can contain names and content
+     * @since 2.3.2
+     */
+    public $neutralPushText = false;
+
+    /**
      * Validate JSON field params
      *
      * @param $arrayPattern
@@ -83,6 +90,7 @@ class ConfigureForm extends Model
             [['senderId'], 'match', 'pattern' => '/^\d+$/'],
             [['firebaseApiKey', 'firebaseAppId', 'firebaseVapidKey'], 'string'],
             [['json', 'humhubApiKey'], 'safe'],
+            ['neutralPushText', 'boolean'],
             ['json', function ($attribute, $params, $validator): void {
                 if (empty($this->$attribute)) {
                     return;
@@ -140,6 +148,7 @@ class ConfigureForm extends Model
             'firebaseAppId' => Yii::t('FcmPushModule.base', 'Web App ID'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Key pair of the Web Push certificates'),
             'json' => Yii::t('FcmPushModule.base', 'Service Account (JSON file)'),
+            'neutralPushText' => Yii::t('FcmPushModule.base', 'Send a neutral text only'),
         ];
     }
 
@@ -149,6 +158,7 @@ class ConfigureForm extends Model
             'humhubInstallId' => Yii::t('FcmPushModule.base', 'Use this ID to register your API Key.'),
             'firebaseVapidKey' => Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging -> Web Push certificates -> Key pair'),
             'json' => Yii::t('FcmPushModule.base', 'Paste the content of the service account JSON files here. You can find more information in the module instructions.'),
+            'neutralPushText' => Yii::t('FcmPushModule.base', 'Push messages are delivered via the servers of Google (or the HumHub push relay) and are shown on the lock screen. When enabled, they only contain the site name and the text "{text}" instead of the notification text, which can contain names and content.', ['text' => static::getNeutralPushText()]),
         ];
     }
 
@@ -169,6 +179,7 @@ class ConfigureForm extends Model
         $this->firebaseVapidKey = $settings->get('firebaseVapidKey');
         $this->json = $settings->get('json');
         $this->humhubApiKey = $settings->get('humhubApiKey');
+        $this->neutralPushText = (bool)$settings->get('neutralPushText');
 
         return true;
     }
@@ -184,8 +195,19 @@ class ConfigureForm extends Model
         $module->settings->set('firebaseVapidKey', $this->firebaseVapidKey);
         $module->settings->set('json', $this->json);
         $module->settings->set('humhubApiKey', $this->humhubApiKey);
+        $module->settings->set('neutralPushText', (bool)$this->neutralPushText ? 1 : 0);
 
         return true;
+    }
+
+    /**
+     * The fixed text of a push message when {@see $neutralPushText} is enabled.
+     *
+     * @since 2.3.2
+     */
+    public static function getNeutralPushText(): string
+    {
+        return Yii::t('FcmPushModule.base', 'You have a new notification.');
     }
 
     public function getJsonAsArray()
