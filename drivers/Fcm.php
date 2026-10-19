@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush\drivers;
 
 use humhub\modules\fcmPush\components\SendReport;
+use humhub\modules\fcmPush\helpers\LogHelper;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
 use Kreait\Firebase\Contract\Messaging;
@@ -54,10 +55,11 @@ class Fcm implements DriverInterface
         try {
             $report = $this->messaging->sendMulticast($message, $tokens);
         } catch (MessagingException $e) {
-            Yii::warning("Messaging Exception: " . print_r($e, 1), 'fcm-push');
+            // Not the exception object: it carries the request, including the title, the text and the tokens
+            Yii::warning('Messaging Exception ' . $e::class . ': ' . $e->getMessage(), 'fcm-push');
             return new SendReport(SendReport::STATE_ERROR);
         } catch (FirebaseException $e) {
-            Yii::warning("Firebase Exception: " . print_r($e, 1), 'fcm-push');
+            Yii::warning('Firebase Exception ' . $e::class . ': ' . $e->getMessage(), 'fcm-push');
             return new SendReport(SendReport::STATE_ERROR);
         }
 
@@ -69,7 +71,7 @@ class Fcm implements DriverInterface
             foreach ($report->failures()->getItems() as $failure) {
                 $error = $failure->error();
                 Yii::warning(
-                    'FCM send failure for token "' . $failure->target()->value() . '": '
+                    'FCM send failure for token ' . LogHelper::tokenId($failure->target()->value()) . ': '
                     . ($error?->getMessage() ?? 'unknown error'),
                     'fcm-push',
                 );

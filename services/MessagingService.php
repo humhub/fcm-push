@@ -7,6 +7,7 @@ use humhub\modules\fcmPush\components\SendReport;
 use humhub\modules\fcmPush\drivers\DriverInterface;
 use humhub\modules\fcmPush\drivers\SilentMessageDriverInterface;
 use humhub\modules\fcmPush\events\NotificationCountEvent;
+use humhub\modules\fcmPush\helpers\LogHelper;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\notification\services\NotificationListService;
 use humhub\modules\notification\targets\DeliveryBatch;
@@ -138,7 +139,7 @@ class MessagingService
     private function removeFailedTokens(TokenService $tokenService, SendReport $report): void
     {
         foreach ($report->failedTokens as $failedToken) {
-            Yii::warning("Removing failed/unregistered FCM token: $failedToken", 'fcm-push');
+            Yii::warning('Removing failed/unregistered FCM token ' . LogHelper::tokenId($failedToken), 'fcm-push');
             $tokenService->deleteToken($failedToken);
         }
     }
