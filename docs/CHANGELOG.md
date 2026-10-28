@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.3.2 (Unreleased)
-------------------
+2.3.2 (October 28, 2026)
+------------------------
 - Fix: Unregistered and invalid device tokens were never deleted when using the HumHub Push Proxy driver, so stale tokens accumulated (requires the updated push.humhub.com relay, which now returns them)
 
 2.3.1 (October 12, 2026)
