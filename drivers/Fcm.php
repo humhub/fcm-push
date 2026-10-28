@@ -47,8 +47,18 @@ class Fcm implements DriverInterface
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body)) // $imageUrl is intentionally omitted — including it would show a duplicate logo on branded apps
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
-            ->withData(['url' => $url, 'notification_count' => $notificationCount])
-            ->withHighestPossiblePriority();
+            ->withData(['url' => $url, 'notification_count' => $notificationCount]);
+
+        if ($notificationCount !== null) {
+            // The OS displays visible messages without running the app's code while it is closed or in the
+            // background, so the badge count must also be set OS-side (iOS; Android launchers supporting it).
+            // Web push ignores these platform specific configs.
+            $message = $message
+                ->withApnsConfig(['payload' => ['aps' => ['badge' => $notificationCount]]])
+                ->withAndroidConfig(['notification' => ['notification_count' => $notificationCount]]);
+        }
+
+        $message = $message->withHighestPossiblePriority();
 
         try {
             $report = $this->messaging->sendMulticast($message, $tokens);
