@@ -72,7 +72,12 @@ class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverIn
             return new SendReport(SendReport::STATE_ERROR);
         }
 
-        return new SendReport(SendReport::STATE_SUCCESS);
+        // The relay returns the tokens Firebase has permanently invalidated (unregistered or
+        // malformed), so they can be deleted. Only tokens of this request are accepted.
+        $failedTokens = $response->data['failedTokens'] ?? [];
+        $failedTokens = is_array($failedTokens) ? array_values(array_intersect($data['tokens'], array_filter($failedTokens, 'is_string'))) : [];
+
+        return new SendReport(SendReport::STATE_SUCCESS, $failedTokens);
     }
 
     public function isConfigured(): bool
