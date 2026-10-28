@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.3 (Unreleased)
+------------------
+- Fix: App icon badge count not updated by visible push notifications of the Firebase driver; the count is now also set OS-side (`aps.badge` on iOS, `notification_count` on Android)
+
 2.3.2 (October 28, 2026)
 ------------------------
 - Fix: Unregistered and invalid device tokens were never deleted when using the HumHub Push Proxy driver, so stale tokens accumulated (requires the updated push.humhub.com relay, which now returns them)
