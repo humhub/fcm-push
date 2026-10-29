@@ -126,7 +126,7 @@ Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/to
 2. The core `notification` module iterates `MobileTargetProvider` implementations.
 3. Because `onBeforeRequest` replaced `MobileTargetProvider::class` with `NotificationTargetProvider::class` in the DI container, `NotificationTargetProvider::handle()` is called.
 4. `handle()` sets the locale to the target user's, then delegates to `MessagingService::processNotification()`.
-5. `MessagingService` builds the message (title = site name, body = notification text, url = notification entry URL, icon = site icon at 180 px, badge count = unseen notifications count) and calls `processMessage()`.
+5. `MessagingService` builds the message (title = site name, body = notification text, url = notification entry URL, icon = site icon at 180 px, badge count = `getNotificationCount()`, see [Mobile app badge count](#mobile-app-badge-count)) and calls `processMessage()`.
 6. For each configured driver, `TokenService::getTokensForUser()` fetches all tokens scoped to that driver's `sender_id`. If tokens exist, `driver->processCloudMessage()` is called.
 
 ### `Fcm` driver
@@ -143,6 +143,23 @@ Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using 
 
 ---
 
+## Mobile app badge count
+
+The mobile app shows the unread count on its app icon. `MessagingService::getNotificationCount()` calculates it: the unseen notifications of the user, plus what other modules add via `MessagingService::EVENT_NOTIFICATION_COUNT` (e.g. the mail module adds the unread conversations). It reaches the app in three ways:
+
+| Way | When | Drivers |
+|---|---|---|
+| Push message (`notification_count` data, plus `aps.badge` / Android `notification_count`, so the OS sets it while the app is closed) | Every notification | All |
+| Silent push message (`SendSilentUnreadNotificationCountJob`) | When the count changed (`UnreadCountChangedEvent`), delayed by `Module::$silentUnreadNotificationCountPushDelay` (10 minutes) to collapse changes | Proxy only, see `MessagingService::sendSilentUnreadNotificationCount()` |
+| `{type: 'updateNotificationCount', count: …}` Flutter bridge message | Every page render in the app, and whenever the count changes on the page | Sent if the app has a driver (`DriverService::getMobileAppDriver()`) |
+
+The bridge message makes the badge correct as soon as the user leaves the app, without waiting for the next (silent) push:
+
+- `Events::syncMobileAppBadge()` (via `onLayoutAddonInit`) sends it with every page render — full page loads and PJAX navigation alike, as layout addons are rendered for both — using `MobileAppHelper::updateNotificationCountScript()`.
+- `MobileAppAsset` (`humhub.fcmPush.mobileApp.js`) sends it when the count changes on the page without navigation: on `humhub:notification:updateCount` (e.g. the notification dropdown marked the notifications as seen) and when the conversation count of the mail module changed (`humhub:modules:notification:UpdateTitleNotificationCount`). It requests the count from `GET /fcm-push/mobile-app/notification-count`, as only the server knows the counts other modules add.
+
+---
+
 ## Service Worker integration (PWA)
 
 `Events::onServiceWorkerControllerInit()` hooks into the `web/pwa` module's service worker generation. If the `Fcm` driver is configured, it appends `importScripts` calls for the Firebase compat SDK and the `firebase.initializeApp()` + `firebase.messaging()` bootstrap to the service worker JS. This is required for background message reception in PWA mode.
@@ -155,9 +172,10 @@ Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using 
 |---|---|---|
 | `Application::EVENT_BEFORE_REQUEST` | `onBeforeRequest` | Registers `NotificationTargetProvider` in the DI container when a driver is configured |
 | `ServiceWorkerController::EVENT_INIT` | `onServiceWorkerControllerInit` | Injects Firebase SDK bootstrap into the PWA service worker |
-| `LayoutAddons::EVENT_INIT` | `onLayoutAddonInit` | Triggers token registration (after login) or unregistration (after logout) scripts |
+| `LayoutAddons::EVENT_INIT` | `onLayoutAddonInit` | Triggers token registration (after login) or unregistration (after logout) scripts; sends the badge count to the mobile app |
 | `User::EVENT_AFTER_LOGIN` | `onAfterLogin` | Sets the session flag to trigger token registration on next render |
 | `User::EVENT_AFTER_LOGOUT` | `onAfterLogout` | Sets session flags to trigger token unregistration on next render |
+| `UnreadCountChangedEvent::EVENT_UNREAD_COUNT_CHANGED` | `onUnreadCountChanged` | Queues the delayed silent push with the updated badge count |
 
 ---
 
@@ -169,6 +187,7 @@ Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using 
 | `POST /fcm-push/token/update-mobile-app` | `TokenController::actionUpdateMobileApp` | Register/refresh a mobile app FCM token |
 | `POST /fcm-push/token/delete` | `TokenController::actionDelete` | Remove a browser FCM token |
 | `POST /fcm-push/token/delete-mobile-app` | `TokenController::actionDeleteMobileApp` | Remove a mobile app FCM token |
+| `GET /fcm-push/mobile-app/notification-count` | `MobileAppController::actionNotificationCount` | Returns the badge count of the logged-in user as `{"count": …}` |
 | `GET /fcm-push/status` | `StatusController::actionIndex` | Returns HTTP 200 / 404 / 501 JSON to check module health |
 | `GET /fcm-push/admin` | `AdminController::actionIndex` | Admin configuration page |
 | `GET /fcm-push/admin/debug` | `AdminController::actionDebug` | Lists and allows deletion of tokens for the current user |
@@ -201,5 +220,6 @@ Sends a raw push message to all registered devices for `<userId>` via all config
 | `MessagingService` | Orchestrates notification → driver dispatch |
 | `NotificationTargetProvider` | Bridge between HumHub's notification system and this module |
 | `FcmUser` | ActiveRecord for the `fcmpush_user` table |
-| `MobileAppHelper` | Emits Flutter JS bridge messages to register/unregister devices |
+| `MobileAppHelper` | Emits Flutter JS bridge messages to register/unregister devices and to update the badge count |
+| `MobileAppAsset` | Sends the badge count to the mobile app when it changes on the page |
 | `WebAppHelper` | Emits JS to unregister web browser tokens on logout |

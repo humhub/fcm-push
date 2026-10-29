@@ -4,10 +4,12 @@ namespace humhub\modules\fcmPush;
 
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
+use humhub\modules\fcmPush\assets\MobileAppAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\jobs\SendSilentUnreadNotificationCountJob;
+use humhub\modules\fcmPush\services\MessagingService;
 use humhub\modules\fcmPush\services\ServiceWorkerService;
 use humhub\modules\fcmPush\widgets\EnableNotificationsBanner;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
@@ -76,7 +78,44 @@ class Events
         if (!Yii::$app->user->isGuest) {
             static::registerAssets();
             static::addEnableNotificationsBanner($event->sender);
+            static::syncMobileAppBadge();
         }
+    }
+
+    /**
+     * Sends the unread count to the mobile app on every page render (full page loads and PJAX
+     * navigation), so the app icon badge is correct when the user leaves the app. Push messages
+     * alone would correct it only with the next notification or, after something was read, with
+     * the delayed silent push of the Proxy driver.
+     * MobileAppAsset sends it again when the count changes on the page without navigation, e.g.
+     * when the notification dropdown marks the notifications as seen.
+     */
+    private static function syncMobileAppBadge(): void
+    {
+        if (!DeviceDetectorHelper::isAppRequest()) {
+            return;
+        }
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        // Without push messages for this app, the badge could not be updated while the app is closed
+        if ($module->getDriverService()->getMobileAppDriver() === null) {
+            return;
+        }
+
+        MobileAppAsset::register(Yii::$app->view);
+
+        try {
+            $count = (new MessagingService($module->getConfigureForm()))
+                ->getNotificationCount(Yii::$app->user->getIdentity());
+        } catch (\Throwable $e) {
+            // Other modules add their counts, a failure there must not break the page
+            Yii::error('Could not calculate the mobile app badge count: ' . $e->getMessage(), 'fcm-push');
+            return;
+        }
+
+        MobileAppHelper::updateNotificationCountScript($count);
     }
 
     /**
