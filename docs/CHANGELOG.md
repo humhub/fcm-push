@@ -4,6 +4,7 @@ Changelog
 2.3.3 (Unreleased)
 ------------------
 - Fix: App icon badge count not updated by visible push notifications of the Firebase driver; the count is now also set OS-side (`aps.badge` on iOS, `notification_count` on Android)
+- Enh #116: Keep the app icon badge of the mobile app in sync while the network is open in the app: the unread count is sent to the app (`updateNotificationCount`) on every page render and whenever it changes on the page, e.g. after opening the notification dropdown, instead of only with the next push message
 
 2.3.2 (October 28, 2026)
 ------------------------
