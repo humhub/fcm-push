@@ -10,6 +10,7 @@ Changelog
 - Chng: Add the Firebase bootstrap to the service worker through the core's `ServiceWorkerService::EVENT_BUILD_SCRIPT`, the `web` module's `ServiceWorkerController` is gone in HumHub 1.20
 - Chng: Tabler icon names instead of Font Awesome ones (humhub/humhub#8504)
 - Chng: Requires HumHub 1.20
+- Fix: Do not write the whole exception or response objects of failed pushes (with the request: title, text, device tokens) and complete device tokens to the log; log the error message and a short token identifier instead
 
 2.3.1 (October 12, 2026)
 ------------------------

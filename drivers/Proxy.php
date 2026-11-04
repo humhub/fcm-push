@@ -92,7 +92,8 @@ class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverIn
         $response = $this->post('/push', $data)->send();
 
         if (!$response->isOk || empty($response->data['success'])) {
-            Yii::error('Could not send request: ' . print_r($response->data, 1), 'fcm-push');
+            // Only the status: the response body may echo the request (title, text, tokens)
+            Yii::error('Could not send request: HTTP status ' . $response->statusCode, 'fcm-push');
             return new SendReport(SendReport::STATE_ERROR);
         }
 
