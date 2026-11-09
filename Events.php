@@ -64,8 +64,11 @@ class Events
         // After logout: unregister tokens so this device stops receiving push notifications.
         // The session flags are set by onAfterLogout and consumed once here.
         if (Yii::$app->session->has(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
-            static::registerAssets();
-            WebAppHelper::unregisterNotificationScript();
+            // Without a configured web driver the firebase JS module is not loaded (and no web
+            // token can exist): calling it would throw a JS error on the page after logout
+            if (static::registerAssets()) {
+                WebAppHelper::unregisterNotificationScript();
+            }
             Yii::$app->session->remove(WebAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION);
         }
         if (Yii::$app->session->has(MobileAppHelper::SESSION_VAR_UNREGISTER_NOTIFICATION)) {
@@ -118,17 +121,22 @@ class Events
         $layoutAddons->addWidget(EnableNotificationsBanner::class);
     }
 
-    private static function registerAssets()
+    /**
+     * @return bool whether the assets were registered (a web driver is configured)
+     */
+    private static function registerAssets(): bool
     {
         /** @var Module $module */
         $module = Yii::$app->getModule('fcm-push');
 
         if (!$module->getDriverService()->hasConfiguredWebDriver()) {
-            return;
+            return false;
         }
 
         FcmPushAsset::register(Yii::$app->view);
         FirebaseAsset::register(Yii::$app->view);
+
+        return true;
     }
 
     public static function onAfterLogin()
