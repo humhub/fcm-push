@@ -22,6 +22,22 @@ class MobileAppHelper extends \humhub\helpers\MobileAppHelper
         self::sendFlutterMessage($message);
     }
 
+    /**
+     * Sends the unread count to the mobile app, which shows it as app icon badge.
+     *
+     * @since 2.3.3
+     */
+    public static function updateNotificationCountScript(int $count): void
+    {
+        if (!DeviceDetectorHelper::isAppRequest()) {
+            return;
+        }
+
+        $json = ['type' => 'updateNotificationCount', 'count' => max(0, $count)];
+        $message = Json::encode($json);
+        self::sendFlutterMessage($message);
+    }
+
     public static function unregisterNotificationScript(): void
     {
         if (!DeviceDetectorHelper::isAppRequest()) {
