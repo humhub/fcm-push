@@ -3,6 +3,7 @@ Changelog
 
 2.3.3 (Unreleased)
 ------------------
+- Enh: Send the base URL of the network with every push message (`base_url`, `baseUrl` for the push relay), so the mobile app can tell which of its networks a message belongs to
 - Fix: JavaScript error `Cannot read properties of undefined (reading 'unregisterNotification')` on the first page after logout when no web push driver is configured
 - Fix: App icon badge count not updated by visible push notifications of the Firebase driver; the count is now also set OS-side (`aps.badge` on iOS, `notification_count` on Android)
 

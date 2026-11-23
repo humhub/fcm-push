@@ -3,6 +3,7 @@
 namespace humhub\modules\fcmPush\drivers;
 
 use humhub\modules\fcmPush\components\SendReport;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
 use Kreait\Firebase\Contract\Messaging;
@@ -47,7 +48,7 @@ class Fcm implements DriverInterface
         $message = CloudMessage::new()
             ->withNotification(Notification::create($title, $body)) // $imageUrl is intentionally omitted — including it would show a duplicate logo on branded apps
             ->withWebPushConfig(['fcm_options' => ['link' => $url]])
-            ->withData(['url' => $url, 'notification_count' => $notificationCount]);
+            ->withData(['url' => $url, 'notification_count' => $notificationCount, 'base_url' => MobileAppHelper::getBaseUrl()]);
 
         if ($notificationCount !== null) {
             // The OS displays visible messages without running the app's code while it is closed or in the
