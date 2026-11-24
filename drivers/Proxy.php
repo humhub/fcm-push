@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush\drivers;
 
 use humhub\libs\HttpClient;
 use humhub\modules\fcmPush\components\SendReport;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\models\ConfigureForm;
 use humhub\modules\fcmPush\Module;
 use Yii;
@@ -49,6 +50,7 @@ class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverIn
             'iconUrl' => $imageUrl,
             'url' => $url,
             'notificationCount' => $notificationCount,
+            'baseUrl' => MobileAppHelper::getBaseUrl(),
         ]);
     }
 
@@ -59,6 +61,7 @@ class Proxy extends HttpClient implements DriverInterface, SilentMessageDriverIn
         return $this->sendCloudMessage([
             'tokens' => $tokens,
             'notificationCount' => $notificationCount,
+            'baseUrl' => MobileAppHelper::getBaseUrl(),
             'silent' => true,
         ]);
     }

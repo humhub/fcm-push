@@ -130,7 +130,7 @@ Once `getToken` returns a token, `sendTokenToServer()` POSTs it to `/fcm-push/to
 6. For each configured driver, `TokenService::getTokensForUser()` fetches all tokens scoped to that driver's `sender_id`. If tokens exist, `driver->processCloudMessage()` is called.
 
 ### `Fcm` driver
-Uses the `kreait/firebase-php` SDK (loaded via a dedicated `vendor/autoload.php` inside the module). Authenticates with the service account JSON. Sends a multicast message with `withWebPushConfig` (link) and `withData` (url + notification_count). The `imageUrl` is intentionally omitted from the notification payload to avoid displaying a duplicate of the logo on branded apps.
+Uses the `kreait/firebase-php` SDK (loaded via a dedicated `vendor/autoload.php` inside the module). Authenticates with the service account JSON. Sends a multicast message with `withWebPushConfig` (link) and `withData` (url + notification_count + base_url, see [Base URL in push messages](#base-url-in-push-messages)). The `imageUrl` is intentionally omitted from the notification payload to avoid displaying a duplicate of the logo on branded apps.
 
 After each multicast, the driver inspects the `MulticastSendReport` for **permanently** invalid tokens only:
 - `unknownTokens()` — Firebase returned `UNREGISTERED` (app was uninstalled, token expired). Safe to delete.
@@ -140,6 +140,11 @@ Transient failures (rate limit, server unavailable) appear in `failures()` but n
 
 ### `Proxy` driver
 Makes an authenticated HTTP POST to `https://push.humhub.com/api/v1/push` using the `humhubApiKey` as a Bearer token. The HumHub service relays the message to FCM on behalf of the operator.
+
+### Base URL in push messages
+Every push message carries the base URL of the network (`MobileAppHelper::getBaseUrl()`, i.e. `Url::base(true)`): `base_url` in the data of the `Fcm` driver, `baseUrl` in the request to the push relay, which passes it on as `base_url`. It equals the `start_url` of the PWA manifest, which the mobile app stores per network, so the app can tell which network a message belongs to, e.g. to attribute the unread count of a silent push message when it is connected to several networks.
+
+Push messages are mostly sent by queue jobs, i.e. console requests. There, `Url::base(true)` comes from the "Base URL" setting (*Administration → Settings → General*), while the manifest gets it from the web request. Both match as long as the setting is the URL the network is opened with.
 
 ---
 
