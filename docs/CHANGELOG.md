@@ -1,8 +1,8 @@
 Changelog
 =========
 
-2.3.4 (Unreleased)
-------------------
+2.3.4 (November 25, 2026)
+-------------------------
 - Fix: Module package could not be built, as Composer blocks firebase/php-jwt 6 (security advisory); updated kreait/firebase-php to 7.24
 
 2.3.3 (November 25, 2026)
