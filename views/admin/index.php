@@ -7,12 +7,12 @@ use humhub\widgets\modal\ModalButton;
 
 /* @var $model ConfigureForm */
 ?>
-<div class="panel panel-default">
-    <div class="panel-heading"><?= Yii::t('FcmPushModule.base', '<strong>FireBase Messaging</strong> Configuration'); ?></div>
-    <div class="panel-body">
+<div class="card content-card">
+    <div class="card-header"><div class="card-title"><?= Yii::t('FcmPushModule.base', '<strong>FireBase Messaging</strong> Configuration'); ?></div></div>
+    <div class="card-body">
         <?php $form = ActiveForm::begin(['id' => 'configure-form', 'enableClientValidation' => false, 'enableClientScript' => false]); ?>
 
-        <h3><?= Yii::t('FcmPushModule.base', 'Push Service (required for the mobile app) (Beta)') ?></h3>
+        <h3 class="card-title mt-0"><?= Yii::t('FcmPushModule.base', 'Push Service (required for the mobile app) (Beta)') ?></h3>
         <p>
             <?= Yii::t('FcmPushModule.base', 'For HumHub mobile app users, push notifications can be sent via the HumHub push service. If you want to use this service, please enter your access key below.<br/>Please note, this push gateway is only available for the users of the official HumHub mobile app.') ?>
         </p>
@@ -23,7 +23,7 @@ use humhub\widgets\modal\ModalButton;
 
         <hr>
 
-        <h3><?= Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging (required for browser & PWA notifications)') ?></h3>
+        <h3 class="card-title"><?= Yii::t('FcmPushModule.base', 'Firebase Cloud Messaging (required for browser & PWA notifications)') ?></h3>
         <p>
             <?= Yii::t('FcmPushModule.base', 'To send Firebase push notifications with your own Firebase project, enter your access details here.') ?>
         </p>

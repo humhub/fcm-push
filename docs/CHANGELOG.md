@@ -3,6 +3,7 @@ Changelog
 
 2.4.0 (Unreleased)
 ------------------
+- Enh: Cards of the core 1.20 instead of Bootstrap 3 panels (humhub/humhub#8777)
 - Enh: Use the HumHub 1.20 notification delivery (MobileTargetProvider::deliver(), DeliveryBatch)
 - Enh: Send the collapse key and the priority of a notification push (Fcm driver: `android.collapse_key`/`priority`, `apns-collapse-id`/`apns-priority`, Web Push `Topic`/`Urgency`; Proxy driver: optional `collapseKey`/`priority` request fields); `DriverInterface::processCloudMessage()` takes them as new optional parameters
 - Enh: Calculate the badge count from the unseen entries of the HumHub 1.20 notification list (`NotificationListService::unseenCount()`)
