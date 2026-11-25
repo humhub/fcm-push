@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.4 (Unreleased)
+------------------
+- Fix: Module package could not be built, as Composer blocks firebase/php-jwt 6 (security advisory); updated kreait/firebase-php to 7.24
+
 2.3.3 (November 25, 2026)
 -------------------------
 - Enh: Send the base URL of the network with every push message (`base_url`, `baseUrl` for the push relay), so the mobile app can tell which of its networks a message belongs to

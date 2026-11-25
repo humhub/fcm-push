@@ -4,7 +4,7 @@
   "type": "library",
   "require": {
     "php": ">=8.0",
-    "kreait/firebase-php": "7.15.x",
+    "kreait/firebase-php": "~7.24.1",
     "npm-asset/firebase": "10.14.1"
   },
   "replace": {
