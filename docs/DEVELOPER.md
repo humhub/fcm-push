@@ -161,7 +161,9 @@ The mobile app shows the unread count on its app icon. `MessagingService::getNot
 The bridge message makes the badge correct as soon as the user leaves the app, without waiting for the next (silent) push:
 
 - `Events::syncMobileAppBadge()` (via `onLayoutAddonInit`) sends it with every page render — full page loads and PJAX navigation alike, as layout addons are rendered for both — using `MobileAppHelper::updateNotificationCountScript()`.
-- `MobileAppAsset` (`humhub.fcmPush.mobileApp.js`) sends it when the count changes on the page without navigation: on `humhub:notification:updateCount` (e.g. the notification dropdown marked the notifications as seen) and when the conversation count of the mail module changed (`humhub:modules:notification:UpdateTitleNotificationCount`). It requests the count from `GET /fcm-push/mobile-app/notification-count`, as only the server knows the counts other modules add.
+- `MobileAppAsset` (`humhub.fcmPush.mobileApp.js`) sends it when the count changes on the page without navigation: on `humhub:notification:updateCount` (e.g. the notification dropdown marked the notifications as seen) and when the conversation count of the mail module changed (`humhub:modules:notification:UpdateTitleNotificationCount`). It requests the count from `GET /fcm-push/mobile-app/notification-count`, as only the server knows the counts other modules add. It only posts an integer, so a response without a count (e.g. a login page after the session expired) is ignored, and of overlapping requests only the latest counts.
+
+Both get the count from `MobileAppHelper::getBadgeCount()`. It is `null` unless `MobileAppHelper::isBadgeSyncEnabled()` (a logged-in user in the app, with a push driver for it), and if calculating the count fails, e.g. in a handler of another module, which is logged. `MessagingService` creates its drivers only when it sends a message, so getting the count does not create them.
 
 ---
 
@@ -192,7 +194,7 @@ The bridge message makes the badge correct as soon as the user leaves the app, w
 | `POST /fcm-push/token/update-mobile-app` | `TokenController::actionUpdateMobileApp` | Register/refresh a mobile app FCM token |
 | `POST /fcm-push/token/delete` | `TokenController::actionDelete` | Remove a browser FCM token |
 | `POST /fcm-push/token/delete-mobile-app` | `TokenController::actionDeleteMobileApp` | Remove a mobile app FCM token |
-| `GET /fcm-push/mobile-app/notification-count` | `MobileAppController::actionNotificationCount` | Returns the badge count of the logged-in user as `{"count": …}` |
+| `GET /fcm-push/mobile-app/notification-count` | `MobileAppController::actionNotificationCount` | Returns the badge count of the logged-in user as `{"count": …}`; `null` outside the app, without a push driver for it, or if the count could not be calculated |
 | `GET /fcm-push/status` | `StatusController::actionIndex` | Returns HTTP 200 / 404 / 501 JSON to check module health |
 | `GET /fcm-push/admin` | `AdminController::actionIndex` | Admin configuration page |
 | `GET /fcm-push/admin/debug` | `AdminController::actionDebug` | Lists and allows deletion of tokens for the current user |

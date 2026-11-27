@@ -3,6 +3,9 @@
 namespace humhub\modules\fcmPush\helpers;
 
 use humhub\helpers\DeviceDetectorHelper;
+use humhub\modules\fcmPush\Module;
+use humhub\modules\fcmPush\services\MessagingService;
+use Yii;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
@@ -36,6 +39,50 @@ class MobileAppHelper extends \humhub\helpers\MobileAppHelper
         $json = ['type' => 'registerFcmDevice', 'url' => Url::to(['/fcm-push/token/update-mobile-app'], true)];
         $message = Json::encode($json);
         self::sendFlutterMessage($message);
+    }
+
+    /**
+     * Whether the unread count is sent to the mobile app of this request, which shows it as app
+     * icon badge: for logged-in users in the app, if the app gets push messages. Without them,
+     * nothing would update the badge while the app is closed.
+     *
+     * @since 2.3.5
+     */
+    public static function isBadgeSyncEnabled(): bool
+    {
+        if (!DeviceDetectorHelper::isAppRequest() || Yii::$app->user->isGuest) {
+            return false;
+        }
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        return $module->getDriverService()->getMobileAppDriver() !== null;
+    }
+
+    /**
+     * Returns the unread count for the app icon badge of the mobile app of this request, `null`
+     * if it is not sent to this request (see isBadgeSyncEnabled()) or could not be calculated.
+     *
+     * @since 2.3.5
+     */
+    public static function getBadgeCount(): ?int
+    {
+        if (!static::isBadgeSyncEnabled()) {
+            return null;
+        }
+
+        /** @var Module $module */
+        $module = Yii::$app->getModule('fcm-push');
+
+        try {
+            return (new MessagingService($module->getConfigureForm()))
+                ->getNotificationCount(Yii::$app->user->getIdentity());
+        } catch (\Throwable $e) {
+            // Other modules add their counts, a failure there must not break the page
+            Yii::error('Could not calculate the mobile app badge count: ' . $e->getMessage(), 'fcm-push');
+            return null;
+        }
     }
 
     /**

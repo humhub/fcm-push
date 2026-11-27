@@ -4,9 +4,8 @@ namespace humhub\modules\fcmPush\controllers;
 
 use humhub\components\access\ControllerAccess;
 use humhub\components\Controller;
+use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\Module;
-use humhub\modules\fcmPush\services\MessagingService;
-use Yii;
 
 /**
  * Endpoints used by the web view of the HumHub mobile app.
@@ -28,12 +27,11 @@ class MobileAppController extends Controller
 
     /**
      * Returns the unread count, which the mobile app shows as app icon badge (see MobileAppAsset).
+     * The count is `null` if it is not sent to this request or could not be calculated, so the
+     * page does not post it to the app.
      */
     public function actionNotificationCount()
     {
-        $count = (new MessagingService($this->module->getConfigureForm()))
-            ->getNotificationCount(Yii::$app->user->getIdentity());
-
-        return $this->asJson(['count' => $count]);
+        return $this->asJson(['count' => MobileAppHelper::getBadgeCount()]);
     }
 }

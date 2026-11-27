@@ -17,6 +17,7 @@ humhub.module('fcmPush.mobileApp', function (module, require, $) {
     const SYNC_DELAY = 500;
 
     let syncTimeout = null;
+    let syncRequest = 0;
     let mailCount = null;
 
     const init = function () {
@@ -48,10 +49,22 @@ humhub.module('fcmPush.mobileApp', function (module, require, $) {
     const sync = function () {
         clearTimeout(syncTimeout);
         syncTimeout = setTimeout(function () {
+            const request = ++syncRequest;
             client.get(module.config.notificationCountUrl).then(function (response) {
+                // A later request is under way, its count is the newer one
+                if (request !== syncRequest) {
+                    return;
+                }
+
+                // No count if the server has none for this request, or the response is no count at all,
+                // e.g. a login page after the session expired. Older apps expect an integer.
+                if (!Number.isInteger(response.count)) {
+                    return;
+                }
+
                 window.flutterChannel.postMessage(JSON.stringify({
                     type: 'updateNotificationCount',
-                    count: response.count,
+                    count: Math.max(0, response.count),
                 }));
             }).catch(function (e) {
                 module.log.error(e);

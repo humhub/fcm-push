@@ -9,7 +9,6 @@ use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
 use humhub\modules\fcmPush\jobs\SendSilentUnreadNotificationCountJob;
-use humhub\modules\fcmPush\services\MessagingService;
 use humhub\modules\fcmPush\services\ServiceWorkerService;
 use humhub\modules\fcmPush\widgets\EnableNotificationsBanner;
 use humhub\modules\fcmPush\widgets\RegisterDeviceTokenButton;
@@ -95,30 +94,16 @@ class Events
      */
     private static function syncMobileAppBadge(): void
     {
-        if (!DeviceDetectorHelper::isAppRequest()) {
-            return;
-        }
-
-        /** @var Module $module */
-        $module = Yii::$app->getModule('fcm-push');
-
-        // Without push messages for this app, the badge could not be updated while the app is closed
-        if ($module->getDriverService()->getMobileAppDriver() === null) {
+        if (!MobileAppHelper::isBadgeSyncEnabled()) {
             return;
         }
 
         MobileAppAsset::register(Yii::$app->view);
 
-        try {
-            $count = (new MessagingService($module->getConfigureForm()))
-                ->getNotificationCount(Yii::$app->user->getIdentity());
-        } catch (\Throwable $e) {
-            // Other modules add their counts, a failure there must not break the page
-            Yii::error('Could not calculate the mobile app badge count: ' . $e->getMessage(), 'fcm-push');
-            return;
+        $count = MobileAppHelper::getBadgeCount();
+        if ($count !== null) {
+            MobileAppHelper::updateNotificationCountScript($count);
         }
-
-        MobileAppHelper::updateNotificationCountScript($count);
     }
 
     /**
@@ -138,7 +123,7 @@ class Events
         }
 
         // Native apps register tokens through the Flutter bridge (MobileAppHelper), not the
-        // browser Notification API. PJAX responses do not render layout addons anyway.
+        // browser Notification API. The banner is shown on full page loads only.
         if (DeviceDetectorHelper::isAppRequest() || Yii::$app->request->isPjax) {
             return;
         }
