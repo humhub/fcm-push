@@ -24,13 +24,13 @@ class MessagingService
     public const EVENT_NOTIFICATION_COUNT = 'pushNotificationCount';
 
     /**
-     * @var DriverInterface[]
+     * @var DriverInterface[]|null the configured drivers, created when a message is sent first, so
+     * getNotificationCount() does not create them
      */
-    private array $drivers;
+    private ?array $drivers = null;
 
-    public function __construct(ConfigureForm $config)
+    public function __construct(private ConfigureForm $config)
     {
-        $this->drivers = (new DriverService($config))->getConfiguredDrivers();
     }
 
     public function processNotification(BaseNotification $baseNotification, User $user): void
@@ -64,7 +64,7 @@ class MessagingService
         $tokenService = new TokenService();
         $notificationCount = $this->getNotificationCount($user);
 
-        foreach ($this->drivers as $driver) {
+        foreach ($this->getDrivers() as $driver) {
             $tokens = $tokenService->getTokensForUser($user, $driver);
             if (empty($tokens)) {
                 continue;
@@ -104,7 +104,7 @@ class MessagingService
         $tokenService = new TokenService();
         $notificationCount = $this->getNotificationCount($user);
 
-        foreach ($this->drivers as $driver) {
+        foreach ($this->getDrivers() as $driver) {
             if (!$driver instanceof SilentMessageDriverInterface) {
                 continue;
             }
@@ -123,6 +123,14 @@ class MessagingService
 
             $this->removeFailedTokens($tokenService, $report);
         }
+    }
+
+    /**
+     * @return DriverInterface[]
+     */
+    private function getDrivers(): array
+    {
+        return $this->drivers ??= (new DriverService($this->config))->getConfiguredDrivers();
     }
 
     /**

@@ -1,6 +1,10 @@
 Changelog
 =========
 
+2.3.5 (Unreleased)
+------------------
+- Enh #116: Keep the app icon badge of the mobile app in sync while the network is open in the app: the unread count is sent to the app (`updateNotificationCount`) on every page render and whenever it changes on the page, e.g. after opening the notification dropdown, instead of only with the next push message
+
 2.3.4 (November 25, 2026)
 -------------------------
 - Fix: Module package could not be built, as Composer blocks firebase/php-jwt 6 (security advisory); updated kreait/firebase-php to 7.24

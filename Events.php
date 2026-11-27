@@ -4,6 +4,7 @@ namespace humhub\modules\fcmPush;
 
 use humhub\modules\fcmPush\assets\FcmPushAsset;
 use humhub\modules\fcmPush\assets\FirebaseAsset;
+use humhub\modules\fcmPush\assets\MobileAppAsset;
 use humhub\modules\fcmPush\components\NotificationTargetProvider;
 use humhub\modules\fcmPush\helpers\MobileAppHelper;
 use humhub\modules\fcmPush\helpers\WebAppHelper;
@@ -79,6 +80,29 @@ class Events
         if (!Yii::$app->user->isGuest) {
             static::registerAssets();
             static::addEnableNotificationsBanner($event->sender);
+            static::syncMobileAppBadge();
+        }
+    }
+
+    /**
+     * Sends the unread count to the mobile app on every page render (full page loads and PJAX
+     * navigation), so the app icon badge is correct when the user leaves the app. Push messages
+     * alone would correct it only with the next notification or, after something was read, with
+     * the delayed silent push of the Proxy driver.
+     * MobileAppAsset sends it again when the count changes on the page without navigation, e.g.
+     * when the notification dropdown marks the notifications as seen.
+     */
+    private static function syncMobileAppBadge(): void
+    {
+        if (!MobileAppHelper::isBadgeSyncEnabled()) {
+            return;
+        }
+
+        MobileAppAsset::register(Yii::$app->view);
+
+        $count = MobileAppHelper::getBadgeCount();
+        if ($count !== null) {
+            MobileAppHelper::updateNotificationCountScript($count);
         }
     }
 
@@ -99,7 +123,7 @@ class Events
         }
 
         // Native apps register tokens through the Flutter bridge (MobileAppHelper), not the
-        // browser Notification API. PJAX responses do not render layout addons anyway.
+        // browser Notification API. The banner is shown on full page loads only.
         if (DeviceDetectorHelper::isAppRequest() || Yii::$app->request->isPjax) {
             return;
         }
